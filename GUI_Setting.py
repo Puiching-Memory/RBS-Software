@@ -34,9 +34,9 @@ class Main ( wx.Frame ):
 
 		wSizer2.Add( self.m_staticText4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_fontPicker1 = wx.FontPickerCtrl( self, wx.ID_ANY, wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ), wx.DefaultPosition, wx.Size( -1,-1 ), wx.FNTP_DEFAULT_STYLE )
-		self.m_fontPicker1.SetMaxPointSize( 100 )
-		wSizer2.Add( self.m_fontPicker1, 0, wx.ALL, 5 )
+		self.font = wx.FontPickerCtrl( self, wx.ID_ANY, wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ), wx.DefaultPosition, wx.Size( -1,-1 ), wx.FNTP_DEFAULT_STYLE|wx.FNTP_FONTDESC_AS_LABEL|wx.FNTP_USEFONT_FOR_LABEL )
+		self.font.SetMaxPointSize( 100 )
+		wSizer2.Add( self.font, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( wSizer2, 1, wx.EXPAND, 5 )
@@ -88,16 +88,16 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_colourPicker1 = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
-		wSizer1.Add( self.m_colourPicker1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.Top_color = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
+		wSizer1.Add( self.Top_color, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"底端", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.m_staticText3.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_colourPicker2 = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
-		wSizer1.Add( self.m_colourPicker2, 0, wx.ALL, 5 )
+		self.Bot_color = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
+		wSizer1.Add( self.Bot_color, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( wSizer1, 1, wx.EXPAND, 5 )
@@ -114,7 +114,7 @@ class Main ( wx.Frame ):
 
 		wSizer5.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		m_choice1Choices = [ u"zh-cn", u"en-us", u"ja-jp", u"fr-fr", u"ru-ru" ]
+		m_choice1Choices = [ u"zh-cn", u"en-us" ]
 		self.m_choice1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice1Choices, 0 )
 		self.m_choice1.SetSelection( 0 )
 		wSizer5.Add( self.m_choice1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -137,7 +137,7 @@ class Main ( wx.Frame ):
 		self.m_textCtrl1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		wSizer7.Add( self.m_textCtrl1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"自定义文件存储路径:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"自定义日志存储路径:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
 
 		self.m_staticText9.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
@@ -170,11 +170,6 @@ class Main ( wx.Frame ):
 		self.m_datePicker4 = wx.adv.DatePickerCtrl( self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.adv.DP_DEFAULT|wx.adv.DP_DROPDOWN )
 		wSizer8.Add( self.m_datePicker4, 0, wx.ALL, 5 )
 
-		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"时间:未开放", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText12.Wrap( -1 )
-
-		wSizer8.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
 
 		bSizer1.Add( wSizer8, 1, wx.EXPAND, 5 )
 
@@ -183,11 +178,11 @@ class Main ( wx.Frame ):
 
 		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.m_button1 = wx.Button( self, wx.ID_ANY, u"确定", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer6.Add( self.m_button1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.B_Accept = wx.Button( self, wx.ID_ANY, u"确定", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer6.Add( self.B_Accept, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_button2 = wx.Button( self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer6.Add( self.m_button2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.B_Cancel = wx.Button( self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer6.Add( self.B_Cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer6, 1, wx.EXPAND, 5 )
@@ -198,7 +193,19 @@ class Main ( wx.Frame ):
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.B_Accept.Bind( wx.EVT_BUTTON, self.Accept )
+		self.B_Cancel.Bind( wx.EVT_BUTTON, self.Cancel )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, overide them in your derived class
+	def Accept( self, event ):
+		event.Skip()
+
+	def Cancel( self, event ):
+		event.Skip()
 
 
