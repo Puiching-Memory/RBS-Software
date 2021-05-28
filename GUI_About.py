@@ -9,7 +9,6 @@
 
 import wx
 import wx.xrc
-import wx.adv
 
 ###########################################################################
 ## Class Main
@@ -18,7 +17,7 @@ import wx.adv
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( 400,500 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( 400,300 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -26,7 +25,7 @@ class Main ( wx.Frame ):
 		self.m_toolBar1 = self.CreateToolBar( wx.TB_HORIZONTAL, wx.ID_ANY )
 		self.m_toolBar1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		self.space = wx.StaticText( self.m_toolBar1, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 20,-1 ), 0 )
+		self.space = wx.StaticText( self.m_toolBar1, wx.ID_ANY, u" ", wx.DefaultPosition, wx.Size( 20,-1 ), 0 )
 		self.space.Wrap( -1 )
 
 		self.m_toolBar1.AddControl( self.space )
@@ -45,49 +44,20 @@ class Main ( wx.Frame ):
 
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-		bSizer4.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
+		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"CC2021 Ver021.5.01", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText18.Wrap( -1 )
 
-		self.version = wx.StaticText( self, wx.ID_ANY, u"CC2021 Ver021.5.01", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.version.Wrap( -1 )
+		bSizer4.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		bSizer4.Add( self.version, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.m_staticText20 = wx.StaticText( self, wx.ID_ANY, u"This is a toolbox software Edit by ZK2021", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText20 = wx.StaticText( self, wx.ID_ANY, u"This is a toolbox software", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText20.Wrap( -1 )
 
-		bSizer4.Add( self.m_staticText20, 0, wx.ALL, 5 )
+		bSizer4.Add( self.m_staticText20, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"Hello, this is Puiching-Memory project team. Puiching memory is a multi breadth, experience oriented (Guangzhou Puiching middle school) series derivative (cultural and creative) project. In essence, it is the form of homework (general technology course). Puiching people hope that we can look back and look forward to the school anniversary in 2021.\n\n你好，这里是PuiChing Memory项目组。 PuiChing Memory是一个多广度，重体验的（广州市培正中学）系列衍生（文创）项目。 本质上是（通用技术课程）的作业形式。 培正人，希望在2021年校庆我们都能一起回首，一起展望。", wx.DefaultPosition, wx.Size( -1,200 ), 0 )
-		self.m_staticText8.Wrap( -1 )
+		self.m_staticText19 = wx.StaticText( self, wx.ID_ANY, u"Edit by ZK2021", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText19.Wrap( -1 )
 
-		bSizer4.Add( self.m_staticText8, 0, wx.ALL, 5 )
-
-		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"GUI made by wxFromBuilder:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText6.Wrap( -1 )
-
-		wSizer1.Add( self.m_staticText6, 0, wx.ALL, 5 )
-
-		self.m_hyperlink1 = wx.adv.HyperlinkCtrl( self, wx.ID_ANY, u"wxFB Website", u"http://www.wxformbuilder.org", wx.DefaultPosition, wx.DefaultSize, wx.adv.HL_DEFAULT_STYLE )
-		wSizer1.Add( self.m_hyperlink1, 0, wx.ALL, 5 )
-
-
-		bSizer4.Add( wSizer1, 1, wx.EXPAND, 5 )
-
-		wSizer3 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Code in Github:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText7.Wrap( -1 )
-
-		wSizer3.Add( self.m_staticText7, 0, wx.ALL, 5 )
-
-		self.m_hyperlink2 = wx.adv.HyperlinkCtrl( self, wx.ID_ANY, u"RB-Software", u"https://github.com/Puiching-Memory/RB-Software", wx.DefaultPosition, wx.DefaultSize, wx.adv.HL_DEFAULT_STYLE )
-		wSizer3.Add( self.m_hyperlink2, 0, wx.ALL, 5 )
-
-
-		bSizer4.Add( wSizer3, 1, wx.EXPAND, 5 )
+		bSizer4.Add( self.m_staticText19, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
 		self.SetSizer( bSizer4 )

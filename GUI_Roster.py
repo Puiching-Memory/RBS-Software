@@ -86,32 +86,32 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.L, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Frequency = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,-1 ), wx.SP_ARROW_KEYS, 0, 60, 10 )
-		wSizer1.Add( self.Frequency, 0, wx.ALL, 5 )
+		self.m_spinCtrl4 = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,-1 ), wx.SP_ARROW_KEYS, 0, 60, 10 )
+		wSizer1.Add( self.m_spinCtrl4, 0, wx.ALL, 5 )
 
 		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"显示位置:X:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText5.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.PlaceX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 1440, 1070 )
-		wSizer1.Add( self.PlaceX, 0, wx.ALL, 5 )
+		self.m_spinCtrl1 = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 1440, 1070 )
+		wSizer1.Add( self.m_spinCtrl1, 0, wx.ALL, 5 )
 
 		self.m_staticText91 = wx.StaticText( self, wx.ID_ANY, u"Y:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText91.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText91, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.PlaceY = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 900, 50 )
-		wSizer1.Add( self.PlaceY, 0, wx.ALL, 5 )
+		self.m_spinCtrl2 = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 900, 50 )
+		wSizer1.Add( self.m_spinCtrl2, 0, wx.ALL, 5 )
 
 		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"行间距:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText11.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Space = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,-1 ), wx.SP_ARROW_KEYS, 0, 100, 50 )
-		wSizer1.Add( self.Space, 0, wx.ALL, 5 )
+		self.m_spinCtrl3 = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,-1 ), wx.SP_ARROW_KEYS, 0, 100, 50 )
+		wSizer1.Add( self.m_spinCtrl3, 0, wx.ALL, 5 )
 
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"自动保存时间:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
@@ -146,12 +146,6 @@ class Main ( wx.Frame ):
 		self.choise.SetSelection( 0 )
 		wSizer8.Add( self.choise, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Style = wx.TextCtrl( self, wx.ID_ANY, u"期末考", wx.DefaultPosition, wx.Size( 80,-1 ), wx.TE_CENTER )
-		wSizer8.Add( self.Style, 0, wx.ALL, 5 )
-
-		self.Date = wx.TextCtrl( self, wx.ID_ANY, u"10", wx.DefaultPosition, wx.Size( 80,-1 ), wx.TE_CENTER )
-		wSizer8.Add( self.Date, 0, wx.ALL, 5 )
-
 
 		wSizer1.Add( wSizer8, 1, wx.EXPAND, 5 )
 
@@ -168,10 +162,6 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.GRID1.Bind( wx.grid.EVT_GRID_CELL_CHANGED, self.save )
-		self.Frequency.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.PlaceX.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.PlaceY.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.Space.Bind( wx.EVT_SPINCTRL, self.Update )
 		self.B_Auto.Bind( wx.EVT_BUTTON, self.Auto )
 		self.B_Stop.Bind( wx.EVT_BUTTON, self.Stop )
 		self.B_Manual.Bind( wx.EVT_BUTTON, self.Manual )
@@ -185,12 +175,6 @@ class Main ( wx.Frame ):
 	# Virtual event handlers, overide them in your derived class
 	def save( self, event ):
 		event.Skip()
-
-	def Update( self, event ):
-		event.Skip()
-
-
-
 
 	def Auto( self, event ):
 		event.Skip()
