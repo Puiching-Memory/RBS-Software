@@ -27,7 +27,8 @@ class CalcFrame(GUI_Preparation.Main):
         self.Text.SetLabel("加载主程序")
         import Main
 
-        self.Bar.SetValue(500)
+        self.Bar.SetSize(100,5)
+        self.Bar.SetLabel('20%')
 
         self.Text.SetLabel("加载必需库文件")
         """
@@ -37,7 +38,8 @@ class CalcFrame(GUI_Preparation.Main):
                         import psutil
                         """
         wx.MilliSleep(100)
-        self.Bar.SetValue(30)
+        self.Bar.SetSize(200,5)
+        self.Bar.SetLabel('40%')
 
         self.Text.SetLabel("加载功能文件")
         """
@@ -50,13 +52,15 @@ class CalcFrame(GUI_Preparation.Main):
                         import Gene
                         """
         wx.MilliSleep(100)
-        self.Bar.SetValue(70)
+        self.Bar.SetSize(250,5)
+        self.Bar.SetLabel('45%')
 
         wx.MilliSleep(200)
-        self.Bar.SetValue(100)
+        self.Bar.SetSize(300,5)
+        self.Bar.SetLabel('60%')
         self.Text.SetLabel("校验文件完整性")
         ###############################
-        list_hash = ['./DATA/Pi/Pi.txt', './DATA/Gene/Covid19-RNA/RNA.txt'] # 文件列表,可无限扩展,但我还是建议用外部导入文件
+        list_hash = ['./DATA/Pi/Pi.txt', './DATA/Gene/Covid19-RNA/RNA.txt', './DATA/Traditional_Chinese/zhcdict.json', './DATA/Idion/idiom.txt'] # 文件列表,可无限扩展,但我还是建议用外部导入文件
         check = open("check.txt", "r")
         list_hash2 = check.readlines()
 
@@ -89,7 +93,8 @@ class CalcFrame(GUI_Preparation.Main):
         ##############################
 
         wx.MilliSleep(500)
-        self.Bar.SetValue(101)
+        self.Bar.SetSize(490,5)
+        self.Bar.SetLabel('100%')
 
         self.Timer.Stop()
         self.Destroy()
@@ -111,4 +116,6 @@ def main():
 
 
 if __name__ == "__main__":
+    global ppt_check
+    ppt_check = 0
     main()

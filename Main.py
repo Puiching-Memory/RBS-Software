@@ -12,12 +12,10 @@
 ###########################################################################
 
 # 自定义功能库
-from pickle import TRUE
 import M_Roll
 import M_Element
 import M_Pinyin
 import M_Roster
-import M_Equation
 import M_Gene
 import M_About
 import M_Pi
@@ -31,6 +29,7 @@ import M_PPTNG
 import M_Download
 import M_Timer
 import M_PPT
+import M_Idion
 
 # 临时库
 
@@ -39,16 +38,12 @@ import sys
 import os
 import win32api
 import win32com.client
-import win32gui
-import win32con
 import psutil
 import time
 import configparser
-import random
 
 # 核心库
 import wx
-##import wx.html2
 import GUI
 import logging.handlers
 
@@ -68,7 +63,7 @@ class CalcFrame(GUI.Main):
 		cfg.read('./cfg/main.cfg')
 
 		# 定义全局变量
-		global Main_State, CPU_text, RAM_text, HDD_text, version, setup, Last_Hover
+		global Main_State, CPU_text, RAM_text, version, setup, Last_Hover, Color_G
 		Main_State = 0
 		CPU_text = 'undefined'
 		RAM_text = 'undefiend'
@@ -76,6 +71,7 @@ class CalcFrame(GUI.Main):
 		version = cfg.get('main', 'VERSION')
 		setup = 0
 		Last_Hover = 0
+		Color_G = '#cccccc'
 
 		# 主界面初始化操作，设置文本常量
 		self.version.SetLabel('#version ' + version)
@@ -142,19 +138,12 @@ class CalcFrame(GUI.Main):
 	def Time_Tick(self, event):
 		''' 计时器-资源监视器 '''
 		# 定义全局变量
-		global CPU_text, RAM_text, HDD_text
+		global CPU_text, RAM_text
 		Line1 = psutil.swap_memory()
 		Line2 = psutil.cpu_times_percent()
-		Line3 = psutil.disk_usage("/")
-		'''
-		self.Line_1.SetValue(int(Line1.percent))  # RAM占用率
-		self.Line_2.SetValue(int(Line2.user))  # CPU使用率
-		self.Line_3.SetValue(int(Line3.percent))  # 磁盘使用占比(程序运行所在的磁盘分区)
-		'''
 		# 显示
 		CPU_text = str(Line2.user) + "%"  # 合并字符串
 		RAM_text = str(Line1.percent) + "%"
-		HDD_text = str(Line3.percent) + "%"
 
 		self.Bottom_Bar3.SetLabel('CPU:' + CPU_text + '  RAM:' + RAM_text)
 		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
@@ -172,26 +161,13 @@ class CalcFrame(GUI.Main):
 		'''
 
 	def PPT_check(self, event):
-		global ppt_check
-		if ppt_check == 0:
-			if proc_exist('POWERPNT.EXE'):
-				##print('PPT is running')
-				ppt_check = 1
-				M_PPT.main()
-			else:
-				event.Skip()
-				##print('no such process...')
-				##os.system('%s%s' % ("taskkill /F /IM ",'PPT'))
+		if proc_exist('POWERPNT.EXE'):
+			##print('PPT is running')
+			self.PPT_Timer.Stop()
+			M_PPT.main()
 		else:
-			if proc_exist('POWERPNT.EXE'):
-				##print('PPT is running')
-				event.Skip()
-			else:
-				global app
-				ppt_check = 0
-				##win32gui.EnumWindows(handle_window, None)
-				##print('no such process...')
-				##os.system('%s%s' % ("taskkill /F /IM ",'PPT'))
+			event.Skip()
+			##print('no such process...')
 
 ###########################################################################
 	def Hover1(self, event):
@@ -289,13 +265,14 @@ class CalcFrame(GUI.Main):
 
 ###########################################################################
 
+
 	def Class1(self, event):
 		''' 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 '''
 		self.Bottom_Bar1.SetLabel('Class1')
 		if Main_State == 1:
 			event.Skip()
 		else:
-			self.G1.SetBackgroundColour('gray')
+			self.G1.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 21
 
@@ -304,7 +281,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 2:
 			event.Skip()
 		else:
-			self.G2.SetBackgroundColour('gray')
+			self.G2.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 22
 
@@ -313,7 +290,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 3:
 			event.Skip()
 		else:
-			self.G3.SetBackgroundColour('gray')
+			self.G3.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 23
 
@@ -322,7 +299,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 4:
 			event.Skip()
 		else:
-			self.G4.SetBackgroundColour('gray')
+			self.G4.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 24
 
@@ -331,7 +308,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 5:
 			event.Skip()
 		else:
-			self.G5.SetBackgroundColour('gray')
+			self.G5.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 25
 
@@ -340,7 +317,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 6:
 			event.Skip()
 		else:
-			self.G6.SetBackgroundColour('gray')
+			self.G6.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 26
 
@@ -349,7 +326,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 7:
 			event.Skip()
 		else:
-			self.G7.SetBackgroundColour('gray')
+			self.G7.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 27
 
@@ -358,7 +335,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 8:
 			event.Skip()
 		else:
-			self.G8.SetBackgroundColour('gray')
+			self.G8.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 28
 
@@ -367,7 +344,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 9:
 			event.Skip()
 		else:
-			self.G9.SetBackgroundColour('gray')
+			self.G9.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 29
 
@@ -376,7 +353,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 10:
 			event.Skip()
 		else:
-			self.G10.SetBackgroundColour('gray')
+			self.G10.SetBackgroundColour(Color_G)
 		global Hover
 		Hover = 210
 
@@ -501,7 +478,9 @@ class CalcFrame(GUI.Main):
 	def Function1(self, event):
 		''' 点击事件_按钮1 '''
 		if Main_State == 1:
+			self.B_F1.Enable(False)
 			M_Pinyin.main()
+			self.B_F1.Enable(True)
 		elif Main_State == 2:
 			M_Pi.main()
 		elif Main_State == 3:
@@ -538,7 +517,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 7:
 			return
 		elif Main_State == 8:
-			M_Equation.main()
+			return
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
@@ -547,7 +526,7 @@ class CalcFrame(GUI.Main):
 	def Function3(self, event):
 		''' 点击事件_按钮3 '''
 		if Main_State == 1:
-			return
+			M_Idion.main()
 		elif Main_State == 2:
 			return
 		elif Main_State == 3:
@@ -613,43 +592,43 @@ class CalcFrame(GUI.Main):
 
 		self.T_F1.SetLabel("中文转拼音")  # 设置功能按钮的标签
 		self.T_F2.SetLabel("简-繁转换")
-		self.T_F3.SetLabel("NONE")
+		self.T_F3.SetLabel("成语接龙")
 		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('将输入的中文转化为拼音,支持多音字')
 		self.Tip2.SetLabel('如题,将中文简体和繁体字互相转换')
-		self.Tip3.SetLabel('什么都没有呢!')
+		self.Tip3.SetLabel('拥有一万对成语的接龙,你能顶得住吗?')
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		Picture_Net1 = wx.Image(
-			"./pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Net2 = wx.Image(
-			"./pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Net3 = wx.Image(
-			"./pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Net4 = wx.Image(
-			"./pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 		Picture_File1 = wx.Image(
-			"./pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_File2 = wx.Image(
-			"./pictures/文件-开启30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/文件-开启20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_File3 = wx.Image(
-			"./pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_File4 = wx.Image(
-			"./pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 		Picture_Star1 = wx.Image(
-			"./pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Star2 = wx.Image(
-			"./pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Star3 = wx.Image(
-			"./pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		Picture_Star4 = wx.Image(
-			"./pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 		Picture_Help = wx.Image(
-			"./pictures/帮助30X30.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+			"./pictures/帮助20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 		self.Net1.SetBitmap(Picture_Net1)
 		self.Net2.SetBitmap(Picture_Net2)
@@ -692,8 +671,6 @@ class CalcFrame(GUI.Main):
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		self.Refresh()
-
-		resize(self)
 
 	def G_3(self, event):
 		''' 3号功能分区-英语 '''
@@ -867,12 +844,12 @@ class CalcFrame(GUI.Main):
 		self.G8.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("元素周期表")
-		self.T_F2.SetLabel("方程式配平")
+		self.T_F2.SetLabel("NONE")
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('经典门捷列夫元素周期表')
-		self.Tip2.SetLabel('未完成,请注意')
+		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
@@ -907,7 +884,6 @@ class CalcFrame(GUI.Main):
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		self.Refresh()
-		resize(self)
 
 	def G_10(self, event):
 		''' 10号功能分区-通用 '''
@@ -1092,6 +1068,9 @@ def start(self):
 		self.info_text3.Show(buer)
 		self.info_text4.Show(buer)
 
+		self.Line1.Show(buer)
+		self.Line2.Show(buer)
+
 		self.Space_topic.Show(False)
 		self.Topic.Show(False)
 		self.Sub1.Show(False)
@@ -1162,6 +1141,8 @@ def start(self):
 		self.info_text3.Show(buer)
 		self.info_text4.Show(buer)
 
+		self.Line1.Show(buer)
+		self.Line2.Show(buer)
 
 		setup = 1
 
@@ -1210,6 +1191,4 @@ def Set_Sidebar(self):
 
 if __name__ == "__main__":
 	check = 'unrunning'  # 不经引导程序启动时的自我设置
-	global ppt_check
-	ppt_check = 0
 	main(check)

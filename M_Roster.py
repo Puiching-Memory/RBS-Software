@@ -7,7 +7,7 @@ import time
 import win32api, win32con, win32gui
 import os
 from PIL import Image, ImageFont, ImageDraw
-import threading
+import getpass
 
 import GUI_Roster
 
@@ -21,12 +21,17 @@ class CalcFrame(GUI_Roster.Main):
 		# 定义主函数
 		GUI_Roster.Main.__init__(self, parent)
 
-		global choise, X, Y, S
+		global choise, X, Y, S, BackGround_img
 		choise = 1
 		load(self)
 		X = self.PlaceX.GetValue()
 		Y = self.PlaceY.GetValue()
 		S = self.Space.GetValue()
+
+		BackGround_img = Image.open(Get_Background_Path())
+		BackGround_img.save('./Cache/BackGround_img.jpg')
+		
+
 
 	def save(self, event):
 		# 触发器: 当输入时执行,保存修改
@@ -46,7 +51,7 @@ class CalcFrame(GUI_Roster.Main):
 
 	def Ticks(self, event):
 		localtime = time.asctime(time.localtime(time.time()))
-		im1 = Image.open("./校徽3.jpg")
+		im1 = Image.open('./Cache/BackGround_img.jpg')
 		font = ImageFont.truetype("Astrolab.ttf", 13)
 		draw = ImageDraw.Draw(im1)
 
@@ -135,7 +140,7 @@ class CalcFrame(GUI_Roster.Main):
 	def Manual(self, event):
 		global X, Y, S
 		localtime = time.asctime(time.localtime(time.time()))
-		im1 = Image.open("./校徽3.jpg")
+		im1 = Image.open('./Cache/BackGround_img.jpg')
 		font = ImageFont.truetype("simhei.ttf", 20)
 		draw = ImageDraw.Draw(im1)
 
@@ -294,5 +299,13 @@ def set():
 	return list0, list1, list2, list3, list4, list5, list6, list7, list8
 
 
+def Get_Background_Path():
+	# Current_Desktop_Background_File
+	CDBF = "C:/Users/" + getpass.getuser() + "/AppData/Roaming/Microsoft/Windows/Themes/CachedFiles"
+	#Current_Desktop_Background
+	CDB = CDBF + "/" + os.listdir(CDBF)[0]
+	return CDB
+
+	
 if __name__ == "__main__":
 	main()

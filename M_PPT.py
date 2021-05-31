@@ -25,6 +25,8 @@ class CalcFrame(GUI_PPT.Main):
 		Y = win32api.GetSystemMetrics(win32con.SM_CYSCREEN)
 		self.Move((X-600)/2,Y-50)
 
+		self.SetTransparent(150)
+
 	def Left( self, event ):
 		mouse = pynput.mouse.Controller()
 		mouse.move(0, -100)
@@ -57,6 +59,8 @@ class CalcFrame(GUI_PPT.Main):
 		keyboard = pynput.keyboard.Controller()
 		keyboard.press(pynput.keyboard.Key.esc)
 		keyboard.release(pynput.keyboard.Key.esc)
+		
+		##self.Destroy()
 
 	def pen(self, event):
 		mouse = pynput.mouse.Controller()
@@ -90,6 +94,13 @@ class CalcFrame(GUI_PPT.Main):
 
 	def Main_quit(self, event):
 		win32gui.EnumWindows(handle_window, None)
+	'''
+	'''
+	def enter(self, event):
+		self.SetTransparent(255)
+
+	def leave(self, event):
+		self.SetTransparent(100)
 	'''
 
 ##############################

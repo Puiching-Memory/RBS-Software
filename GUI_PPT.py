@@ -63,6 +63,8 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Main_quit )
+		self.Bind( wx.EVT_KILL_FOCUS, self.leave )
+		self.Bind( wx.EVT_SET_FOCUS, self.enter )
 		self.Left1.Bind( wx.EVT_BUTTON, self.Left )
 		self.RightClick.Bind( wx.EVT_BUTTON, self.rightcilck )
 		self.B_pen.Bind( wx.EVT_BUTTON, self.pen )
@@ -77,6 +79,12 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, overide them in your derived class
 	def Main_quit( self, event ):
+		event.Skip()
+
+	def leave( self, event ):
+		event.Skip()
+
+	def enter( self, event ):
 		event.Skip()
 
 	def Left( self, event ):

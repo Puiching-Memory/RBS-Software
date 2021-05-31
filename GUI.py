@@ -36,7 +36,7 @@ class Main ( wx.Frame ):
 		self.version.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.version )
-		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"不要孤独地走入那个良夜", wx.DefaultPosition, wx.Size( 400,-1 ), 0 )
+		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"不要孤独地走入那个良夜", wx.DefaultPosition, wx.Size( 400,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Note.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.Note )
@@ -84,7 +84,7 @@ class Main ( wx.Frame ):
 		self.m_toolBar2 = wx.ToolBar( self, wx.ID_ANY, wx.Point( -1,-1 ), wx.Size( 450,25 ), wx.TB_NOALIGN|wx.TB_NODIVIDER|wx.TB_NOICONS|wx.TB_NO_TOOLTIPS )
 		self.m_toolBar2.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 
-		self.G1 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"语文 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G1 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"语文 3", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G1.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
@@ -114,7 +114,7 @@ class Main ( wx.Frame ):
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G7 )
-		self.G8 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"化学 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G8 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"化学 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G8.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G8 )
@@ -134,20 +134,25 @@ class Main ( wx.Frame ):
 
 		bSizer18 = wx.BoxSizer( wx.VERTICAL )
 
-		self.Side1 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,50 ), wx.BORDER_NONE )
+		self.Side1 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 35,88 ), wx.BORDER_NONE )
+		self.Side1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
+
 		bSizer18.Add( self.Side1, 0, wx.RIGHT, 5 )
 
-		self.Side3 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,50 ), wx.BORDER_NONE )
+		self.Side3 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 35,88 ), wx.BORDER_NONE )
 		bSizer18.Add( self.Side3, 0, wx.RIGHT, 5 )
 
-		self.Side2 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,50 ), wx.BORDER_NONE )
+		self.Side2 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 35,88 ), wx.BORDER_NONE )
 		bSizer18.Add( self.Side2, 0, wx.RIGHT, 5 )
 
-		self.Side4 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,50 ), wx.BORDER_NONE )
+		self.Side4 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 35,88 ), wx.BORDER_NONE )
 		bSizer18.Add( self.Side4, 0, wx.RIGHT, 5 )
 
 
 		wSizer8.Add( bSizer18, 1, wx.EXPAND, 5 )
+
+		self.Line1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+		wSizer8.Add( self.Line1, 0, wx.EXPAND|wx.RIGHT, 5 )
 
 		fgSizer1 = wx.FlexGridSizer( 0, 2, 0, 30 )
 		fgSizer1.SetFlexibleDirection( wx.BOTH )
@@ -165,30 +170,30 @@ class Main ( wx.Frame ):
 
 		wSizer81 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Net1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Net1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Net1.SetBitmap( wx.Bitmap( u"pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Net1.SetBitmap( wx.Bitmap( u"pictures/网络-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Net1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer81.Add( self.Net1, 0, wx.ALL, 5 )
 
-		self.File1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.File1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.File1.SetBitmap( wx.Bitmap( u"pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.File1.SetBitmap( wx.Bitmap( u"pictures/文件-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.File1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer81.Add( self.File1, 0, wx.ALL, 5 )
 
-		self.Star1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Star1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Star1.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Star1.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Star1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer81.Add( self.Star1, 0, wx.ALL, 5 )
 
-		self.Help1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Help1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Help1.SetBitmap( wx.Bitmap( u"pictures/帮助30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Help1.SetBitmap( wx.Bitmap( u"pictures/帮助20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Help1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer81.Add( self.Help1, 0, wx.ALL, 5 )
@@ -209,15 +214,14 @@ class Main ( wx.Frame ):
 
 		bSizer3.Add( wSizer2, 1, wx.EXPAND, 5 )
 
-		self.Tip1 = wx.StaticText( self, wx.ID_ANY, u"Tip1", wx.DefaultPosition, wx.Size( 200,25 ), wx.ST_ELLIPSIZE_END )
-		self.Tip1.Wrap( -1 )
-
-		self.Tip1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Tip1 = wx.Button( self, wx.ID_ANY, u"Tip1", wx.DefaultPosition, wx.Size( 200,25 ), wx.BORDER_NONE|wx.BU_LEFT )
+		self.Tip1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.Tip1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		bSizer3.Add( self.Tip1, 0, wx.ALL, 5 )
 
 
-		fgSizer1.Add( bSizer3, 1, wx.EXPAND, 5 )
+		fgSizer1.Add( bSizer3, 0, 0, 5 )
 
 		bSizer31 = wx.BoxSizer( wx.VERTICAL )
 
@@ -231,30 +235,30 @@ class Main ( wx.Frame ):
 
 		wSizer811 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Net2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Net2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Net2.SetBitmap( wx.Bitmap( u"pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Net2.SetBitmap( wx.Bitmap( u"pictures/网络-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Net2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer811.Add( self.Net2, 0, wx.ALL, 5 )
 
-		self.File2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.File2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.File2.SetBitmap( wx.Bitmap( u"pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.File2.SetBitmap( wx.Bitmap( u"pictures/文件-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.File2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer811.Add( self.File2, 0, wx.ALL, 5 )
 
-		self.Star2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Star2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Star2.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Star2.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Star2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer811.Add( self.Star2, 0, wx.ALL, 5 )
 
-		self.Help2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Help2 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Help2.SetBitmap( wx.Bitmap( u"pictures/帮助30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Help2.SetBitmap( wx.Bitmap( u"pictures/帮助20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Help2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer811.Add( self.Help2, 0, wx.ALL, 5 )
@@ -275,10 +279,9 @@ class Main ( wx.Frame ):
 
 		bSizer31.Add( wSizer21, 1, wx.EXPAND, 5 )
 
-		self.Tip2 = wx.StaticText( self, wx.ID_ANY, u"Tip2", wx.DefaultPosition, wx.Size( 200,25 ), 0 )
-		self.Tip2.Wrap( -1 )
-
-		self.Tip2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Tip2 = wx.Button( self, wx.ID_ANY, u"Tip2", wx.DefaultPosition, wx.Size( 200,25 ), wx.BORDER_NONE|wx.BU_LEFT )
+		self.Tip2.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.Tip2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		bSizer31.Add( self.Tip2, 0, wx.ALL, 5 )
 
@@ -297,30 +300,30 @@ class Main ( wx.Frame ):
 
 		wSizer812 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Net3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Net3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Net3.SetBitmap( wx.Bitmap( u"pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Net3.SetBitmap( wx.Bitmap( u"pictures/网络-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Net3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer812.Add( self.Net3, 0, wx.ALL, 5 )
 
-		self.File3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.File3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.File3.SetBitmap( wx.Bitmap( u"pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.File3.SetBitmap( wx.Bitmap( u"pictures/文件-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.File3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer812.Add( self.File3, 0, wx.ALL, 5 )
 
-		self.Star3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Star3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Star3.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Star3.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Star3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer812.Add( self.Star3, 0, wx.ALL, 5 )
 
-		self.Help3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Help3 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Help3.SetBitmap( wx.Bitmap( u"pictures/帮助30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Help3.SetBitmap( wx.Bitmap( u"pictures/帮助20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Help3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer812.Add( self.Help3, 0, wx.ALL, 5 )
@@ -341,10 +344,9 @@ class Main ( wx.Frame ):
 
 		bSizer32.Add( wSizer22, 1, wx.EXPAND, 5 )
 
-		self.Tip3 = wx.StaticText( self, wx.ID_ANY, u"Tip3", wx.DefaultPosition, wx.Size( 200,25 ), 0 )
-		self.Tip3.Wrap( -1 )
-
-		self.Tip3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Tip3 = wx.Button( self, wx.ID_ANY, u"Tip3", wx.DefaultPosition, wx.Size( 200,25 ), wx.BORDER_NONE|wx.BU_LEFT )
+		self.Tip3.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.Tip3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		bSizer32.Add( self.Tip3, 0, wx.ALL, 5 )
 
@@ -363,30 +365,30 @@ class Main ( wx.Frame ):
 
 		wSizer813 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Net4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Net4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Net4.SetBitmap( wx.Bitmap( u"pictures/网络-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Net4.SetBitmap( wx.Bitmap( u"pictures/网络-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Net4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer813.Add( self.Net4, 0, wx.ALL, 5 )
 
-		self.File4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.File4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.File4.SetBitmap( wx.Bitmap( u"pictures/文件-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.File4.SetBitmap( wx.Bitmap( u"pictures/文件-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.File4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer813.Add( self.File4, 0, wx.ALL, 5 )
 
-		self.Star4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Star4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Star4.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Star4.SetBitmap( wx.Bitmap( u"pictures/收藏-关闭20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Star4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer813.Add( self.Star4, 0, wx.ALL, 5 )
 
-		self.Help4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 30,30 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Help4 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
-		self.Help4.SetBitmap( wx.Bitmap( u"pictures/帮助30X30.png", wx.BITMAP_TYPE_ANY ) )
+		self.Help4.SetBitmap( wx.Bitmap( u"pictures/帮助20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Help4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer813.Add( self.Help4, 0, wx.ALL, 5 )
@@ -404,21 +406,23 @@ class Main ( wx.Frame ):
 		self.B_F4 = wx.Button( self, wx.ID_ANY, u"<(￣︶￣)↗[GO!]", wx.DefaultPosition, wx.Size( 160,50 ), wx.BORDER_NONE )
 		wSizer23.Add( self.B_F4, 0, 0, 5 )
 
+		self.Tip4 = wx.Button( self, wx.ID_ANY, u"Tip4", wx.DefaultPosition, wx.Size( 200,25 ), wx.BORDER_NONE|wx.BU_LEFT )
+		self.Tip4.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.Tip4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
+
+		wSizer23.Add( self.Tip4, 0, wx.ALL, 5 )
+
 
 		bSizer33.Add( wSizer23, 1, wx.EXPAND, 5 )
-
-		self.Tip4 = wx.StaticText( self, wx.ID_ANY, u"Tip4", wx.DefaultPosition, wx.Size( 200,25 ), 0 )
-		self.Tip4.Wrap( -1 )
-
-		self.Tip4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-
-		bSizer33.Add( self.Tip4, 0, wx.ALL, 5 )
 
 
 		fgSizer1.Add( bSizer33, 1, wx.EXPAND, 5 )
 
 
 		wSizer8.Add( fgSizer1, 1, wx.EXPAND, 5 )
+
+		self.Line2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+		wSizer8.Add( self.Line2, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 
 		bSizer181 = wx.BoxSizer( wx.VERTICAL )
 
