@@ -22,14 +22,14 @@ class CalcFrame(GUI_Preparation.Main):
         GUI_Preparation.Main.__init__(self, parent)
         # 初始化设置
         # self.Text.SetFont(wx.Font(8,wx.FONTFAMILY_DEFAULT,wx.FONTSTYLE_NORMAL,wx.FONTWEIGHT_NORMAL,False,'./FZHTJW.TTF'))
+        self.Timer.Start()
 
     def Time_Tick(self, event):
         self.Text.SetLabel("加载主程序")
         import Main
 
-        self.Bar.SetSize(100,5)
+        self.Bar.SetSize(40,5)
         self.Bar.SetLabel('20%')
-
         self.Text.SetLabel("加载必需库文件")
         """
                         import sys
@@ -38,7 +38,7 @@ class CalcFrame(GUI_Preparation.Main):
                         import psutil
                         """
         wx.MilliSleep(100)
-        self.Bar.SetSize(200,5)
+        self.Bar.SetSize(80,5)
         self.Bar.SetLabel('40%')
 
         self.Text.SetLabel("加载功能文件")
@@ -52,11 +52,11 @@ class CalcFrame(GUI_Preparation.Main):
                         import Gene
                         """
         wx.MilliSleep(100)
-        self.Bar.SetSize(250,5)
+        self.Bar.SetSize(90,5)
         self.Bar.SetLabel('45%')
 
         wx.MilliSleep(200)
-        self.Bar.SetSize(300,5)
+        self.Bar.SetSize(120,5)
         self.Bar.SetLabel('60%')
         self.Text.SetLabel("校验文件完整性")
         ###############################
@@ -93,7 +93,7 @@ class CalcFrame(GUI_Preparation.Main):
         ##############################
 
         wx.MilliSleep(500)
-        self.Bar.SetSize(490,5)
+        self.Bar.SetSize(190,5)
         self.Bar.SetLabel('100%')
 
         self.Timer.Stop()
