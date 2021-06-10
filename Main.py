@@ -4,6 +4,12 @@
 # Power by ZK2021
 # Puiching Memory™
 # python version: 3.8.8
+#  ____  ____ ____       ____         __ _
+# |  _ \| __ ) ___|     / ___|  ___  / _| |___      ____ _ _ __ ___
+# | |_) |  _ \___ \ ____\___ \ / _ \| |_| __\ \ /\ / / _` | '__/ _ \
+# |  _ <| |_) |__) |_____|__) | (_) |  _| |_ \ V  V / (_| | | |  __/
+# |_| \_\____/____/     |____/ \___/|_|  \__| \_/\_/ \__,_|_|  \___|
+#
 ###########################################################################
 
 
@@ -47,13 +53,13 @@ import logging.handlers
 # 核心库
 import wx
 import GUI
+import Plug_in
+import User
 
 ###########################################################################
 # GUI的函数桥接
 # Class Main
 ###########################################################################
-
-
 class CalcFrame(GUI.Main):
 	def __init__(self, parent):
 		''' 定义主函数(初始化) '''
@@ -64,29 +70,34 @@ class CalcFrame(GUI.Main):
 		CPU_text = 'undefined'
 		RAM_text = 'undefiend'
 
-		cfg = configparser.ConfigParser()# 读取设置文件
+		cfg = configparser.ConfigParser()  # 读取设置文件
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
+		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
 
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
-		Main_State = 0 # 按下按钮后记录,正常值为1~9,0为初始化值
 		FUN_State = 'NONE'
 		Hover = 0  # 检测当前Hover的按钮是哪个
-		color_Hover = '#A65F00' # 顶部按钮被Hover时呈现的颜色
+		color_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
 		Color_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
 		# 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
 		self.version.SetLabel('#version ' + version)
 		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
-		start(self) # 初始化界面布局函数(纯操作,无计算)
+		start(self)  # 初始化界面布局函数(纯操作,无计算)
 
-		if last == 'NONE':
-			return
-		else:
-			self.Fast1.SetLabel(last)
+		if last != 'NONE':
+			self.Fast.SetLabel(last)
 
-		##self.SetTransparent(200)
+		if Main_State == 'NONE':
+			Main_State = 0
+		
+		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255,255,255,255):
+			self.Fast.SetBackgroundColour(wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
+
+		##self.SetTransparent(200) # 设置窗口透明度
+		##self.SetCursor(wx.StockCursor(6)) # 设置窗口光标
 
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
@@ -95,7 +106,7 @@ class CalcFrame(GUI.Main):
 
 	def Sacc(self, event):
 		''' 主界面背景图片绘制 '''
-		if Main_State == 0:
+		if setup == 1:
 			dc = event.GetDC()
 			dc.DrawBitmap(wx.Bitmap("SEA.jpg"), 0, 0)
 		else:
@@ -104,22 +115,29 @@ class CalcFrame(GUI.Main):
 
 	def Close(self, event):
 		''' windows_关闭程序 '''
+		cfg.set('History', 'LAST', FUN_State)
+		cfg.set('History', 'MAINSTATE', str(Main_State))
+		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
+		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(
 			str('windows quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
-		cfg.set('History', 'LAST', FUN_State)
-		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 关闭程序
 		sys.exit(0)
 
 	def Quit(self, event):
 		''' self_关闭程序 '''
+		cfg.set('History', 'LAST', FUN_State)
+		cfg.set('History', 'MAINSTATE', str(Main_State))
+		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
+		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
-		cfg.set('History', 'LAST', FUN_State)
-		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 关闭程序
 		sys.exit(0)
+
+	def Ico(self, event):
+		print(self.IsIconized())
 
 	def Cmd(self, event):
 		# 打开Cmd
@@ -145,7 +163,22 @@ class CalcFrame(GUI.Main):
 		''' 返回主界面 '''
 		Home(self)
 
-###########################################################################
+	def Plug_in(self, event):
+		Plug_in.main()
+
+	def User(self, event):
+		User.main()
+
+	def Fast_on(self, event):
+		check_name = ['中文转拼音', '简-繁转换', '成语接龙', '', '圆周率', '', '', '', '大小写转换', '', '', '', '下载器', 'PPT出图', 'BMI', 'DDT', '',
+					  '', '', '', '', '', '', '', '', '', '', '', '元素周期表', '', '', '', '基因库', '', '', '', '随机数生成器', '进制转换', '值日表', '计时器']
+		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None, M_Pi, None, None, None, M_Capslook, None, None, None, M_Download, M_PPTNG, M_BMI, M_DDT, None, None,
+						None, None, None, None, None, None, None, None, None, None, M_Element, None, None, None, M_Gene, None, None, None, M_Roll, M_Base_conversion, M_Roster, M_Timer]
+		for (name, program) in zip(check_name, into_program):
+			if name == self.Fast.GetLabel():
+				program.main()
+
+	#---------------------------------------------------------------------
 
 	def Time_Tick(self, event):
 		''' 计时器-资源监视器 '''
@@ -181,7 +214,8 @@ class CalcFrame(GUI.Main):
 			event.Skip()
 			##print('no such process...')
 
-###########################################################################
+	#------------------------------------------------------------------------
+
 	def Hover1(self, event):
 		''' 光标经过，接触到按钮时（功能按钮），改变提示标签文本 '''
 		self.Bottom_Bar1.SetLabel('Function1')
@@ -361,7 +395,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 210
 
-###########################################################################
+	#---------------------------------------------------------------------
 
 	def Leave(self, event):
 		''' 通用,离开事件 '''
@@ -489,7 +523,7 @@ class CalcFrame(GUI.Main):
 		self.B_Quit.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
-###########################################################################
+	#-----------------------------------------------------------------------
 
 	def Function1(self, event):
 		''' 点击事件_按钮1 '''
@@ -594,7 +628,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 10:
 			M_Timer.main()
 
-###########################################################################
+	#--------------------------------------------------------------------
 
 	def G_1(self, event):
 		''' 1号功能分区-语文 '''
@@ -627,45 +661,8 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('拥有一万对成语的接龙,你能顶得住吗?')
 		self.Tip4.SetLabel('什么都没有呢!')
 
-		Picture_Net1 = wx.Image(
-			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Net2 = wx.Image(
-			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Net3 = wx.Image(
-			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Net4 = wx.Image(
-			"./pictures/网络-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-
-		Picture_File1 = wx.Image(
-			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_File2 = wx.Image(
-			"./pictures/文件-开启20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_File3 = wx.Image(
-			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_File4 = wx.Image(
-			"./pictures/文件-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-
-		Picture_Star1 = wx.Image(
-			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Star2 = wx.Image(
-			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Star3 = wx.Image(
-			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-		Picture_Star4 = wx.Image(
-			"./pictures/收藏-关闭20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-
-		Picture_Help = wx.Image(
-			"./pictures/帮助20.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-
-		self.Net1.SetBitmap(Picture_Net1)
-		self.Net2.SetBitmap(Picture_Net2)
-		self.Net3.SetBitmap(Picture_Net3)
-		self.Net4.SetBitmap(Picture_Net4)
-
-		self.File1.SetBitmap(Picture_File1)
-		self.File2.SetBitmap(Picture_File2)
-		self.File3.SetBitmap(Picture_File3)
-		self.File4.SetBitmap(Picture_File4)
+		# 功能主标题下方的四个按钮的设置(每四个一组,网络,文件)
+		Function_icon(self, 0, 0, 0, 0, 1, 1, 1, 0)
 
 		self.Refresh()  # 刷新屏幕
 
@@ -698,6 +695,8 @@ class CalcFrame(GUI.Main):
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
+
+		Function_icon(self, 0, 0, 0, 0, 1, 0, 0, 0)
 
 		self.Refresh()
 
@@ -732,6 +731,8 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+
 		self.Refresh()
 
 	def G_4(self, event):
@@ -764,6 +765,8 @@ class CalcFrame(GUI.Main):
 		self.Tip2.SetLabel('将选定文件夹内的所有PPT导出为图片')
 		self.Tip3.SetLabel('BMI计算器,简单,易用,但没人关心这个')
 		self.Tip4.SetLabel('(DDT)破环性实验功能，谨慎使用，任何造成的损失后果自负')
+
+		Function_icon(self, 1, 0, 0, 1, 1, 1, 0, 0)
 
 		self.Refresh()
 
@@ -798,6 +801,8 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+
 		self.Refresh()
 
 	def G_6(self, event):
@@ -829,6 +834,8 @@ class CalcFrame(GUI.Main):
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
+
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
 
 		self.Refresh()
 
@@ -862,6 +869,8 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+
 		self.Refresh()
 
 	def G_8(self, event):
@@ -893,6 +902,8 @@ class CalcFrame(GUI.Main):
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
+
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
 
 		self.Refresh()
 
@@ -926,6 +937,8 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
+		Function_icon(self, 0, 0, 0, 0, 1, 0, 0, 0)
+
 		self.Refresh()
 
 	def G_10(self, event):
@@ -948,7 +961,7 @@ class CalcFrame(GUI.Main):
 		self.G10.SetBackgroundColour(color_Main)
 		self.G10.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("随机点名")
+		self.T_F1.SetLabel("随机数生成器")
 		self.T_F2.SetLabel("进制转换")
 		self.T_F3.SetLabel("值日表")
 		self.T_F4.SetLabel("计时器")
@@ -958,8 +971,13 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
 		self.Tip4.SetLabel('简单的计时器,真的只是计时')
 
-		self.Refresh()
+		Function_icon(self, 0, 0, 0, 0, 0, 0, 1, 0)
 
+		self.Refresh()
+###########################################################################
+# 外置Class
+# Other Class
+###########################################################################
 ###########################################################################
 # 主函数
 # def main
@@ -1063,6 +1081,7 @@ def proc_exist(process_name):
 def start(self):
 	global setup
 	if setup == 1:
+		setup = 2
 		buer = True
 		self.T_F1.Show(buer)
 		self.T_F2.Show(buer)
@@ -1126,15 +1145,13 @@ def start(self):
 		self.Topic.Show(False)
 		self.Sub1.Show(False)
 		self.Sub2.Show(False)
-		self.Fast1.Show(False)
-		self.Fast2.Show(False)
-		self.Fast3.Show(False)
-		self.Fast4.Show(False)
+		self.Fast.Show(False)
+		self.Fast_Star1.Show(False)
+		self.Fast_Star2.Show(False)
+		self.Fast_Star3.Show(False)
 
 		resize(self)
 		self.SetBackgroundColour('White')
-
-		setup = 2
 
 	elif setup == 0:
 		buer = False
@@ -1203,6 +1220,14 @@ def start(self):
 
 
 def Home(self):
+	global setup, Main_State, color_Hover
+	color_Hover = '#A65F00'
+
+	cfg.set('History', 'LAST', FUN_State)
+	cfg.set('History', 'MAINSTATE', str(Main_State))
+	cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
+	cfg.write(open('./cfg/main.cfg', 'w'))
+
 	buer = False
 	self.T_F1.Show(buer)
 	self.T_F2.Show(buer)
@@ -1266,13 +1291,13 @@ def Home(self):
 	self.Topic.Show(True)
 	self.Sub1.Show(True)
 	self.Sub2.Show(True)
-	self.Fast1.Show(True)
-	self.Fast2.Show(True)
-	self.Fast3.Show(True)
-	self.Fast4.Show(True)
-	
-	botm = wx.Colour(255,201,60)
-	top = wx.Colour(242,171,57)
+	self.Fast.Show(True)
+	self.Fast_Star1.Show(True)
+	self.Fast_Star2.Show(True)
+	self.Fast_Star3.Show(True)
+
+	botm = wx.Colour(255, 201, 60)
+	top = wx.Colour(242, 171, 57)
 
 	self.Bottom_Bar1.SetBackgroundColour(botm)
 	self.Bottom_Bar2.SetBackgroundColour(botm)
@@ -1289,21 +1314,79 @@ def Home(self):
 	self.B_About.SetBackgroundColour(top)
 	self.B_Update.SetBackgroundColour(top)
 
-	self.Fast1.SetLabel(FUN_State)
+	self.Fast.SetLabel(FUN_State)
 
 	Color_clean(self)
 
-	global setup, Main_State, color_Hover
-	setup = 1
-	Main_State = 0
-	color_Hover = '#A65F00'
+	last = cfg.get('History', 'LAST')
+		
+	if last != 'NONE':
+		self.Fast.SetLabel(last)
+	else:
+		self.Fast.SetLabel('NONE')
 
+	if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255,255,255,255):
+		self.Fast.SetBackgroundColour(wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
+
+	Main_State = 0
+	setup = 1
+	
 	self.Refresh()
 
 
 def resize(self):
 	self.SetSize(751, 450)
 	self.SetSize(750, 450)
+
+
+def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, LocalFile2, LocalFile3, LocalFile4):
+	Internet_ON = wx.Image("./pictures/网络-开启20.png",
+						   wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+	Internet_OFF = wx.Image("./pictures/网络-关闭20.png",
+							wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+	File_ON = wx.Image("./pictures/文件-开启20.png",
+					   wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+	File_OFF = wx.Image("./pictures/文件-关闭20.png",
+						wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+	if Internet1 == 1:
+		self.Net1.SetBitmap(Internet_ON)
+	else:
+		self.Net1.SetBitmap(Internet_OFF)
+
+	if Internet2 == 1:
+		self.Net2.SetBitmap(Internet_ON)
+	else:
+		self.Net2.SetBitmap(Internet_OFF)
+
+	if Internet3 == 1:
+		self.Net3.SetBitmap(Internet_ON)
+	else:
+		self.Net3.SetBitmap(Internet_OFF)
+
+	if Internet4 == 1:
+		self.Net4.SetBitmap(Internet_ON)
+	else:
+		self.Net4.SetBitmap(Internet_OFF)
+
+	if LocalFile1 == 1:
+		self.File1.SetBitmap(File_ON)
+	else:
+		self.File1.SetBitmap(File_OFF)
+
+	if LocalFile2 == 1:
+		self.File2.SetBitmap(File_ON)
+	else:
+		self.File2.SetBitmap(File_OFF)
+
+	if LocalFile3 == 1:
+		self.File3.SetBitmap(File_ON)
+	else:
+		self.File3.SetBitmap(File_OFF)
+
+	if LocalFile4 == 1:
+		self.File4.SetBitmap(File_ON)
+	else:
+		self.File4.SetBitmap(File_OFF)
 
 
 if __name__ == "__main__":

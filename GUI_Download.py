@@ -26,29 +26,32 @@ class Main ( wx.Frame ):
 
 		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 300,-1 ), 0 )
+		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 300,-1 ), wx.TE_AUTO_URL )
 		wSizer1.Add( self.input1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.URL = wx.StaticText( self, wx.ID_ANY, u"URL", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.URL = wx.StaticText( self, wx.ID_ANY, u"URL", wx.DefaultPosition, wx.Size( 30,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.URL.Wrap( -1 )
 
 		wSizer1.Add( self.URL, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
-		bSizer2.Add( wSizer1, 1, wx.EXPAND, 5 )
+		bSizer2.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
+		self.Picker = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.Size( 340,-1 ), wx.DIRP_DEFAULT_STYLE )
+		wSizer2.Add( self.Picker, 0, wx.ALL, 5 )
 
-		bSizer2.Add( wSizer2, 1, wx.EXPAND, 5 )
+
+		bSizer2.Add( wSizer2, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.Tip = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,20 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Tip.Wrap( -1 )
+
+		bSizer2.Add( self.Tip, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.m_button1 = wx.Button( self, wx.ID_ANY, u"Download", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer2.Add( self.m_button1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.Space1 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,100 ), 0 )
-		self.Space1.Wrap( -1 )
-
-		bSizer2.Add( self.Space1, 0, wx.ALL, 5 )
 
 
 		self.SetSizer( bSizer2 )

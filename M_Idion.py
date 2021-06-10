@@ -5,8 +5,6 @@ import wx
 
 import random
 
-from wx.core import LANGUAGE_MACEDONIAN
-
 import GUI_Idion
 
 ##############################

@@ -502,7 +502,7 @@ class Main ( wx.Frame ):
 		bSizer181.Add( self.Control, 0, wx.ALIGN_RIGHT, 5 )
 
 
-		wSizer8.Add( bSizer181, 1, wx.EXPAND, 5 )
+		wSizer8.Add( bSizer181, 0, 0, 5 )
 
 
 		bSizer8.Add( wSizer8, 1, wx.EXPAND, 5 )
@@ -531,20 +531,23 @@ class Main ( wx.Frame ):
 
 		wSizer11 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Fast1 = wx.Button( self, wx.ID_ANY, u"NONE", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast1, 0, wx.ALL, 5 )
+		self.Fast = wx.Button( self, wx.ID_ANY, u"NONE", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.Fast.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Fast.SetBackgroundColour( wx.Colour( 255, 128, 0 ) )
+
+		wSizer11.Add( self.Fast, 0, wx.ALL, 5 )
 
 		self.Line_Last = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
 		wSizer11.Add( self.Line_Last, 0, wx.EXPAND |wx.ALL, 5 )
 
-		self.Fast2 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast2, 0, wx.ALL, 5 )
+		self.Fast_Star1 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		wSizer11.Add( self.Fast_Star1, 0, wx.ALL, 5 )
 
-		self.Fast3 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast3, 0, wx.ALL, 5 )
+		self.Fast_Star2 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		wSizer11.Add( self.Fast_Star2, 0, wx.ALL, 5 )
 
-		self.Fast4 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast4, 0, wx.ALL, 5 )
+		self.Fast_Star3 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		wSizer11.Add( self.Fast_Star3, 0, wx.ALL, 5 )
 
 
 		bSizer63.Add( wSizer11, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -628,6 +631,7 @@ class Main ( wx.Frame ):
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.Bind( wx.EVT_ERASE_BACKGROUND, self.Sacc )
+		self.Bind( wx.EVT_ICONIZE, self.Ico )
 		self.B_Log.Bind( wx.EVT_BUTTON, self.Log )
 		self.B_Log.Bind( wx.EVT_ENTER_WINDOW, self.H_LOG )
 		self.B_Log.Bind( wx.EVT_LEAVE_WINDOW, self.L_LOG )
@@ -679,8 +683,10 @@ class Main ( wx.Frame ):
 		self.Side1.Bind( wx.EVT_BUTTON, self.HOME )
 		self.Side1.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L1 )
 		self.Side1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L1 )
+		self.Side2.Bind( wx.EVT_BUTTON, self.Plug_in )
 		self.Side2.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L2 )
 		self.Side2.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L2 )
+		self.Side3.Bind( wx.EVT_BUTTON, self.User )
 		self.Side3.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L3 )
 		self.Side3.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L3 )
 		self.Side4.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L4 )
@@ -721,6 +727,10 @@ class Main ( wx.Frame ):
 		self.B_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.Tip4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.Tip4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Fast.Bind( wx.EVT_BUTTON, self.Fast_on )
+		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
+		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
+		self.Fast_Star3.Bind( wx.EVT_BUTTON, self.FStar3 )
 		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=MainTimer )
 		self.Bind( wx.EVT_TIMER, self.Update_Variables, id=VarTimer )
 		self.Bind( wx.EVT_TIMER, self.PPT_check, id=PPT_TIMER )
@@ -734,6 +744,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Sacc( self, event ):
+		event.Skip()
+
+	def Ico( self, event ):
 		event.Skip()
 
 	def Log( self, event ):
@@ -889,10 +902,16 @@ class Main ( wx.Frame ):
 	def Leave_L1( self, event ):
 		event.Skip()
 
+	def Plug_in( self, event ):
+		event.Skip()
+
 	def Hover_L2( self, event ):
 		event.Skip()
 
 	def Leave_L2( self, event ):
+		event.Skip()
+
+	def User( self, event ):
 		event.Skip()
 
 	def Hover_L3( self, event ):
@@ -960,6 +979,18 @@ class Main ( wx.Frame ):
 
 
 
+
+	def Fast_on( self, event ):
+		event.Skip()
+
+	def FStar1( self, event ):
+		event.Skip()
+
+	def FStar2( self, event ):
+		event.Skip()
+
+	def FStar3( self, event ):
+		event.Skip()
 
 	def Time_Tick( self, event ):
 		event.Skip()

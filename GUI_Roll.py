@@ -38,7 +38,7 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.MIN = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, 0, 10, 0 )
+		self.MIN = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, -999999, 999999, 0 )
 		wSizer1.Add( self.MIN, 0, wx.ALL, 5 )
 
 		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"最大值:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -46,24 +46,28 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.MAX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, 0, 10, 0 )
+		self.MAX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, -999999, 999999, 10 )
 		wSizer1.Add( self.MAX, 0, wx.ALL, 5 )
 
-		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"次数:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"个数:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText5.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_spinCtrl3 = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, 0, 10, 0 )
-		wSizer1.Add( self.m_spinCtrl3, 0, wx.ALL, 5 )
+		self.NUM = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, 1, 999999, 1 )
+		wSizer1.Add( self.NUM, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"重复", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer2.Add( self.m_checkBox1, 0, wx.ALL, 5 )
+		self.Retry = wx.CheckBox( self, wx.ID_ANY, u"重复", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Retry.SetValue(True)
+		wSizer2.Add( self.Retry, 0, wx.ALL, 5 )
+
+		self.Enter = wx.CheckBox( self, wx.ID_ANY, u"换行", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer2.Add( self.Enter, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( wSizer2, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -72,6 +76,9 @@ class Main ( wx.Frame ):
 		self.m_button1.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
 
 		bSizer1.Add( self.m_button1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.Out = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 500,200 ), wx.TE_DONTWRAP|wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer1.Add( self.Out, 0, wx.ALL, 5 )
 
 
 		self.SetSizer( bSizer1 )

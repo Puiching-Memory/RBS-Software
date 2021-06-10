@@ -42,19 +42,19 @@ class Main ( wx.Frame ):
 
 		bSizer4.Add( self.Version, 0, wx.ALL, 5 )
 
-		self.m_staticText15 = wx.StaticText( self, wx.ID_ANY, u"广州市培正中学-悦社-张凯的作品\nPower by @ZK2021\nASCE || Puiching Memory", wx.DefaultPosition, wx.Size( 200,60 ), 0 )
+		self.m_staticText15 = wx.StaticText( self, wx.ID_ANY, u"广州市培正中学-悦社-张凯的作品\n©2021 ZK2021. All rights reserved.", wx.DefaultPosition, wx.Size( 200,35 ), 0 )
 		self.m_staticText15.Wrap( -1 )
 
-		self.m_staticText15.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		self.m_staticText15.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
 		self.m_staticText15.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 
 		bSizer4.Add( self.m_staticText15, 0, wx.ALL, 5 )
 
-		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"Hello, this is puiching memory project team. Puiching memory is a multi breadth, experience oriented (Guangzhou Peizheng middle school) series derivative (cultural and creative) project. In essence, it is the form of homework (general technology course). Peizheng people hope that in 2021 we can all look back and look forward together.\n\n©2021 ZK2021. All rights reserved.", wx.DefaultPosition, wx.Size( 200,180 ), 0 )
+		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"When we pay attention to space, we are also looking for our own origin. Our story is the story of the universe, because we are the real children of stars. Every atom and molecule injected into our body is the whole history of the universe from the big bang to now", wx.DefaultPosition, wx.Size( 200,210 ), 0 )
 		self.m_staticText17.Wrap( -1 )
 
 		self.m_staticText17.SetFont( wx.Font( 7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
-		self.m_staticText17.SetForegroundColour( wx.Colour( 46, 46, 46 ) )
+		self.m_staticText17.SetForegroundColour( wx.Colour( 86, 86, 86 ) )
 
 		bSizer4.Add( self.m_staticText17, 0, wx.ALL, 5 )
 
@@ -66,7 +66,9 @@ class Main ( wx.Frame ):
 
 		bSizer4.Add( self.Text, 0, wx.ALL, 5 )
 
-		self.Bar = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 1,5 ), wx.BORDER_NONE )
+		self.Bar = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 1,8 ), wx.BORDER_NONE )
+		self.Bar.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		self.Bar.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bar.SetBackgroundColour( wx.Colour( 255, 128, 0 ) )
 
 		bSizer4.Add( self.Bar, 0, wx.RIGHT|wx.LEFT, 5 )
@@ -74,18 +76,12 @@ class Main ( wx.Frame ):
 
 		wSizer20.Add( bSizer4, 0, 0, 5 )
 
-		self.m_button34 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 370,400 ), wx.BORDER_NONE )
+		self.m_button34 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 380,400 ), wx.BORDER_NONE )
 
 		self.m_button34.SetBitmap( wx.Bitmap( u"pictures/start-V2 370X400(white).png", wx.BITMAP_TYPE_ANY ) )
 		self.m_button34.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer20.Add( self.m_button34, 0, 0, 5 )
-
-		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
-		wSizer20.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
-
-		self.m_staticline21 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
-		wSizer20.Add( self.m_staticline21, 0, wx.EXPAND|wx.TOP|wx.BOTTOM, 5 )
 
 
 		bSizer3.Add( wSizer20, 0, 0, 5 )

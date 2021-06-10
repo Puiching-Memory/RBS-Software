@@ -1,47 +1,75 @@
-import sys
-import os
-import sys
-import io
-import datetime
-def create_detail_day():
- '''
- :return:
- '''
- # 年-月-日
- # daytime = datetime.datetime.now().strftime('day'+'%Y-%m-%d')
- # 年_月_日
- daytime = datetime.datetime.now().strftime('day'+'%Y_%m_%d')
- # 时：分：秒
- # hourtime = datetime.datetime.now().strftime("%H:%M:%S")
- # hourtime = datetime.datetime.now().strftime('time' + "%H_%M_%S")
- detail_time = daytime
- # print(daytime + "-" + hourtime)
- # detail_time = daytime + "__" + hourtime
- return detail_time
-def make_print_to_file(path='./'):
- '''
-  example:
- use make_print_to_file() , and the all the information of funtion print , will be write in to a log file
- :param path: the path to save print information
- :return:
- '''
- class Logger(object):
-  def __init__(self, filename="Default.log", path="./"):
-   sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-   self.terminal = sys.stdout
-   self.log = open(os.path.join(path, filename), "a", encoding='utf8')
-  def write(self, message):
-   self.terminal.write(message)
-   self.log.write(message)
-  def flush(self):
-   pass
- sys.stdout = Logger(create_detail_day() + '.log', path=path)
- print(create_detail_time().center(60,'*'))
-if __name__ == '__main__':
-  make_print_to_file(path="/home/log/")
-  print('explanation'.center(80, '*'))
-  info1 = '从大到小排序'
-  info2 = ' sort the form large to small'
-  print(info1)
-  print(info2)
-  print('END: explanation'.center(80, '*'))
+import wx
+
+########################################################################
+class MyFileDropTarget(wx.FileDropTarget):
+		""""""
+
+		#----------------------------------------------------------------------
+		def __init__(self, window):
+				"""Constructor"""
+				wx.FileDropTarget.__init__(self)
+				self.window = window
+
+		#----------------------------------------------------------------------
+		def OnDropFiles(self, x, y, filenames):
+				"""
+				When files are dropped, write where they were dropped and then
+				the file paths themselves
+				"""
+				self.window.SetInsertionPointEnd()
+				self.window.updateText("\n%d file(s) dropped at %d,%d:\n" %
+															(len(filenames), x, y))
+				print (filenames)
+				for filepath in filenames:
+						self.window.updateText(filepath + '\n')    
+
+########################################################################
+class DnDPanel(wx.Panel):
+		""""""
+
+		#----------------------------------------------------------------------
+		def __init__(self, parent):
+				"""Constructor"""
+				wx.Panel.__init__(self, parent=parent)
+
+				file_drop_target = MyFileDropTarget(self)
+				lbl = wx.StaticText(self, label="Drag some files here:")
+				self.fileTextCtrl = wx.TextCtrl(self,
+																				style=wx.TE_MULTILINE|wx.HSCROLL|wx.TE_READONLY)
+				self.fileTextCtrl.SetDropTarget(file_drop_target)
+
+				sizer = wx.BoxSizer(wx.VERTICAL)
+				sizer.Add(lbl, 0, wx.ALL, 5)
+				sizer.Add(self.fileTextCtrl, 1, wx.EXPAND|wx.ALL, 5)
+				self.SetSizer(sizer)
+
+		#----------------------------------------------------------------------
+		def SetInsertionPointEnd(self):
+				"""
+				Put insertion point at end of text control to prevent overwriting
+				"""
+				self.fileTextCtrl.SetInsertionPointEnd()
+
+		#----------------------------------------------------------------------
+		def updateText(self, text):
+				"""
+				Write text to the text control
+				"""
+				self.fileTextCtrl.WriteText(text)
+
+########################################################################
+class DnDFrame(wx.Frame):
+		""""""
+
+		#----------------------------------------------------------------------
+		def __init__(self):
+				"""Constructor"""
+				wx.Frame.__init__(self, parent=None, title="DnD Tutorial")
+				panel = DnDPanel(self)
+				self.Show()
+
+#----------------------------------------------------------------------
+if __name__ == "__main__":
+		app = wx.App(False)
+		frame = DnDFrame()
+		app.MainLoop()
