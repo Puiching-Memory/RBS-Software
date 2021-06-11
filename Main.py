@@ -27,7 +27,6 @@ import M_About
 import M_Pi
 import M_Capslook
 import M_Base_conversion
-import M_Setting
 import M_Update
 import M_Traditional_Chinese
 import M_BMI
@@ -55,6 +54,7 @@ import wx
 import GUI
 import Plug_in
 import User
+import Setting
 
 ###########################################################################
 # GUI的函数桥接
@@ -66,9 +66,7 @@ class CalcFrame(GUI.Main):
 		GUI.Main.__init__(self, parent)
 
 		# 定义全局变量
-		global Main_State, FUN_State, CPU_text, RAM_text, version, setup, Color_G, Hover, color_Hover, last, cfg
-		CPU_text = 'undefined'
-		RAM_text = 'undefiend'
+		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg
 
 		cfg = configparser.ConfigParser()  # 读取设置文件
 		cfg.read('./cfg/main.cfg')
@@ -97,7 +95,7 @@ class CalcFrame(GUI.Main):
 			self.Fast.SetBackgroundColour(wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
 		##self.SetTransparent(200) # 设置窗口透明度
-		##self.SetCursor(wx.StockCursor(6)) # 设置窗口光标
+		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
 
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
@@ -115,6 +113,7 @@ class CalcFrame(GUI.Main):
 
 	def Close(self, event):
 		''' windows_关闭程序 '''
+		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
 		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
@@ -127,6 +126,7 @@ class CalcFrame(GUI.Main):
 
 	def Quit(self, event):
 		''' self_关闭程序 '''
+		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
 		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
@@ -134,7 +134,7 @@ class CalcFrame(GUI.Main):
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
 		# 关闭程序
-		sys.exit(0)
+		self.Close(event)
 
 	def Ico(self, event):
 		print(self.IsIconized())
@@ -153,7 +153,7 @@ class CalcFrame(GUI.Main):
 
 	def Setting(self, event):
 		# 打开设置
-		M_Setting.main()
+		Setting.main()
 
 	def Update(self, event):
 		# 打开<联网更新>界面
@@ -219,51 +219,60 @@ class CalcFrame(GUI.Main):
 	def Hover1(self, event):
 		''' 光标经过，接触到按钮时（功能按钮），改变提示标签文本 '''
 		self.Bottom_Bar1.SetLabel('Function1')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 11
 
 	def Hover2(self, event):
 		self.Bottom_Bar1.SetLabel('Function2')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 12
 
 	def Hover3(self, event):
 		self.Bottom_Bar1.SetLabel('Function3')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 13
 
 	def Hover4(self, event):
 		self.Bottom_Bar1.SetLabel('Function4')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 14
 
 	def Hover_L1(self, event):
 		self.Side1.SetBackgroundColour(color_Hover)
 		self.Bottom_Bar1.SetLabel('Back to HOME')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 41
 
 	def Hover_L2(self, event):
 		self.Side2.SetBackgroundColour(color_Hover)
 		self.Bottom_Bar1.SetLabel('check the plug-in')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 42
 
 	def Hover_L3(self, event):
 		self.Side3.SetBackgroundColour(color_Hover)
 		self.Bottom_Bar1.SetLabel('login as user')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 43
 
 	def Hover_L4(self, event):
 		self.Side4.SetBackgroundColour(color_Hover)
 		self.Bottom_Bar1.SetLabel('Background service program')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 44
 
 	def H_LOG(self, event):
 		''' 顶部功能按钮提示 '''
 		self.Bottom_Bar1.SetLabel('update log')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 31
 
@@ -271,6 +280,7 @@ class CalcFrame(GUI.Main):
 
 	def H_SET(self, event):
 		self.Bottom_Bar1.SetLabel('software setting')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 32
 
@@ -278,6 +288,7 @@ class CalcFrame(GUI.Main):
 
 	def H_ABO(self, event):
 		self.Bottom_Bar1.SetLabel('About us')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 33
 
@@ -285,6 +296,7 @@ class CalcFrame(GUI.Main):
 
 	def H_CMD(self, event):
 		self.Bottom_Bar1.SetLabel('open cmd on windows')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 34
 
@@ -292,6 +304,7 @@ class CalcFrame(GUI.Main):
 
 	def H_UPD(self, event):
 		self.Bottom_Bar1.SetLabel('check to update online')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 35
 
@@ -299,6 +312,7 @@ class CalcFrame(GUI.Main):
 
 	def H_QUT(self, event):
 		self.Bottom_Bar1.SetLabel('quit/end the software')
+		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 36
 
@@ -307,6 +321,7 @@ class CalcFrame(GUI.Main):
 	def Class1(self, event):
 		''' 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 '''
 		self.Bottom_Bar1.SetLabel(str('功能分区1--' + self.G1.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 1:
 			event.Skip()
 		else:
@@ -316,6 +331,7 @@ class CalcFrame(GUI.Main):
 
 	def Class2(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区2--' + self.G2.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 2:
 			event.Skip()
 		else:
@@ -325,6 +341,7 @@ class CalcFrame(GUI.Main):
 
 	def Class3(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区3--' + self.G3.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 3:
 			event.Skip()
 		else:
@@ -334,6 +351,7 @@ class CalcFrame(GUI.Main):
 
 	def Class4(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区4--' + self.G4.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 4:
 			event.Skip()
 		else:
@@ -343,6 +361,7 @@ class CalcFrame(GUI.Main):
 
 	def Class5(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区5--' + self.G5.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 5:
 			event.Skip()
 		else:
@@ -352,6 +371,7 @@ class CalcFrame(GUI.Main):
 
 	def Class6(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区6--' + self.G6.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 6:
 			event.Skip()
 		else:
@@ -361,6 +381,7 @@ class CalcFrame(GUI.Main):
 
 	def Class7(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区7--' + self.G7.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 7:
 			event.Skip()
 		else:
@@ -370,6 +391,7 @@ class CalcFrame(GUI.Main):
 
 	def Class8(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区8--' + self.G8.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 8:
 			event.Skip()
 		else:
@@ -379,6 +401,7 @@ class CalcFrame(GUI.Main):
 
 	def Class9(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区9--' + self.G9.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 9:
 			event.Skip()
 		else:
@@ -388,6 +411,7 @@ class CalcFrame(GUI.Main):
 
 	def Class10(self, event):
 		self.Bottom_Bar1.SetLabel(str('功能分区10--' + self.G10.GetLabel()))
+		self.SetCursor(wx.Cursor(6))
 		if Main_State == 10:
 			event.Skip()
 		else:
@@ -400,10 +424,12 @@ class CalcFrame(GUI.Main):
 	def Leave(self, event):
 		''' 通用,离开事件 '''
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 
 	def Leave1(self, event):
 		''' 光标离开，不接触按钮时，改变提示标签文本 '''
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 1:
 			event.Skip()
 		else:
@@ -412,6 +438,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave2(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 2:
 			event.Skip()
 		else:
@@ -420,6 +447,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave3(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 3:
 			event.Skip()
 		else:
@@ -428,6 +456,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave4(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 4:
 			event.Skip()
 		else:
@@ -436,6 +465,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave5(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 5:
 			event.Skip()
 		else:
@@ -444,6 +474,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave6(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 6:
 			event.Skip()
 		else:
@@ -452,6 +483,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave7(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 7:
 			event.Skip()
 		else:
@@ -460,6 +492,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave8(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 8:
 			event.Skip()
 		else:
@@ -468,6 +501,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave9(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 9:
 			event.Skip()
 		else:
@@ -476,6 +510,7 @@ class CalcFrame(GUI.Main):
 
 	def Leave10(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		if Main_State == 10:
 			event.Skip()
 		else:
@@ -484,42 +519,52 @@ class CalcFrame(GUI.Main):
 
 	def Leave_L1(self, event):
 		self.Side1.SetBackgroundColour(color_SideL)
+		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L2(self, event):
 		self.Side2.SetBackgroundColour(color_SideL)
+		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L3(self, event):
 		self.Side3.SetBackgroundColour(color_SideL)
+		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L4(self, event):
 		self.Side4.SetBackgroundColour(color_SideL)
+		self.SetCursor(wx.Cursor(1))
 
 	def L_LOG(self, event):
 		''' 顶部功能按钮提示 '''
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_Log.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
 
 	def L_SET(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_Setting.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
 	def L_ABO(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_About.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
 	def L_CMD(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_Cmd.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
 
 	def L_UPD(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_Update.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
 	def L_QUT(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
 		self.B_Quit.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
@@ -1390,5 +1435,5 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 
 
 if __name__ == "__main__":
-	check = 'unrunning'  # 不经引导程序启动时的自我设置
+	check = 'Unrunning(Self_On)'  # 不经引导程序启动时的自我设置
 	main(check)

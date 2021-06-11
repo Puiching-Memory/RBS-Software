@@ -63,10 +63,10 @@ class Main ( wx.Frame ):
 
 		wSizer4.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_checkBox2 = wx.CheckBox( self, wx.ID_ANY, u"启用", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox2.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		self.fastsetup = wx.CheckBox( self, wx.ID_ANY, u"启用", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.fastsetup.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
-		wSizer4.Add( self.m_checkBox2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		wSizer4.Add( self.fastsetup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer4, 1, wx.EXPAND, 5 )
@@ -178,8 +178,8 @@ class Main ( wx.Frame ):
 
 		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.B_Accept = wx.Button( self, wx.ID_ANY, u"确定", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer6.Add( self.B_Accept, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.B_Application = wx.Button( self, wx.ID_ANY, u"应用", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer6.Add( self.B_Application, 0, wx.ALL, 5 )
 
 		self.B_Cancel = wx.Button( self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0 )
 		wSizer6.Add( self.B_Cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -194,7 +194,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
-		self.B_Accept.Bind( wx.EVT_BUTTON, self.Accept )
+		self.B_Application.Bind( wx.EVT_BUTTON, self.Application )
 		self.B_Cancel.Bind( wx.EVT_BUTTON, self.Cancel )
 
 	def __del__( self ):
@@ -202,7 +202,7 @@ class Main ( wx.Frame ):
 
 
 	# Virtual event handlers, overide them in your derived class
-	def Accept( self, event ):
+	def Application( self, event ):
 		event.Skip()
 
 	def Cancel( self, event ):
