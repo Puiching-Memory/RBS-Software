@@ -10,9 +10,6 @@
 import wx
 import wx.xrc
 
-Timer = 1000
-Fast_Timer = 1001
-
 ###########################################################################
 ## Class Main
 ###########################################################################
@@ -26,9 +23,7 @@ class Main ( wx.Frame ):
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.Timer = wx.Timer()
-		self.Timer.SetOwner( self, Timer )
-		self.Fast_Timer = wx.Timer()
-		self.Fast_Timer.SetOwner( self, Fast_Timer )
+		self.Timer.SetOwner( self, wx.ID_ANY )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
 		wSizer20 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
@@ -98,8 +93,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
-		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=Timer )
-		self.Bind( wx.EVT_TIMER, self.Fast_Tick, id=Fast_Timer )
+		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=wx.ID_ANY )
 
 	def __del__( self ):
 		pass
@@ -107,9 +101,6 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, overide them in your derived class
 	def Time_Tick( self, event ):
-		event.Skip()
-
-	def Fast_Tick( self, event ):
 		event.Skip()
 
 
