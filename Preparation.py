@@ -28,13 +28,21 @@ class CalcFrame(GUI_Preparation.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_Preparation.Main.__init__(self, parent)
+		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
 		cfg.read('./cfg/main.cfg')
 		version = cfg.get('main', 'VERSION')
+		fast_setup = cfg.get('main', 'fast_setup')
 		self.Version.SetLabel(str('#Version:   ' + version))
 
-		self.Timer.Start(1, True)
+		if fast_setup == 'True':
+			self.Fast_Timer.Start(1, True)
+		elif fast_setup == 'False':
+			self.Timer.Start(100, True)
+		else:
+			self.Timer.Start(100, True)
+			print('设置不合法')
 
 	def Time_Tick(self, event):
 		self.Text.SetLabel("加载主程序")
@@ -46,7 +54,7 @@ class CalcFrame(GUI_Preparation.Main):
 
 		self.Text.SetLabel("加载必需库文件")
 
-		wx.MilliSleep(100)
+		##wx.MilliSleep(100)
 		self.Bar.SetSize(80, 8)
 		self.Bar.SetLabel('40%')
 
@@ -61,11 +69,11 @@ class CalcFrame(GUI_Preparation.Main):
 
 		CheckDir = None
 
-		wx.MilliSleep(100)
+		##wx.MilliSleep(100)
 		self.Bar.SetSize(90, 8)
 		self.Bar.SetLabel('45%')
 
-		wx.MilliSleep(200)
+		##wx.MilliSleep(200)
 		self.Bar.SetSize(120, 8)
 		self.Bar.SetLabel('60%')
 		self.Text.SetLabel("校验数据库完整性")
@@ -98,11 +106,22 @@ class CalcFrame(GUI_Preparation.Main):
 		p = f = m = hexd = list_hash = line = None
 		##############################
 
-		wx.MilliSleep(500)
+		##wx.MilliSleep(500)
 		self.Bar.SetSize(190, 8)
 		self.Bar.SetLabel('100%')
 
 		##self.Timer.Stop()
+		self.Destroy()
+		Main.main(check)
+
+	def Fast_Tick(self, event):
+		self.Text.SetLabel('<<快速启动模式>>')
+		self.Bar.SetSize(100, 8)
+
+		import Main
+
+		check = 'Unrunning(Fast_Setup)'
+
 		self.Destroy()
 		Main.main(check)
 
