@@ -24,15 +24,20 @@ class Main ( wx.Frame ):
 
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
+		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"本功能尚未完成，请别催我", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText7.Wrap( -1 )
+
+		bSizer2.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
 		self.local_version = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.local_version.Wrap( -1 )
 
 		bSizer2.Add( self.local_version, 0, wx.ALL, 5 )
 
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText7.Wrap( -1 )
+		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText3.Wrap( -1 )
 
-		bSizer2.Add( self.m_staticText7, 0, wx.ALL, 5 )
+		bSizer2.Add( self.m_staticText3, 0, wx.ALL, 5 )
 
 
 		self.SetSizer( bSizer2 )

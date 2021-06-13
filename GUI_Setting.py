@@ -36,6 +36,8 @@ class Main ( wx.Frame ):
 
 		self.font = wx.FontPickerCtrl( self, wx.ID_ANY, wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ), wx.DefaultPosition, wx.Size( -1,-1 ), wx.FNTP_DEFAULT_STYLE|wx.FNTP_FONTDESC_AS_LABEL|wx.FNTP_USEFONT_FOR_LABEL )
 		self.font.SetMaxPointSize( 100 )
+		self.font.Enable( False )
+
 		wSizer2.Add( self.font, 0, wx.ALL, 5 )
 
 
@@ -54,6 +56,8 @@ class Main ( wx.Frame ):
 		wSizer4.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_checkBox1 = wx.CheckBox( self, wx.ID_ANY, u"启用", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox1.Enable( False )
+
 		wSizer4.Add( self.m_checkBox1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"快速启动:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -89,6 +93,8 @@ class Main ( wx.Frame ):
 		wSizer1.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.Top_color = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
+		self.Top_color.Enable( False )
+
 		wSizer1.Add( self.Top_color, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"底端", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
@@ -97,6 +103,8 @@ class Main ( wx.Frame ):
 		wSizer1.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.Bot_color = wx.ColourPickerCtrl( self, wx.ID_ANY, wx.Colour( 0, 0, 0 ), wx.DefaultPosition, wx.Size( 70,-1 ), wx.CLRP_DEFAULT_STYLE|wx.CLRP_SHOW_LABEL )
+		self.Bot_color.Enable( False )
+
 		wSizer1.Add( self.Bot_color, 0, wx.ALL, 5 )
 
 
@@ -117,6 +125,8 @@ class Main ( wx.Frame ):
 		m_choice1Choices = [ u"zh-cn", u"en-us" ]
 		self.m_choice1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice1Choices, 0 )
 		self.m_choice1.SetSelection( 0 )
+		self.m_choice1.Enable( False )
+
 		wSizer5.Add( self.m_choice1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
@@ -135,6 +145,8 @@ class Main ( wx.Frame ):
 		wSizer7.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_textCtrl1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_textCtrl1.Enable( False )
+
 		wSizer7.Add( self.m_textCtrl1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"自定义日志存储路径:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -145,6 +157,8 @@ class Main ( wx.Frame ):
 		wSizer7.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_dirPicker1 = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE|wx.DIRP_SMALL )
+		self.m_dirPicker1.Enable( False )
+
 		wSizer7.Add( self.m_dirPicker1, 0, wx.ALL, 5 )
 
 
@@ -168,6 +182,8 @@ class Main ( wx.Frame ):
 		wSizer8.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_datePicker4 = wx.adv.DatePickerCtrl( self, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.adv.DP_DEFAULT|wx.adv.DP_DROPDOWN )
+		self.m_datePicker4.Enable( False )
+
 		wSizer8.Add( self.m_datePicker4, 0, wx.ALL, 5 )
 
 

@@ -445,12 +445,17 @@ class Main ( wx.Frame ):
 
 		wSizer8.Add( fgSizer1, 1, wx.EXPAND, 5 )
 
-		self.Line2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
+		self.Space_left = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), 0 )
+		self.Space_left.Wrap( -1 )
+
+		wSizer8.Add( self.Space_left, 0, wx.ALL, 5 )
+
+		self.Line2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.LI_VERTICAL )
 		wSizer8.Add( self.Line2, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 
 		bSizer181 = wx.BoxSizer( wx.VERTICAL )
 
-		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"<--->", wx.DefaultPosition, wx.Size( 200,30 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"Helper", wx.DefaultPosition, wx.Size( 200,30 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Side_Tip.Wrap( -1 )
 
 		self.Side_Tip.SetFont( wx.Font( 16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
@@ -459,14 +464,14 @@ class Main ( wx.Frame ):
 
 		bSizer181.Add( self.Side_Tip, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
-		self.info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,140 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		self.info = wx.TextCtrl( self, wx.ID_ANY, u"选中一个帮助焦点以显示帮助", wx.DefaultPosition, wx.Size( 200,140 ), wx.TE_MULTILINE|wx.TE_READONLY )
 		bSizer181.Add( self.info, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 		fgSizer2 = wx.FlexGridSizer( 0, 1, 0, 0 )
 		fgSizer2.SetFlexibleDirection( wx.BOTH )
 		fgSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
-		self.info_text1 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
+		self.info_text1 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
 		self.info_text1.Wrap( -1 )
 
 		self.info_text1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
@@ -474,21 +479,21 @@ class Main ( wx.Frame ):
 
 		fgSizer2.Add( self.info_text1, 0, wx.ALL, 5 )
 
-		self.info_text2 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
+		self.info_text2 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
 		self.info_text2.Wrap( -1 )
 
 		self.info_text2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 
 		fgSizer2.Add( self.info_text2, 0, wx.ALL, 5 )
 
-		self.info_text3 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
+		self.info_text3 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
 		self.info_text3.Wrap( -1 )
 
 		self.info_text3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 
 		fgSizer2.Add( self.info_text3, 0, wx.ALL, 5 )
 
-		self.info_text4 = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
+		self.info_text4 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
 		self.info_text4.Wrap( -1 )
 
 		self.info_text4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )

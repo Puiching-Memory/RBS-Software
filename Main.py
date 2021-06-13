@@ -18,6 +18,7 @@
 ###########################################################################
 
 # 自定义功能库
+from re import S
 import M_Roll
 import M_Element
 import M_Pinyin
@@ -1185,6 +1186,7 @@ def start(self):
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
 		self.Line_Last.Show(False)
+		self.Space_left.Show(buer)
 
 		self.Space_topic.Show(False)
 		self.Topic.Show(False)
@@ -1257,6 +1259,7 @@ def start(self):
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
 		self.Line_Last.Show(True)
+		self.Space_left.Show(buer)
 
 		setup = 1
 
@@ -1331,6 +1334,7 @@ def Home(self):
 	self.Line1.Show(buer)
 	self.Line2.Show(buer)
 	self.Line_Last.Show(True)
+	self.Space_left.Show(buer)
 
 	self.Space_topic.Show(True)
 	self.Topic.Show(True)

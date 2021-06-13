@@ -26,7 +26,7 @@ class Main ( wx.Frame ):
 
 		wSizer2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 320,35 ), 0 )
+		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 320,35 ), wx.TE_CENTER )
 		wSizer2.Add( self.input1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"身高CM", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -35,11 +35,11 @@ class Main ( wx.Frame ):
 		wSizer2.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
-		bSizer2.Add( wSizer2, 1, wx.EXPAND, 5 )
+		bSizer2.Add( wSizer2, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.input2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 320,35 ), 0 )
+		self.input2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 320,35 ), wx.TE_CENTER )
 		wSizer1.Add( self.input2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"体重KG", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -48,7 +48,7 @@ class Main ( wx.Frame ):
 		wSizer1.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
-		bSizer2.Add( wSizer1, 1, wx.EXPAND, 5 )
+		bSizer2.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.Out1 = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.Size( -1,60 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Out1.Wrap( -1 )
@@ -60,7 +60,7 @@ class Main ( wx.Frame ):
 		self.RUN = wx.Button( self, wx.ID_ANY, u"计算", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer2.Add( self.RUN, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		self.Space1 = wx.StaticText( self, wx.ID_ANY, u" ", wx.DefaultPosition, wx.Size( -1,50 ), 0 )
+		self.Space1 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,50 ), 0 )
 		self.Space1.Wrap( -1 )
 
 		bSizer2.Add( self.Space1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )

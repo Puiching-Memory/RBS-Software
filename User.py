@@ -6,6 +6,7 @@ import wx
 import GUI_User
 
 import uuid
+import platform
 
 ##############################
 # GUI的函数桥接
@@ -18,8 +19,13 @@ class CalcFrame(GUI_User.Main):
         GUI_User.Main.__init__(self, parent)
 
         self.UUID.SetLabel(str(uuid.uuid1()))
-        
-        
+        self.Python.SetLabel(platform.python_version())
+        self.Python_B.SetLabel(str(platform.python_compiler()))
+        self.Net.SetLabel(platform.node())
+        self.System.SetLabel(platform.platform())
+        self.CPU.SetLabel(platform.processor())
+        ##print(platform.python_revision())
+
 ##############################
 # 主函数
 ##############################
