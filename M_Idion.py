@@ -3,8 +3,6 @@
 ##############################
 import wx
 
-import random
-
 import GUI_Idion
 
 ##############################

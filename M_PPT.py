@@ -4,9 +4,7 @@
 import wx
 import win32api,win32con,win32com.client,win32gui
 import pynput
-import sys
 
-from wx.core import App, Frame
 #from pynput.keyboard import Key
 #from pynput.mouse import Button
 

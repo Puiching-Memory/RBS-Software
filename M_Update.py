@@ -2,7 +2,6 @@
 # import
 ##############################
 import wx
-import requests
 
 import GUI_Update
 

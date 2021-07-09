@@ -3,7 +3,6 @@
 ##############################
 import wx
 import math
-import numpy
 import random
 
 import GUI_Pi

@@ -1,46 +1,29 @@
-import wx
-import wx.grid
-import logging
-import os
-
-# 第3步，实现wx.FileDropTarget子类
-class FileDrop(wx.FileDropTarget):
-    def __init__(self, grid):
-        wx.FileDropTarget.__init__(self)
-        self.grid = grid
-
-    def OnDropFiles(self, x, y, filePath):         # 当文件被拖入grid后，会调用此方法
-        cellCoords = self.grid.XYToCell(x, y)      # 根据坐标轴换算被拖入grid网格的行号和列号
-        filename = os.path.basename(filePath[0])
-        self.grid.SetCellValue(cellCoords.GetRow(), cellCoords.GetCol(), filename)  # 将文件名赋给被拖入的cell
-        
-
-class MyFrame(wx.Frame):
-    def __init__(self):
-        wx.Frame.__init__(self, None, -1, 'MyFrame', size = (640, 480))
-        panel = wx.Panel(self, -1)
-
-        vSizer = wx.BoxSizer(wx.VERTICAL)
-        self.grid = wx.grid.Grid(panel, -1)
-        self.grid.CreateGrid(10, 3)
-        
-        sizer = wx.BoxSizer(wx.HORIZONTAL)
-        sizer.Add(self.grid, 1, wx.ALL | wx.EXPAND, 5)
-        vSizer.Add(sizer, 1, wx.ALL | wx.EXPAND)
-
-        panel.SetSizer(vSizer)
-        self.fileDrop = FileDrop(self.grid)      # 第1步，创建FileDrop对象，并把grid传给初始化函数
-        self.grid.SetDropTarget(self.fileDrop)   # 第2步，调用grid的SetDropTarget函数，并把FileDrop对象传给它
-
-class MainApp(wx.App):
-    def __init__(self, redirect = False, filename = None):
-        wx.App.__init__(self, redirect, filename)
-
-    def OnInit(self):
-        self.frame = MyFrame()
-        self.frame.Show()
-        self.frame.Center()
-        return True
-
-app = MainApp()
-app.MainLoop()
+import matplotlib.pyplot as plt
+import librosa.display
+import numpy as np
+from pydub import AudioSegment
+ 
+# 1秒=1000毫秒
+SECOND = 1000
+# 音乐文件
+AUDIO_PATH = 'E:\桌面\Rainbow-software\Tears_River.wav'
+ 
+def split_music(begin, end, filepath):
+ # 导入音乐
+	song = AudioSegment.from_wav(filepath)
+ 
+ # 取begin秒到end秒间的片段
+	song = song[begin*SECOND: end*SECOND]
+ 
+ # 存储为临时文件做备份
+	temp_path = 'backup/'+filepath
+	song.export(temp_path)
+ 
+	return temp_path
+ 
+music, sr = librosa.load(split_music(0, 1, AUDIO_PATH))
+ 
+# 宽高比为14:5的图
+plt.figure(figsize=(14, 5))
+librosa.display.waveplot(music, sr=sr)
+plt.show() 

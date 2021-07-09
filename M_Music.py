@@ -3,21 +3,29 @@
 ##############################
 import wx
 
-import GUI_Plug_in
+import GUI_Music
+
+import simpleaudio
 
 ##############################
 # GUI的函数桥接
 ##############################
 
 
-class CalcFrame(GUI_Plug_in.Main):
+class CalcFrame(GUI_Music.Main):
     def __init__(self, parent):
         # 定义主函数
-        GUI_Plug_in.Main.__init__(self, parent)
+        GUI_Music.Main.__init__(self, parent)
 
-    def Close(self, event):
-        self.Destroy()
-        
+    def import_file(self, event):
+        return
+
+    def play(self, event):
+        song = simpleaudio.WaveObject.from_wave_file(self.File.GetPath())
+        play_obj = song.play()
+        ##play_obj.wait_done()
+
+
         
 ##############################
 # 主函数

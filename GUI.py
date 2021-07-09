@@ -110,7 +110,7 @@ class Main ( wx.Frame ):
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G6 )
-		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 0", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G7 )
@@ -461,10 +461,13 @@ class Main ( wx.Frame ):
 		self.Side_Tip.SetFont( wx.Font( 16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
 		self.Side_Tip.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 		self.Side_Tip.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+		self.Side_Tip.Enable( False )
 
 		bSizer181.Add( self.Side_Tip, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 		self.info = wx.TextCtrl( self, wx.ID_ANY, u"选中一个帮助焦点以显示帮助", wx.DefaultPosition, wx.Size( 200,140 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		self.info.Enable( False )
+
 		bSizer181.Add( self.info, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 		fgSizer2 = wx.FlexGridSizer( 0, 1, 0, 0 )
@@ -476,6 +479,7 @@ class Main ( wx.Frame ):
 
 		self.info_text1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 		self.info_text1.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+		self.info_text1.Enable( False )
 
 		fgSizer2.Add( self.info_text1, 0, wx.ALL, 5 )
 
@@ -483,6 +487,7 @@ class Main ( wx.Frame ):
 		self.info_text2.Wrap( -1 )
 
 		self.info_text2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.info_text2.Enable( False )
 
 		fgSizer2.Add( self.info_text2, 0, wx.ALL, 5 )
 
@@ -490,6 +495,7 @@ class Main ( wx.Frame ):
 		self.info_text3.Wrap( -1 )
 
 		self.info_text3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.info_text3.Enable( False )
 
 		fgSizer2.Add( self.info_text3, 0, wx.ALL, 5 )
 
@@ -497,6 +503,7 @@ class Main ( wx.Frame ):
 		self.info_text4.Wrap( -1 )
 
 		self.info_text4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.info_text4.Enable( False )
 
 		fgSizer2.Add( self.info_text4, 0, wx.ALL, 5 )
 
@@ -504,6 +511,8 @@ class Main ( wx.Frame ):
 		bSizer181.Add( fgSizer2, 0, wx.ALIGN_RIGHT, 5 )
 
 		self.Control = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,50 ), 0 )
+		self.Control.Enable( False )
+
 		bSizer181.Add( self.Control, 0, wx.ALIGN_RIGHT, 5 )
 
 
@@ -567,53 +576,47 @@ class Main ( wx.Frame ):
 
 		bSizer8.Add( bSizer63, 1, wx.EXPAND, 5 )
 
-		wSizer7 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+		Bsizer = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Space1 = wx.StaticText( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), 0 )
-		self.Space1.Wrap( -1 )
-
+		self.Space1 = wx.Button( self, wx.ID_ANY, u">", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Space1, 0, 0, 5 )
+		Bsizer.Add( self.Space1, 0, 0, 5 )
 
 		self.Bottom_Bar1 = wx.Button( self, wx.ID_ANY, u"    ------", wx.DefaultPosition, wx.Size( 295,20 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Bottom_Bar1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Bottom_Bar1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Bottom_Bar1, 0, 0, 5 )
+		Bsizer.Add( self.Bottom_Bar1, 0, 0, 5 )
 
-		self.Space2 = wx.StaticText( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), 0 )
-		self.Space2.Wrap( -1 )
-
+		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Space2, 0, 0, 5 )
+		Bsizer.Add( self.Space2, 0, 0, 5 )
 
 		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 250,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Bottom_Bar2, 0, 0, 5 )
+		Bsizer.Add( self.Bottom_Bar2, 0, 0, 5 )
 
-		self.Space3 = wx.StaticText( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), 0 )
-		self.Space3.Wrap( -1 )
-
+		self.Space3 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Space3, 0, 0, 5 )
+		Bsizer.Add( self.Space3, 0, 0, 5 )
 
-		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 171,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 172,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		wSizer7.Add( self.Bottom_Bar3, 1, wx.EXPAND, 5 )
+		Bsizer.Add( self.Bottom_Bar3, 0, 0, 5 )
 
 
-		bSizer8.Add( wSizer7, 0, 0, 5 )
+		bSizer8.Add( Bsizer, 0, 0, 0 )
 
 
 		self.SetSizer( bSizer8 )
@@ -629,6 +632,12 @@ class Main ( wx.Frame ):
 		self.PPT_Timer = wx.Timer()
 		self.PPT_Timer.SetOwner( self, PPT_TIMER )
 		self.PPT_Timer.Start( 1000 )
+
+		self.Bar = self.CreateStatusBar( 6, wx.STB_ELLIPSIZE_END, wx.ID_ANY )
+		self.Bar.SetFont( wx.Font( 6, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		self.Bar.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
+		self.Bar.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Bar.Hide()
 
 
 		self.Centre( wx.BOTH )
@@ -732,6 +741,7 @@ class Main ( wx.Frame ):
 		self.B_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.Tip4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.Tip4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Control.Bind( wx.EVT_BUTTON, self.LLL )
 		self.Fast.Bind( wx.EVT_BUTTON, self.Fast_on )
 		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
 		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
@@ -984,6 +994,9 @@ class Main ( wx.Frame ):
 
 
 
+
+	def LLL( self, event ):
+		event.Skip()
 
 	def Fast_on( self, event ):
 		event.Skip()

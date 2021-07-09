@@ -9,10 +9,6 @@ from pynput.keyboard import HotKey as HotKey
 from pynput.mouse import Button
 from pynput.mouse import Controller as Controller2
 
-import win32gui
-import win32con
-import win32clipboard as w
-
 from pynput.mouse import Button, Controller as mouse_cl
 from pynput.keyboard import Key, Controller as key_cl
 import requests

@@ -18,11 +18,10 @@
 ###########################################################################
 
 # 自定义功能库
-from re import S
 import M_Roll
 import M_Element
 import M_Pinyin
-import M_Roster
+import M_Roster #占用空间过大
 import M_Gene
 import M_About
 import M_Pi
@@ -37,8 +36,14 @@ import M_Timer
 import M_PPT
 import M_Idion
 import M_DDT
+import M_Music
+
+import User
+import Setting
+import Plug_in
 
 # 临时库
+import L_College
 
 # 辅助功能库
 import sys
@@ -47,20 +52,19 @@ import win32api
 import win32com.client
 import psutil
 import time
-import configparser
-import logging.handlers
 
 # 核心库
 import wx
 import GUI
-import Plug_in
-import User
-import Setting
+import configparser
+import logging.handlers
 
 ###########################################################################
 # GUI的函数桥接
 # Class Main
 ###########################################################################
+
+
 class CalcFrame(GUI.Main):
 	def __init__(self, parent):
 		''' 定义主函数(初始化) '''
@@ -75,6 +79,13 @@ class CalcFrame(GUI.Main):
 		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
 
+		print(wx.Display.GetPPI(wx.Display()))
+		print(wx.ClientDisplayRect(), wx.ColourDisplay())
+		print(self.Size)
+
+		self.SetDropTarget(FileDrop(self))
+		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))
+
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = 'NONE'
 		Hover = 0  # 检测当前Hover的按钮是哪个
@@ -83,7 +94,16 @@ class CalcFrame(GUI.Main):
 
 		# 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
 		self.version.SetLabel('#version ' + version)
-		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
+		''' 系统自带状态栏
+		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
+		self.Bar.SetStatusText(self.Space1.GetLabel(), 0)
+		self.Bar.SetStatusText(self.Bottom_Bar1.GetLabel(), 1)
+		self.Bar.SetStatusText(self.Space2.GetLabel(), 2)
+		self.Bar.SetStatusText(self.Bottom_Bar2.GetLabel(), 3)
+		self.Bar.SetStatusText(self.Space3.GetLabel(), 4)
+		self.Bar.SetStatusText(self.Bottom_Bar3.GetLabel(), 5)
+		##self.Bar.SetStatusStyles(self, 1)
+		'''
 		start(self)  # 初始化界面布局函数(纯操作,无计算)
 
 		if last != 'NONE':
@@ -91,12 +111,13 @@ class CalcFrame(GUI.Main):
 
 		if Main_State == 'NONE':
 			Main_State = 0
-		
-		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255,255,255,255):
-			self.Fast.SetBackgroundColour(wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
-		##self.SetTransparent(200) # 设置窗口透明度
-		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
+		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
+			self.Fast.SetBackgroundColour(
+				wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
+
+		# self.SetTransparent(200) # 设置窗口透明度
+		# self.SetCursor(wx.Cursor(6)) # 设置窗口光标
 
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
@@ -108,6 +129,7 @@ class CalcFrame(GUI.Main):
 		if setup == 1:
 			dc = event.GetDC()
 			dc.DrawBitmap(wx.Bitmap("SEA.jpg"), 0, 0)
+			# print(1)
 		else:
 			dc = event.GetDC()
 			dc.Clear()
@@ -117,7 +139,8 @@ class CalcFrame(GUI.Main):
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
-		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
+		cfg.set('History', 'COLOR', str(
+			self.Bottom_Bar1.GetBackgroundColour()))
 		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(
@@ -130,7 +153,8 @@ class CalcFrame(GUI.Main):
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
-		cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
+		cfg.set('History', 'COLOR', str(
+			self.Bottom_Bar1.GetBackgroundColour()))
 		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
@@ -138,7 +162,11 @@ class CalcFrame(GUI.Main):
 		self.Close(event)
 
 	def Ico(self, event):
-		print(self.IsIconized())
+		print('窗口最小化:' + str(self.IsIconized()))
+		if self.IsIconized() == True:
+			self.Enable(False)
+		else:
+			self.Enable(True)
 
 	def Cmd(self, event):
 		# 打开Cmd
@@ -170,6 +198,9 @@ class CalcFrame(GUI.Main):
 	def User(self, event):
 		User.main()
 
+	def LLL(self, event):
+		L_College.main()
+
 	def Fast_on(self, event):
 		check_name = ['中文转拼音', '简-繁转换', '成语接龙', '', '圆周率', '', '', '', '大小写转换', '', '', '', '下载器', 'PPT出图', 'BMI', 'DDT', '',
 					  '', '', '', '', '', '', '', '', '', '', '', '元素周期表', '', '', '', '基因库', '', '', '', '随机数生成器', '进制转换', '值日表', '计时器']
@@ -179,7 +210,7 @@ class CalcFrame(GUI.Main):
 			if name == self.Fast.GetLabel():
 				program.main()
 
-	#---------------------------------------------------------------------
+	# ---------------------------------------------------------------------
 
 	def Time_Tick(self, event):
 		''' 计时器-资源监视器 '''
@@ -215,7 +246,7 @@ class CalcFrame(GUI.Main):
 			event.Skip()
 			##print('no such process...')
 
-	#------------------------------------------------------------------------
+	# ------------------------------------------------------------------------
 
 	def Hover1(self, event):
 		''' 光标经过，接触到按钮时（功能按钮），改变提示标签文本 '''
@@ -420,7 +451,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 210
 
-	#---------------------------------------------------------------------
+	# ---------------------------------------------------------------------
 
 	def Leave(self, event):
 		''' 通用,离开事件 '''
@@ -569,7 +600,7 @@ class CalcFrame(GUI.Main):
 		self.B_Quit.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
-	#-----------------------------------------------------------------------
+	# -----------------------------------------------------------------------
 
 	def Function1(self, event):
 		''' 点击事件_按钮1 '''
@@ -589,7 +620,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			return
+			M_Music.main()
 		elif Main_State == 8:
 			M_Element.main()
 		elif Main_State == 9:
@@ -615,7 +646,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			return
+			L_College.main()
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
@@ -674,7 +705,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 10:
 			M_Timer.main()
 
-	#--------------------------------------------------------------------
+	# --------------------------------------------------------------------
 
 	def G_1(self, event):
 		''' 1号功能分区-语文 '''
@@ -737,7 +768,7 @@ class CalcFrame(GUI.Main):
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
-		self.Tip1.SetLabel('支持圆周率后一万位!当然是记下来的,但是我们也提供了计算的方法!')
+		self.Tip1.SetLabel('记录了小数点后一万位,支持本地解算')
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
@@ -905,13 +936,13 @@ class CalcFrame(GUI.Main):
 		self.G7.SetBackgroundColour(color_Main)
 		self.G7.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("NONE")
-		self.T_F2.SetLabel("NONE")
+		self.T_F1.SetLabel("音频分析器")
+		self.T_F2.SetLabel("大学评分数据库")
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
-		self.Tip1.SetLabel('什么都没有呢!')
-		self.Tip2.SetLabel('什么都没有呢!')
+		self.Tip1.SetLabel('对于音频的可视化分析')
+		self.Tip2.SetLabel('临时模块-数据库已完成20%')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
@@ -1021,9 +1052,25 @@ class CalcFrame(GUI.Main):
 
 		self.Refresh()
 ###########################################################################
-# 外置Class
-# Other Class
+# 文件拖入处理Class
+# File Class
 ###########################################################################
+
+
+class FileDrop(wx.FileDropTarget):
+
+	def __init__(self, window):
+
+		wx.FileDropTarget.__init__(self)
+		self.window = window
+
+	def OnDropFiles(self, x, y, filenames):
+
+		for name in filenames:
+			print(name)
+
+		return True
+
 ###########################################################################
 # 主函数
 # def main
@@ -1038,6 +1085,7 @@ def main(check):
 	app = wx.App(False)  # GUI循环及前置设置
 	frame = CalcFrame(None)
 	frame.Show(True)
+
 	app.MainLoop()
 
 
@@ -1368,18 +1416,19 @@ def Home(self):
 	Color_clean(self)
 
 	last = cfg.get('History', 'LAST')
-		
+
 	if last != 'NONE':
 		self.Fast.SetLabel(last)
 	else:
 		self.Fast.SetLabel('NONE')
 
-	if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255,255,255,255):
-		self.Fast.SetBackgroundColour(wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
+	if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
+		self.Fast.SetBackgroundColour(
+			wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
 	Main_State = 0
 	setup = 1
-	
+
 	self.Refresh()
 
 

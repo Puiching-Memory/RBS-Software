@@ -31,6 +31,7 @@ class Main ( wx.Frame ):
 		self.m_staticText4.Wrap( -1 )
 
 		self.m_staticText4.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText4.Enable( False )
 
 		wSizer2.Add( self.m_staticText4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -52,6 +53,7 @@ class Main ( wx.Frame ):
 		self.m_staticText5.Wrap( -1 )
 
 		self.m_staticText5.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText5.Enable( False )
 
 		wSizer4.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -72,6 +74,20 @@ class Main ( wx.Frame ):
 
 		wSizer4.Add( self.fastsetup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"底端任务栏：", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText12.Wrap( -1 )
+
+		self.m_staticText12.Enable( False )
+
+		wSizer4.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		m_choice3Choices = [ u"自定义复合型", u"系统默认经典" ]
+		self.m_choice3 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice3Choices, 0 )
+		self.m_choice3.SetSelection( 0 )
+		self.m_choice3.Enable( False )
+
+		wSizer4.Add( self.m_choice3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
 
 		bSizer1.Add( wSizer4, 1, wx.EXPAND, 5 )
 
@@ -84,11 +100,14 @@ class Main ( wx.Frame ):
 		self.m_staticText1.Wrap( -1 )
 
 		self.m_staticText1.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText1.Enable( False )
 
 		wSizer1.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"顶端", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.m_staticText2.Wrap( -1 )
+
+		self.m_staticText2.Enable( False )
 
 		wSizer1.Add( self.m_staticText2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -99,6 +118,8 @@ class Main ( wx.Frame ):
 
 		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"底端", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.m_staticText3.Wrap( -1 )
+
+		self.m_staticText3.Enable( False )
 
 		wSizer1.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -119,6 +140,7 @@ class Main ( wx.Frame ):
 		self.m_staticText7.Wrap( -1 )
 
 		self.m_staticText7.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText7.Enable( False )
 
 		wSizer5.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -141,6 +163,7 @@ class Main ( wx.Frame ):
 		self.m_staticText8.Wrap( -1 )
 
 		self.m_staticText8.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText8.Enable( False )
 
 		wSizer7.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -153,6 +176,7 @@ class Main ( wx.Frame ):
 		self.m_staticText9.Wrap( -1 )
 
 		self.m_staticText9.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText9.Enable( False )
 
 		wSizer7.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
@@ -173,11 +197,14 @@ class Main ( wx.Frame ):
 		self.m_staticText10.Wrap( -1 )
 
 		self.m_staticText10.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
+		self.m_staticText10.Enable( False )
 
 		wSizer8.Add( self.m_staticText10, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"日期", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText11.Wrap( -1 )
+
+		self.m_staticText11.Enable( False )
 
 		wSizer8.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
