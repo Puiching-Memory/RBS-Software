@@ -11,11 +11,15 @@
 # |_| \_\____/____/     |____/ \___/|_|  \__| \_/\_/ \__,_|_|  \___|
 #
 ###########################################################################
-
-
+#
+#	↓↓↓↓↓格式声明↓↓↓↓↓
+#	1.开头使用两个##注释掉的代码可以正常运行,但因特别原因不再使用
+#	2.使用一个#注释掉的为正常注释
+#	3.少量注释中使用箭头↓等特殊字符,这可能指的是所指方向的一行或一个段落的代码
+#
 ###########################################################################
-# import
-###########################################################################
+
+# ↓↓↓↓↓ import ↓↓↓↓↓
 
 # 自定义功能库
 import M_Roll
@@ -38,6 +42,8 @@ import M_Idion
 import M_DDT
 import M_Music
 
+import WeaterAPI # 天气API
+
 import User
 import Setting
 import Plug_in
@@ -52,25 +58,25 @@ import win32api
 import win32com.client
 import psutil
 import time
+import ping3
+##import gc # 内存库
 
 # 核心库
 import wx
 import GUI
-import configparser
-import logging.handlers
+import configparser # 设置文件(.cfg)库
+import logging.handlers # 日志库
 
 ###########################################################################
-# GUI的函数桥接
 # Class Main
 ###########################################################################
 
 
 class CalcFrame(GUI.Main):
 	def __init__(self, parent):
-		''' 定义主函数(初始化) '''
-		GUI.Main.__init__(self, parent)
+		GUI.Main.__init__(self, parent) # 初始化
 
-		# 定义全局变量
+		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg
 
 		cfg = configparser.ConfigParser()  # 读取设置文件
@@ -78,13 +84,18 @@ class CalcFrame(GUI.Main):
 		last = cfg.get('History', 'LAST')
 		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
+		transparent = cfg.get('main', 'transparent')
 
-		print(wx.Display.GetPPI(wx.Display()))
-		print(wx.ClientDisplayRect(), wx.ColourDisplay())
-		print(self.Size)
+		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display()))) # 信息收集
+		print('屏幕分辨率:' + str(wx.ClientDisplayRect()))
+		print('彩色模式:' + str(wx.ColourDisplay()))
+		print('GUI大小:' + str(self.Size))
+		
+		self.Weater.SetLabel(WeaterAPI.Now_weather())
 
-		self.SetDropTarget(FileDrop(self))
-		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))
+		self.SetDropTarget(FileDrop(self)) # 声明:接受文件拖放
+
+		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO)) # 设置GUI图标(左上角)
 
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = 'NONE'
@@ -92,9 +103,10 @@ class CalcFrame(GUI.Main):
 		color_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
 		Color_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
-		# 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
-		self.version.SetLabel('#version ' + version)
-		''' 系统自带状态栏
+		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
+		self.version.SetLabel('#version ' + version) # 设置版本号
+
+		''' 系统自带状态栏(备选方案)
 		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
 		self.Bar.SetStatusText(self.Space1.GetLabel(), 0)
 		self.Bar.SetStatusText(self.Bottom_Bar1.GetLabel(), 1)
@@ -116,8 +128,8 @@ class CalcFrame(GUI.Main):
 			self.Fast.SetBackgroundColour(
 				wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
-		# self.SetTransparent(200) # 设置窗口透明度
-		# self.SetCursor(wx.Cursor(6)) # 设置窗口光标
+		self.SetTransparent(int(transparent)) # 设置窗口透明度
+		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
 
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
@@ -125,17 +137,22 @@ class CalcFrame(GUI.Main):
 		logging.debug('Version软件版本:' + version)
 
 	def Sacc(self, event):
-		''' 主界面背景图片绘制 '''
+		'''
+		主界面背景图片绘制
+		'''
 		if setup == 1:
 			dc = event.GetDC()
-			dc.DrawBitmap(wx.Bitmap("SEA.jpg"), 0, 0)
+			dc.DrawBitmap(wx.Bitmap("./pictures/Background.jpg"), 0, 0)
 			# print(1)
 		else:
 			dc = event.GetDC()
 			dc.Clear()
 
+
 	def Close(self, event):
-		''' windows_关闭程序 '''
+		'''
+		windows_关闭程序
+		'''
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -149,7 +166,9 @@ class CalcFrame(GUI.Main):
 		sys.exit(0)
 
 	def Quit(self, event):
-		''' self_关闭程序 '''
+		'''
+		self_关闭程序
+		'''
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -162,9 +181,17 @@ class CalcFrame(GUI.Main):
 		self.Close(event)
 
 	def Ico(self, event):
+		'''
+		窗口最小化-事件触发
+		'''
 		print('窗口最小化:' + str(self.IsIconized()))
 		if self.IsIconized() == True:
 			self.Enable(False)
+			'''
+			# 释放内存的一种方法,在这里不适用
+			del self # 删除变量
+			gc.collect() # 调用GC库释放内存
+			'''
 		else:
 			self.Enable(True)
 
@@ -214,11 +241,10 @@ class CalcFrame(GUI.Main):
 
 	def Time_Tick(self, event):
 		''' 计时器-资源监视器 '''
-		# 定义全局变量
-		global CPU_text, RAM_text
+		global CPU_text, RAM_text # 定义全局变量
 		Line1 = psutil.swap_memory()
 		Line2 = psutil.cpu_times_percent()
-		# 显示
+
 		CPU_text = str(Line2.user) + "%"  # 合并字符串
 		RAM_text = str(Line1.percent) + "%"
 
@@ -245,6 +271,16 @@ class CalcFrame(GUI.Main):
 		else:
 			event.Skip()
 			##print('no such process...')
+
+	def Net_Tick(self, event):
+		'''
+		计时器-网络监视器
+		'''
+		ping = str(int(ping3.ping('www.baidu.com') * 1000))[0:3]
+		if int(ping) == 0:
+			self.Network.SetLabel('Net:Ero')
+		else:
+			self.Network.SetLabel('Net:' + ping + 'ms')
 
 	# ------------------------------------------------------------------------
 
@@ -1051,11 +1087,11 @@ class CalcFrame(GUI.Main):
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 1, 0)
 
 		self.Refresh()
+
 ###########################################################################
 # 文件拖入处理Class
 # File Class
 ###########################################################################
-
 
 class FileDrop(wx.FileDropTarget):
 
@@ -1069,6 +1105,13 @@ class FileDrop(wx.FileDropTarget):
 		for name in filenames:
 			print(name)
 
+			font = int(name.rfind('.')) + 1
+			end = int(len(name))
+			file_type = str(name)[font: end]
+
+			print('文件类型:' + file_type)
+
+
 		return True
 
 ###########################################################################
@@ -1078,7 +1121,9 @@ class FileDrop(wx.FileDropTarget):
 
 
 def main(check):
-	global app
+	'''
+	主函数
+	'''
 	Log()  # 初始化LOG设置
 	logging.debug('Document integrity check文件完整性检查:' + check)
 
@@ -1173,6 +1218,9 @@ def proc_exist(process_name):
 
 
 def start(self):
+	'''
+	程序初始化界面
+	'''
 	global setup
 	if setup == 1:
 		setup = 2
@@ -1316,6 +1364,9 @@ def start(self):
 
 
 def Home(self):
+	'''
+	返回初始界面
+	'''
 	global setup, Main_State, color_Hover
 	color_Hover = '#A65F00'
 
@@ -1433,11 +1484,18 @@ def Home(self):
 
 
 def resize(self):
+	'''
+	通过更改窗口大小触发-->界面刷新
+	(这种刷新有别于一般的Refresh,可以让错位的子项复位)
+	'''
 	self.SetSize(751, 450)
 	self.SetSize(750, 450)
 
 
 def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, LocalFile2, LocalFile3, LocalFile4):
+	'''
+	功能图标的设置
+	'''
 	Internet_ON = wx.Image("./pictures/网络-开启20.png",
 						   wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 	Internet_OFF = wx.Image("./pictures/网络-关闭20.png",

@@ -112,7 +112,7 @@ class CalcFrame(GUI_Preparation.Main):
 
 		##self.Timer.Stop()
 
-		wx.MessageBox("你好!欢迎使用RBS-software!\nRBS是应用于教育行业的工具箱软件\n作者:@广州市培正中学-悦社-张凯\n最后编辑时间:2021/7/03 凌晨1:21\n'现在即是未来'", "致未来的你们:", wx.OK) # 启动通知
+		##wx.MessageBox("你好!欢迎使用RBS-software!\nRBS是应用于教育行业的工具箱软件\n作者:@广州市培正中学-悦社-张凯\n最后编辑时间:2021/7/03 凌晨1:21\n'现在即是未来'", "致未来的你们:", wx.OK) # 启动通知
 		self.Destroy()
 		
 		Main.main(check)

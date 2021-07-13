@@ -28,10 +28,22 @@ class CalcFrame(GUI_Roster.Main):
 		Y = self.PlaceY.GetValue()
 		S = self.Space.GetValue()
 
-		BackGround_img = Image.open(Get_Background_Path())
-		BackGround_img.save('./Cache/BackGround_img.jpg')
-		
+		if os.path.exists('./Cache/BackGround_img.jpg') == True:
+			self.B_Catch.Enable(False)
+			self.IMG.SetBitmap(wx.Bitmap('./Cache/BackGround_img.jpg'))
 
+		
+	def Catch(self, event):
+		BackGround_img = Image.open(Get_Background_Path())
+		BackGround_img = BackGround_img.resize((500,300))
+		BackGround_img.save('./Cache/BackGround_img.jpg')
+
+		self.IMG.SetBitmap(wx.Bitmap('./Cache/BackGround_img.jpg'))
+
+		self.B_Catch.Enable(False)
+
+	def Refresh(self, event):
+		self.IMG.SetBitmap(wx.Bitmap('./Cache/build.jpg'))
 
 	def save(self, event):
 		# 触发器: 当输入时执行,保存修改
@@ -44,101 +56,19 @@ class CalcFrame(GUI_Roster.Main):
 		for x in ["扫地", "拖地", "擦黑板", "包干区", "倒垃圾", "搬饭"]:
 			worksheet.write(i, 0, label=x)
 			i = i + 1
-		workbook.save("./work.xls")
+		workbook.save("./DATA/Roster/work.xls")
 		self.Time.SetLabel(str(time.strftime("%H时%M分%S秒")))
 		load(self)
 		print("完成")
 
-	def Ticks(self, event):
-		localtime = time.asctime(time.localtime(time.time()))
-		im1 = Image.open('./Cache/BackGround_img.jpg')
-		font = ImageFont.truetype("Astrolab.ttf", 13)
-		draw = ImageDraw.Draw(im1)
+	def Edit(self, event):
 
-		strs = "Time:" + str(localtime)
-		draw.text((1070, 10), strs, (255, 255, 255), font=font)
-
-		font = ImageFont.truetype("simhei.ttf", 20)
-		date = " ".join(localtime.split()[:1])
-
-		X = 1070
-
-		if date == "Mon":
-			set()
-			for i in range(0, 6):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list1[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Tue":
-			set()
-			for i in range(0, 6):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list2[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Wed":
-			set()
-			for i in range(0, 6):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list3[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Thu":
-			set()
-			for i in range(0, 5):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list4[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Fri":
-			set()
-			for i in range(0, 5):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list5[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Sat":
-			set()
-			for i in range(0, 6):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list1[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-		elif date == "Sun":
-			set()
-			for i in range(0, 6):
-				strs = str(list0[i])
-				draw.text((X, 50 + i * 50), strs, (255, 255, 255), font=font)
-				strs = str(list1[i])
-				draw.text((X + 100, 50 + i * 50), strs, (255, 255, 255), font=font)
-
-		print(date, strs)
-		im1.save("./bulid.jpg")
-
-		imagepath = "./bulid.jpg"
-		keyex = win32api.RegOpenKeyEx(
-			win32con.HKEY_CURRENT_USER,
-			"Control Panel\\Desktop",
-			0,
-			win32con.KEY_SET_VALUE,
-		)
-		win32api.RegSetValueEx(keyex, "WallpaperStyle", 0, win32con.REG_SZ, "2")
-		win32api.RegSetValueEx(keyex, "TileWallpaper", 0, win32con.REG_SZ, "0")
-		win32gui.SystemParametersInfo(
-			win32con.SPI_SETDESKWALLPAPER,
-			os.path.abspath(".") + imagepath,
-			win32con.SPIF_SENDWININICHANGE,
-		)
-
-	def Auto(self, event):
-		self.Timer.Start(10000)
-		self.B_Auto.Enable(False)
-		self.B_Stop.Enable(True)
-		print("开始计时")
-
-	def Manual(self, event):
 		global X, Y, S
+
+		X = self.PlaceX.GetValue()
+		Y = self.PlaceY.GetValue()
+		S = self.Space.GetValue()
+		
 		localtime = time.asctime(time.localtime(time.time()))
 		im1 = Image.open('./Cache/BackGround_img.jpg')
 		font = ImageFont.truetype("simhei.ttf", 20)
@@ -173,9 +103,13 @@ class CalcFrame(GUI_Roster.Main):
 			strs = str(list_M[i])
 			draw.text((X + 100, Y + i * S), strs, (255, 255, 255), font=font)
 
-		im1.save("./bulid.jpg")
+		im1.save("./Cache/build.jpg")
 
-		imagepath = "./bulid.jpg"
+		self.B_Refresh.Enable(True)
+
+	def Manual(self, event):
+
+		imagepath = "./Cache/build.jpg"
 		keyex = win32api.RegOpenKeyEx(
 			win32con.HKEY_CURRENT_USER,
 			"Control Panel\\Desktop",
@@ -190,20 +124,9 @@ class CalcFrame(GUI_Roster.Main):
 			win32con.SPIF_SENDWININICHANGE,
 		)
 
-	def Stop(self, event):
-		self.Timer.Stop()
-		self.B_Auto.Enable(True)
-		self.B_Stop.Enable(False)
-
 	def Choise_change(self, event):
 		global choise
 		choise = self.choise.Selection
-
-	def Update(self, event):
-		global X, Y, S
-		X = self.PlaceX.GetValue()
-		Y = self.PlaceY.GetValue()
-		S = self.Space.GetValue()
 
 
 ##############################
@@ -225,7 +148,7 @@ def load(self):
 	workbook = xlwt.Workbook(encoding="utf-8")
 	worksheet = workbook.add_sheet("Sheet1")
 
-	excel = xlrd.open_workbook("./work.xls")
+	excel = xlrd.open_workbook("./DATA/Roster/work.xls")
 	excel = excel.sheet_by_index(0)
 	line1 = excel.row_values(rowx=0, start_colx=1)
 	line2 = excel.row_values(rowx=1, start_colx=1)
@@ -283,7 +206,7 @@ def set():
 	global list0, list1, list2, list3, list4, list5, list6, list7, list8
 	workbook = xlwt.Workbook(encoding="utf-8")
 	worksheet = workbook.add_sheet("Sheet1")
-	excel = xlrd.open_workbook("./work.xls")
+	excel = xlrd.open_workbook("./DATA/Roster/work.xls")
 	excel = excel.sheet_by_index(0)
 
 	list0 = excel.col_values(colx=0)

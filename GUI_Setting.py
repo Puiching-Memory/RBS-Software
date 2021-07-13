@@ -18,7 +18,7 @@ import wx.adv
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Setting", pos = wx.DefaultPosition, size = wx.Size( 600,350 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Setting", pos = wx.DefaultPosition, size = wx.Size( 600,400 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -40,6 +40,14 @@ class Main ( wx.Frame ):
 		self.font.Enable( False )
 
 		wSizer2.Add( self.font, 0, wx.ALL, 5 )
+
+		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"窗口透明度:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText13.Wrap( -1 )
+
+		wSizer2.Add( self.m_staticText13, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.M_transparent = wx.Slider( self, wx.ID_ANY, 255, 0, 255, wx.DefaultPosition, wx.Size( 200,-1 ), wx.SL_LABELS )
+		wSizer2.Add( self.M_transparent, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer2, 1, wx.EXPAND, 5 )

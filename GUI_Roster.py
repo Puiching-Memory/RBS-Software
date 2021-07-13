@@ -18,7 +18,7 @@ import wx.grid
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Roster V2", pos = wx.DefaultPosition, size = wx.Size( 750,400 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Roster V3", pos = wx.DefaultPosition, size = wx.Size( 750,700 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -77,16 +77,20 @@ class Main ( wx.Frame ):
 		# Cell Defaults
 		self.GRID1.SetDefaultCellBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 		self.GRID1.SetDefaultCellAlignment( wx.ALIGN_LEFT, wx.ALIGN_TOP )
-		bSizer1.Add( self.GRID1, 0, wx.ALL, 5 )
+		bSizer1.Add( self.GRID1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
 		self.L = wx.StaticText( self, wx.ID_ANY, u"自动更新频率:", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.L.Wrap( -1 )
 
+		self.L.Enable( False )
+
 		wSizer1.Add( self.L, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.Frequency = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 50,-1 ), wx.SP_ARROW_KEYS, 0, 60, 10 )
+		self.Frequency.Enable( False )
+
 		wSizer1.Add( self.Frequency, 0, wx.ALL, 5 )
 
 		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"显示位置:X:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -94,7 +98,7 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.m_staticText5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.PlaceX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 1440, 1070 )
+		self.PlaceX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 80,-1 ), wx.SP_ARROW_KEYS, 0, 1440, 1067 )
 		wSizer1.Add( self.PlaceX, 0, wx.ALL, 5 )
 
 		self.m_staticText91 = wx.StaticText( self, wx.ID_ANY, u"Y:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -123,9 +127,14 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.Time, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+
+		bSizer1.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
 		wSizer8 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
 		self.B_Auto = wx.Button( self, wx.ID_ANY, u"Auto", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_Auto.Enable( False )
+
 		wSizer8.Add( self.B_Auto, 0, wx.ALL, 5 )
 
 		self.B_Stop = wx.Button( self, wx.ID_ANY, u"Stop", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -133,30 +142,53 @@ class Main ( wx.Frame ):
 
 		wSizer8.Add( self.B_Stop, 0, wx.ALL, 5 )
 
-		self.B_Manual = wx.Button( self, wx.ID_ANY, u"Manual", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_Catch = wx.Button( self, wx.ID_ANY, u"抓取", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
+		wSizer8.Add( self.B_Catch, 0, wx.ALL, 5 )
+
+		self.B_Refresh = wx.Button( self, wx.ID_ANY, u"刷新", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
+		self.B_Refresh.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.B_Refresh.Enable( False )
+
+		wSizer8.Add( self.B_Refresh, 0, wx.ALL, 5 )
+
+		self.B_Manual = wx.Button( self, wx.ID_ANY, u"设置为桌面背景", wx.DefaultPosition, wx.DefaultSize, 0 )
 		wSizer8.Add( self.B_Manual, 0, wx.ALL, 5 )
 
-		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"选择:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"选择分组:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
 
 		wSizer8.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		choiseChoices = [ u"1", u"2", u"3", u"4", u"5", u"6", u"7", u"8" ]
 		self.choise = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiseChoices, 0 )
-		self.choise.SetSelection( 0 )
+		self.choise.SetSelection( 5 )
 		wSizer8.Add( self.choise, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.Style = wx.TextCtrl( self, wx.ID_ANY, u"期末考", wx.DefaultPosition, wx.Size( 80,-1 ), wx.TE_CENTER )
+		self.Style.Enable( False )
+
 		wSizer8.Add( self.Style, 0, wx.ALL, 5 )
 
 		self.Date = wx.TextCtrl( self, wx.ID_ANY, u"10", wx.DefaultPosition, wx.Size( 80,-1 ), wx.TE_CENTER )
+		self.Date.Enable( False )
+
 		wSizer8.Add( self.Date, 0, wx.ALL, 5 )
 
 
-		wSizer1.Add( wSizer8, 1, wx.EXPAND, 5 )
+		bSizer1.Add( wSizer8, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
+		self.IMG = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 500,300 ), wx.BORDER_NONE )
+		self.IMG.SetBackgroundColour( wx.Colour( 192, 192, 192 ) )
 
-		bSizer1.Add( wSizer1, 1, wx.EXPAND, 5 )
+		bSizer1.Add( self.IMG, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.LEFT, 5 )
+
+		self.T_Size = wx.StaticText( self, wx.ID_ANY, u"500X300", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_Size.Wrap( -1 )
+
+		self.T_Size.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.T_Size.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+
+		bSizer1.Add( self.T_Size, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.LEFT, 5 )
 
 
 		self.SetSizer( bSizer1 )
@@ -169,11 +201,13 @@ class Main ( wx.Frame ):
 		# Connect Events
 		self.GRID1.Bind( wx.grid.EVT_GRID_CELL_CHANGED, self.save )
 		self.Frequency.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.PlaceX.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.PlaceY.Bind( wx.EVT_SPINCTRL, self.Update )
-		self.Space.Bind( wx.EVT_SPINCTRL, self.Update )
+		self.PlaceX.Bind( wx.EVT_SPINCTRL, self.Edit )
+		self.PlaceY.Bind( wx.EVT_SPINCTRL, self.Edit )
+		self.Space.Bind( wx.EVT_SPINCTRL, self.Edit )
 		self.B_Auto.Bind( wx.EVT_BUTTON, self.Auto )
 		self.B_Stop.Bind( wx.EVT_BUTTON, self.Stop )
+		self.B_Catch.Bind( wx.EVT_BUTTON, self.Catch )
+		self.B_Refresh.Bind( wx.EVT_BUTTON, self.Refresh )
 		self.B_Manual.Bind( wx.EVT_BUTTON, self.Manual )
 		self.choise.Bind( wx.EVT_CHOICE, self.Choise_change )
 		self.Bind( wx.EVT_TIMER, self.Ticks, id=wx.ID_ANY )
@@ -189,6 +223,8 @@ class Main ( wx.Frame ):
 	def Update( self, event ):
 		event.Skip()
 
+	def Edit( self, event ):
+		event.Skip()
 
 
 
@@ -196,6 +232,12 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Stop( self, event ):
+		event.Skip()
+
+	def Catch( self, event ):
+		event.Skip()
+
+	def Refresh( self, event ):
 		event.Skip()
 
 	def Manual( self, event ):

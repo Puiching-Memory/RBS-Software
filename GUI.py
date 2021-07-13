@@ -10,9 +10,10 @@
 import wx
 import wx.xrc
 
-MainTimer = 1000
-VarTimer = 1001
-PPT_TIMER = 1002
+NetTimer = 1000
+MainTimer = 1001
+VarTimer = 1002
+PPT_TIMER = 1003
 
 ###########################################################################
 ## Class Main
@@ -21,7 +22,7 @@ PPT_TIMER = 1002
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software CC2021", pos = wx.DefaultPosition, size = wx.Size( 750,450 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.FRAME_SHAPED|wx.MINIMIZE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software CC2021", pos = wx.DefaultPosition, size = wx.Size( 750,450 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
@@ -30,13 +31,26 @@ class Main ( wx.Frame ):
 		bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
 		self.ToolBar_Main = wx.ToolBar( self, wx.ID_ANY, wx.Point( -1,-1 ), wx.DefaultSize, wx.TB_NOALIGN|wx.TB_NODIVIDER|wx.TB_NOICONS|wx.TB_NO_TOOLTIPS )
+		self.ToolBar_Main.SetToolSeparation( 0 )
 		self.ToolBar_Main.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.version = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"#Version 000.00.00", wx.DefaultPosition, wx.Size( 150,-1 ), 0 )
+		self.version = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"#Version 000.00.00", wx.DefaultPosition, wx.Size( 120,-1 ), 0 )
 		self.version.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.version )
-		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 400,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Network = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"Net:N/A", wx.DefaultPosition, wx.Size( 60,-1 ), 0 )
+		self.Network.Wrap( -1 )
+
+		self.Network.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+
+		self.ToolBar_Main.AddControl( self.Network )
+		self.Weater = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"Weater", wx.DefaultPosition, wx.Size( 80,-1 ), 0 )
+		self.Weater.Wrap( -1 )
+
+		self.Weater.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+
+		self.ToolBar_Main.AddControl( self.Weater )
+		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 290,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Note.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.Note )
@@ -621,6 +635,10 @@ class Main ( wx.Frame ):
 
 		self.SetSizer( bSizer8 )
 		self.Layout()
+		self.NetTimer = wx.Timer()
+		self.NetTimer.SetOwner( self, NetTimer )
+		self.NetTimer.Start( 10000 )
+
 		self.Timer = wx.Timer()
 		self.Timer.SetOwner( self, MainTimer )
 		self.Timer.Start( 1000 )
@@ -646,6 +664,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.Bind( wx.EVT_ERASE_BACKGROUND, self.Sacc )
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
+		self.Bind( wx.EVT_SIZE, self.Change_Size )
 		self.B_Log.Bind( wx.EVT_BUTTON, self.Log )
 		self.B_Log.Bind( wx.EVT_ENTER_WINDOW, self.H_LOG )
 		self.B_Log.Bind( wx.EVT_LEAVE_WINDOW, self.L_LOG )
@@ -746,6 +765,7 @@ class Main ( wx.Frame ):
 		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
 		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
 		self.Fast_Star3.Bind( wx.EVT_BUTTON, self.FStar3 )
+		self.Bind( wx.EVT_TIMER, self.Net_Tick, id=NetTimer )
 		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=MainTimer )
 		self.Bind( wx.EVT_TIMER, self.Update_Variables, id=VarTimer )
 		self.Bind( wx.EVT_TIMER, self.PPT_check, id=PPT_TIMER )
@@ -762,6 +782,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Ico( self, event ):
+		event.Skip()
+
+	def Change_Size( self, event ):
 		event.Skip()
 
 	def Log( self, event ):
@@ -1008,6 +1031,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def FStar3( self, event ):
+		event.Skip()
+
+	def Net_Tick( self, event ):
 		event.Skip()
 
 	def Time_Tick( self, event ):

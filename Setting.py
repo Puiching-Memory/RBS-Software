@@ -26,6 +26,7 @@ class CalcFrame(GUI_Setting.Main):
 		fastsetup = cfg.get('main', 'FAST_SETUP')
 		top_color = cfg.get('main', 'TOP_COLOR')
 		bottom_color = cfg.get('main', 'BOTTOM_COLOR')
+		transparent = cfg.get('main', 'transparent')
 		##print(font_size, font_family, font_style, font_weight, font_underlined, font_name)
 
 		if fastsetup == 'False':
@@ -40,6 +41,7 @@ class CalcFrame(GUI_Setting.Main):
 		self.Top_color.SetColour(top_color)
 		self.Bot_color.SetColour(bottom_color)
 		self.fastsetup.SetValue(fastsetup)
+		self.M_transparent.SetValue(int(transparent))
 
 	def Application( self, event ):
 		anaylize(self)
@@ -49,6 +51,7 @@ class CalcFrame(GUI_Setting.Main):
 		fastsetup = cfg.get('main', 'FAST_SETUP')
 		top_color = cfg.get('main', 'TOP_COLOR')
 		bottom_color = cfg.get('main', 'BOTTOM_COLOR')
+		transparent = cfg.get('main', 'transparent')
 
 		if fastsetup == 'False':
 			fastsetup = False
@@ -60,6 +63,7 @@ class CalcFrame(GUI_Setting.Main):
 		self.Top_color.SetColour(top_color)
 		self.Bot_color.SetColour(bottom_color)
 		self.fastsetup.SetValue(fastsetup)
+		self.M_transparent.SetValue(int(transparent))
 
 ##############################
 # 主函数
@@ -75,11 +79,12 @@ def main():
 def anaylize(self):
 	if self.fastsetup.IsChecked() == False:
 		cfg.set('main', 'fast_setup', 'False')
-		print(1)
+		##print(1)
 	else:
 		cfg.set('main', 'fast_setup', 'True')
-		print(2)
+		##print(2)
 
+	cfg.set('main', 'transparent', str(self.M_transparent.GetValue()))
 	##print(self.fastsetup.IsChecked())
 
 	cfg.write(open('./cfg/main.cfg', 'w'))

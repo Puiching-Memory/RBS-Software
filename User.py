@@ -6,6 +6,7 @@ import wx
 import GUI_User
 
 import uuid
+import socket
 import platform
 
 ##############################
@@ -24,6 +25,10 @@ class CalcFrame(GUI_User.Main):
         self.Net.SetLabel(platform.node())
         self.System.SetLabel(platform.platform())
         self.CPU.SetLabel(platform.processor())
+        self.IP.SetLabel(socket.gethostbyname(socket.getfqdn(socket.gethostname())))
+        self.PPI.SetLabel(str(wx.Display.GetPPI(wx.Display())))
+        self.Screen_Size.SetLabel(str(wx.ClientDisplayRect()))
+        self.Color.SetLabel(str(wx.ColourDisplay()))
         ##print(platform.python_revision())
 
 ##############################

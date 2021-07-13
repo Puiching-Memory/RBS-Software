@@ -18,40 +18,32 @@ import wx.adv
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( 400,500 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"About", pos = wx.DefaultPosition, size = wx.Size( 400,430 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		self.m_toolBar1 = self.CreateToolBar( wx.TB_HORIZONTAL, wx.ID_ANY )
-		self.m_toolBar1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
-
-		self.space = wx.StaticText( self.m_toolBar1, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 20,-1 ), 0 )
-		self.space.Wrap( -1 )
-
-		self.m_toolBar1.AddControl( self.space )
-		self.m_bitmap3 = wx.StaticBitmap( self.m_toolBar1, wx.ID_ANY, wx.Bitmap( u"ICO/ICO_100X100.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_bitmap3.SetMinSize( wx.Size( 100,100 ) )
-
-		self.m_toolBar1.AddControl( self.m_bitmap3 )
-		self.m_staticText17 = wx.StaticText( self.m_toolBar1, wx.ID_ANY, u"RBS-Software", wx.DefaultPosition, wx.Size( 250,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
-		self.m_staticText17.Wrap( -1 )
-
-		self.m_staticText17.SetFont( wx.Font( 16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
-		self.m_staticText17.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
-
-		self.m_toolBar1.AddControl( self.m_staticText17 )
-		self.m_toolBar1.Realize()
-
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-		bSizer4.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
+		wSizer31 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.LOGO = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,-1 ), wx.BORDER_NONE )
+
+		self.LOGO.SetBitmap( wx.Bitmap( u"pictures/LOGO.png", wx.BITMAP_TYPE_ANY ) )
+		self.LOGO.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
+
+		wSizer31.Add( self.LOGO, 0, wx.ALL, 5 )
 
 		self.version = wx.StaticText( self, wx.ID_ANY, u"CC2021 Ver021.5.01", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.version.Wrap( -1 )
 
-		bSizer4.Add( self.version, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		wSizer31.Add( self.version, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer4.Add( wSizer31, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.m_staticline2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		bSizer4.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
 
 		self.m_staticText20 = wx.StaticText( self, wx.ID_ANY, u"RBS is a toolbox software used in education industry\nRBS 是一个应用于教育行业的工具箱软件", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
 		self.m_staticText20.Wrap( -1 )
@@ -90,7 +82,7 @@ class Main ( wx.Frame ):
 
 		wSizer3.Add( self.m_staticText7, 0, wx.ALL, 5 )
 
-		self.m_hyperlink2 = wx.adv.HyperlinkCtrl( self, wx.ID_ANY, u"RB-Software", u"https://github.com/Puiching-Memory/RB-Software", wx.DefaultPosition, wx.DefaultSize, wx.adv.HL_DEFAULT_STYLE )
+		self.m_hyperlink2 = wx.adv.HyperlinkCtrl( self, wx.ID_ANY, u"RBS-Software", u"https://github.com/Puiching-Memory/RBS-Software", wx.DefaultPosition, wx.DefaultSize, wx.adv.HL_DEFAULT_STYLE )
 		wSizer3.Add( self.m_hyperlink2, 0, wx.ALL, 5 )
 
 

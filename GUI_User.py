@@ -109,6 +109,56 @@ class Main ( wx.Frame ):
 
 		bSizer2.Add( wSizer14, 0, 0, 5 )
 
+		wSizer141 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.m_staticText241 = wx.StaticText( self, wx.ID_ANY, u"IP地址:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText241.Wrap( -1 )
+
+		wSizer141.Add( self.m_staticText241, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.IP = wx.StaticText( self, wx.ID_ANY, u"000-0000-0000", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.IP.Wrap( -1 )
+
+		wSizer141.Add( self.IP, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer2.Add( wSizer141, 0, 0, 5 )
+
+		wSizer111 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.m_staticText212 = wx.StaticText( self, wx.ID_ANY, u"屏幕PPI:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText212.Wrap( -1 )
+
+		wSizer111.Add( self.m_staticText212, 0, wx.ALL, 5 )
+
+		self.PPI = wx.StaticText( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.PPI.Wrap( -1 )
+
+		wSizer111.Add( self.PPI, 0, wx.ALL, 5 )
+
+		self.m_staticText231 = wx.StaticText( self, wx.ID_ANY, u"屏幕分辨率:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText231.Wrap( -1 )
+
+		wSizer111.Add( self.m_staticText231, 0, wx.ALL, 5 )
+
+		self.Screen_Size = wx.StaticText( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Screen_Size.Wrap( -1 )
+
+		wSizer111.Add( self.Screen_Size, 0, wx.ALL, 5 )
+
+		self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"彩色模式:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText25.Wrap( -1 )
+
+		wSizer111.Add( self.m_staticText25, 0, wx.ALL, 5 )
+
+		self.Color = wx.StaticText( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Color.Wrap( -1 )
+
+		wSizer111.Add( self.Color, 0, wx.ALL, 5 )
+
+
+		bSizer2.Add( wSizer111, 0, 0, 5 )
+
 
 		self.SetSizer( bSizer2 )
 		self.Layout()
