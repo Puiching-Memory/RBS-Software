@@ -2,8 +2,8 @@
 
 ###########################################################################
 # Power by ZK2021
-# Puiching Memory™
-# python version: 3.8.8
+# @Puiching Memory™
+# python version: 3.8.10
 #  ____  ____ ____       ____         __ _
 # |  _ \| __ ) ___|     / ___|  ___  / _| |___      ____ _ _ __ ___
 # | |_) |  _ \___ \ ____\___ \ / _ \| |_| __\ \ /\ / / _` | '__/ _ \
@@ -21,11 +21,11 @@
 
 # ↓↓↓↓↓ import ↓↓↓↓↓
 
-# 自定义功能库
+# 功能库
 import M_Roll
 import M_Element
 import M_Pinyin
-import M_Roster #占用空间过大
+import M_Roster #打包后空间过大
 import M_Gene
 import M_About
 import M_Pi
@@ -41,6 +41,8 @@ import M_PPT
 import M_Idion
 import M_DDT
 import M_Music
+import M_WALP
+import M_Version
 
 import WeaterAPI # 天气API
 
@@ -204,8 +206,8 @@ class CalcFrame(GUI.Main):
 		M_About.main()
 
 	def Log(self, event):
-		# 使用记事本打开更新日志
-		win32api.ShellExecute(0, "open", "update-log.txt", "", "", 1)
+		# 更新日志
+		M_Version.main()
 
 	def Setting(self, event):
 		# 打开设置
@@ -654,7 +656,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 5:
 			return
 		elif Main_State == 6:
-			return
+			M_WALP.main()
 		elif Main_State == 7:
 			M_Music.main()
 		elif Main_State == 8:
@@ -938,12 +940,12 @@ class CalcFrame(GUI.Main):
 		self.G6.SetBackgroundColour(color_Main)
 		self.G6.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("NONE")
+		self.T_F1.SetLabel("WALP")
 		self.T_F2.SetLabel("NONE")
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
-		self.Tip1.SetLabel('什么都没有呢!')
+		self.Tip1.SetLabel('WALP地理信息系统')
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
@@ -1194,7 +1196,11 @@ def Color_Set(self, note, color_Main, color_Bottom, color_SideL):
 
 def Log():
 	''' Log日志输出 '''
-	output_dir = "Log"  # 定义文件夹位置(不区分大小写)
+	cfg = configparser.ConfigParser()  # 读取设置文件
+	cfg.read('./cfg/main.cfg')
+	log_place = cfg.get('main', 'LOG')
+	
+	output_dir = log_place  # 定义文件夹位置(不区分大小写)
 	log_name = '{}.log'.format(
 		time.strftime('%Y-%m-%d-%H-%M'))  # 定义文件后缀名和命名规则
 	filename = os.path.join(output_dir, log_name)

@@ -44,14 +44,21 @@ class CalcFrame(GUI_Setting.Main):
 		self.M_transparent.SetValue(int(transparent))
 
 	def Application( self, event ):
+		self.B_Application.Enable(False)
 		anaylize(self)
 		print('apply')
 
+	def Changed(self, event):
+		self.B_Application.Enable(True)
+		self.B_Cancel.Enable(True)
+
 	def Cancel( self, event ):
+		self.B_Application.Enable(True)
 		fastsetup = cfg.get('main', 'FAST_SETUP')
 		top_color = cfg.get('main', 'TOP_COLOR')
 		bottom_color = cfg.get('main', 'BOTTOM_COLOR')
 		transparent = cfg.get('main', 'transparent')
+		log_place = cfg.get('main', 'LOG')
 
 		if fastsetup == 'False':
 			fastsetup = False
@@ -64,6 +71,7 @@ class CalcFrame(GUI_Setting.Main):
 		self.Bot_color.SetColour(bottom_color)
 		self.fastsetup.SetValue(fastsetup)
 		self.M_transparent.SetValue(int(transparent))
+		self.LOG_P.SetPath(log_place)
 
 ##############################
 # 主函数
@@ -86,6 +94,7 @@ def anaylize(self):
 
 	cfg.set('main', 'transparent', str(self.M_transparent.GetValue()))
 	##print(self.fastsetup.IsChecked())
+	cfg.set('main', 'LOG', self.LOG_P.GetPath())
 
 	cfg.write(open('./cfg/main.cfg', 'w'))
 

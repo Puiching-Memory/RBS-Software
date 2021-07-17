@@ -120,7 +120,7 @@ class Main ( wx.Frame ):
 		self.G5.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G5 )
-		self.G6 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"地理 0", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G6 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"地理 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G6 )

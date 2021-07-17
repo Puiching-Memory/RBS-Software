@@ -183,15 +183,12 @@ class Main ( wx.Frame ):
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"自定义日志存储路径:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
 
-		self.m_staticText9.SetFont( wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )
-		self.m_staticText9.Enable( False )
+		self.m_staticText9.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer7.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_dirPicker1 = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE|wx.DIRP_SMALL )
-		self.m_dirPicker1.Enable( False )
-
-		wSizer7.Add( self.m_dirPicker1, 0, wx.ALL, 5 )
+		self.LOG_P = wx.DirPickerCtrl( self, wx.ID_ANY, wx.EmptyString, u"绝对路径.\\log", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DIR_MUST_EXIST|wx.DIRP_SMALL|wx.DIRP_USE_TEXTCTRL )
+		wSizer7.Add( self.LOG_P, 0, wx.ALL, 5 )
 
 
 		bSizer1.Add( wSizer7, 1, wx.EXPAND, 5 )
@@ -230,9 +227,13 @@ class Main ( wx.Frame ):
 		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
 		self.B_Application = wx.Button( self, wx.ID_ANY, u"应用", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_Application.Enable( False )
+
 		wSizer6.Add( self.B_Application, 0, wx.ALL, 5 )
 
 		self.B_Cancel = wx.Button( self, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_Cancel.Enable( False )
+
 		wSizer6.Add( self.B_Cancel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
@@ -245,6 +246,10 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.M_transparent.Bind( wx.EVT_SCROLL, self.Changed )
+		self.M_transparent.Bind( wx.EVT_SLIDER, self.Changed )
+		self.fastsetup.Bind( wx.EVT_CHECKBOX, self.Changed )
+		self.LOG_P.Bind( wx.EVT_DIRPICKER_CHANGED, self.Changed )
 		self.B_Application.Bind( wx.EVT_BUTTON, self.Application )
 		self.B_Cancel.Bind( wx.EVT_BUTTON, self.Cancel )
 
@@ -253,6 +258,12 @@ class Main ( wx.Frame ):
 
 
 	# Virtual event handlers, overide them in your derived class
+	def Changed( self, event ):
+		event.Skip()
+
+
+
+
 	def Application( self, event ):
 		event.Skip()
 

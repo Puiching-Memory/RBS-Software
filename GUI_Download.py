@@ -56,16 +56,11 @@ class Main ( wx.Frame ):
 
 		self.SetSizer( bSizer2 )
 		self.Layout()
-		self.m_timer1 = wx.Timer()
-		self.m_timer1.SetOwner( self, wx.ID_ANY )
-		self.m_timer1.Start( 100 )
-
 
 		self.Centre( wx.BOTH )
 
 		# Connect Events
 		self.m_button1.Bind( wx.EVT_BUTTON, self.run )
-		self.Bind( wx.EVT_TIMER, self.time, id=wx.ID_ANY )
 
 	def __del__( self ):
 		pass
@@ -73,9 +68,6 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, overide them in your derived class
 	def run( self, event ):
-		event.Skip()
-
-	def time( self, event ):
 		event.Skip()
 
 
