@@ -31,7 +31,6 @@ import M_About
 import M_Pi
 import M_Capslook
 import M_Base_conversion
-import M_Update
 import M_Traditional_Chinese
 import M_BMI
 import M_PPTNG
@@ -43,6 +42,8 @@ import M_DDT
 import M_Music
 import M_WALP
 import M_Version
+import M_History
+import M_Date
 
 import WeaterAPI # 天气API
 
@@ -56,8 +57,8 @@ import L_College
 # 辅助功能库
 import sys
 import os
-import win32api
 import win32com.client
+import win32api
 import psutil
 import time
 import ping3
@@ -80,13 +81,14 @@ class CalcFrame(GUI.Main):
 
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg
-
 		cfg = configparser.ConfigParser()  # 读取设置文件
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
 		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
 		transparent = cfg.get('main', 'transparent')
+
+		Self_CMD(self, '载入设置完成')
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display()))) # 信息收集
 		print('屏幕分辨率:' + str(wx.ClientDisplayRect()))
@@ -106,7 +108,7 @@ class CalcFrame(GUI.Main):
 		Color_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
 		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
-		self.version.SetLabel('#version ' + version) # 设置版本号
+		self.version.SetLabel('#V' + version) # 设置版本号
 
 		''' 系统自带状态栏(备选方案)
 		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
@@ -137,6 +139,8 @@ class CalcFrame(GUI.Main):
 		logging.debug(str('Initialization complete初始化完成:' +
 						  time.strftime('%Y/%m/%d*%H:%M:%S')))
 		logging.debug('Version软件版本:' + version)
+
+		Self_CMD(self, '初始化完成,日志已保存')
 
 	def Sacc(self, event):
 		'''
@@ -215,7 +219,7 @@ class CalcFrame(GUI.Main):
 
 	def Update(self, event):
 		# 打开<联网更新>界面
-		M_Update.main(version)
+		win32api.ShellExecute(0, 'open', 'Update.exe', '','',1)
 
 	def HOME(self, event):
 		''' 返回主界面 '''
@@ -229,6 +233,13 @@ class CalcFrame(GUI.Main):
 
 	def LLL(self, event):
 		L_College.main()
+
+	def CMD_Enter(self, event):
+		CMD(self, self.CMD_IN.GetValue())
+		self.CMD_IN.SetValue('')
+
+	def BT2(self, event):
+		M_Date.main()
 
 	def Fast_on(self, event):
 		check_name = ['中文转拼音', '简-繁转换', '成语接龙', '', '圆周率', '', '', '', '大小写转换', '', '', '', '下载器', 'PPT出图', 'BMI', 'DDT', '',
@@ -274,6 +285,7 @@ class CalcFrame(GUI.Main):
 			event.Skip()
 			##print('no such process...')
 
+
 	def Net_Tick(self, event):
 		'''
 		计时器-网络监视器
@@ -283,6 +295,8 @@ class CalcFrame(GUI.Main):
 			self.Network.SetLabel('Net:Ero')
 		else:
 			self.Network.SetLabel('Net:' + ping + 'ms')
+
+		Self_CMD(self, '网络延迟:' + ping + 'ms')
 
 	# ------------------------------------------------------------------------
 
@@ -654,7 +668,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 4:
 			M_Download.main()
 		elif Main_State == 5:
-			return
+			M_History.main()
 		elif Main_State == 6:
 			M_WALP.main()
 		elif Main_State == 7:
@@ -906,12 +920,12 @@ class CalcFrame(GUI.Main):
 		self.G5.SetBackgroundColour(color_Main)
 		self.G5.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("NONE")
+		self.T_F1.SetLabel("历史上的今天")
 		self.T_F2.SetLabel("NONE")
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
-		self.Tip1.SetLabel('什么都没有呢!')
+		self.Tip1.SetLabel('数据来自www.ipip5.com')
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
@@ -1128,6 +1142,7 @@ def main(check):
 	'''
 	Log()  # 初始化LOG设置
 	logging.debug('Document integrity check文件完整性检查:' + check)
+	
 
 	app = wx.App(False)  # GUI循环及前置设置
 	frame = CalcFrame(None)
@@ -1276,17 +1291,17 @@ def start(self):
 		self.Side3.Show(buer)
 		self.Side4.Show(buer)
 
+		self.B_Side_Close.Show(buer)
+		self.CMD_OUT.Show(buer)
+		self.CMD_IN.Show(buer)
+		self.Push.Show(buer)
+
 		self.Side_Tip.Show(buer)
 		self.info.Show(buer)
-		self.Control.Show(buer)
-
-		self.info_text1.Show(buer)
-		self.info_text2.Show(buer)
-		self.info_text3.Show(buer)
-		self.info_text4.Show(buer)
 
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
+		self.Line3.Show(buer)
 		self.Line_Last.Show(False)
 		self.Space_left.Show(buer)
 
@@ -1349,17 +1364,17 @@ def start(self):
 		self.Side3.Show(buer)
 		self.Side4.Show(buer)
 
+		self.B_Side_Close.Show(buer)
+		self.CMD_OUT.Show(buer)
+		self.CMD_IN.Show(buer)
+		self.Push.Show(buer)
+
 		self.Side_Tip.Show(buer)
 		self.info.Show(buer)
-		self.Control.Show(buer)
-
-		self.info_text1.Show(buer)
-		self.info_text2.Show(buer)
-		self.info_text3.Show(buer)
-		self.info_text4.Show(buer)
 
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
+		self.Line3.Show(buer)
 		self.Line_Last.Show(True)
 		self.Space_left.Show(buer)
 
@@ -1427,17 +1442,17 @@ def Home(self):
 	self.Side3.Show(buer)
 	self.Side4.Show(buer)
 
+	self.B_Side_Close.Show(buer)
+	self.CMD_OUT.Show(buer)
+	self.CMD_IN.Show(buer)
+	self.Push.Show(buer)
+
 	self.Side_Tip.Show(buer)
 	self.info.Show(buer)
-	self.Control.Show(buer)
-
-	self.info_text1.Show(buer)
-	self.info_text2.Show(buer)
-	self.info_text3.Show(buer)
-	self.info_text4.Show(buer)
 
 	self.Line1.Show(buer)
 	self.Line2.Show(buer)
+	self.Line3.Show(buer)
 	self.Line_Last.Show(True)
 	self.Space_left.Show(buer)
 
@@ -1550,6 +1565,28 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 	else:
 		self.File4.SetBitmap(File_OFF)
 
+
+def Self_CMD(self, info):
+	'''
+	向程序自带控制台输入信息
+	info输入要求:str
+	'''
+	if self.CMD_OUT.GetValue() == '':
+		self.CMD_OUT.SetValue('>>>' + time.strftime('%H:%M:%S') + ':' + info)
+	else:
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
+
+
+def CMD(self, info):
+	'''
+	控制台指令处理
+	'''
+	if info == 'clear':
+		self.CMD_OUT.SetValue('')
+	elif info == 'time':
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Time:' + time.strftime('%H:%M:%S'))
+	else:
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
 if __name__ == "__main__":
 	check = 'Unrunning(Self_On)'  # 不经引导程序启动时的自我设置

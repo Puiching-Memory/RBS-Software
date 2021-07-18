@@ -34,7 +34,7 @@ class Main ( wx.Frame ):
 		self.ToolBar_Main.SetToolSeparation( 0 )
 		self.ToolBar_Main.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.version = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"#Version 000.00.00", wx.DefaultPosition, wx.Size( 120,-1 ), 0 )
+		self.version = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,-1 ), 0 )
 		self.version.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.version )
@@ -50,7 +50,7 @@ class Main ( wx.Frame ):
 		self.Weater.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.ToolBar_Main.AddControl( self.Weater )
-		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 290,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 330,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Note.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.Note )
@@ -116,7 +116,7 @@ class Main ( wx.Frame ):
 		self.G4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G4 )
-		self.G5 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"历史 0", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G5 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"历史 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G5.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G5 )
@@ -465,69 +465,49 @@ class Main ( wx.Frame ):
 		wSizer8.Add( self.Space_left, 0, wx.ALL, 5 )
 
 		self.Line2 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.LI_VERTICAL )
-		wSizer8.Add( self.Line2, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
+		wSizer8.Add( self.Line2, 0, wx.EXPAND|wx.TOP|wx.LEFT, 5 )
 
 		bSizer181 = wx.BoxSizer( wx.VERTICAL )
 
-		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"Helper", wx.DefaultPosition, wx.Size( 200,30 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Line3 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		bSizer181.Add( self.Line3, 0, wx.EXPAND|wx.TOP, 5 )
+
+		wSizer12 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.B_Side_Close = wx.Button( self, wx.ID_ANY, u"X", wx.DefaultPosition, wx.Size( 25,25 ), wx.BORDER_NONE )
+		self.B_Side_Close.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_SCROLLBAR ) )
+
+		wSizer12.Add( self.B_Side_Close, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"          Helper", wx.DefaultPosition, wx.Size( 150,20 ), 0 )
+		self.Side_Tip.SetLabelMarkup( u"          Helper" )
 		self.Side_Tip.Wrap( -1 )
 
-		self.Side_Tip.SetFont( wx.Font( 16, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_ITALIC, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.Side_Tip.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
 		self.Side_Tip.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 		self.Side_Tip.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
-		self.Side_Tip.Enable( False )
 
-		bSizer181.Add( self.Side_Tip, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		wSizer12.Add( self.Side_Tip, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer181.Add( wSizer12, 0, 0, 5 )
 
 		self.info = wx.TextCtrl( self, wx.ID_ANY, u"选中一个帮助焦点以显示帮助", wx.DefaultPosition, wx.Size( 200,140 ), wx.TE_MULTILINE|wx.TE_READONLY )
-		self.info.Enable( False )
-
 		bSizer181.Add( self.info, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 
-		fgSizer2 = wx.FlexGridSizer( 0, 1, 0, 0 )
-		fgSizer2.SetFlexibleDirection( wx.BOTH )
-		fgSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		self.CMD_OUT = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,100 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer181.Add( self.CMD_OUT, 0, wx.ALL, 5 )
 
-		self.info_text1 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
-		self.info_text1.Wrap( -1 )
+		wSizer13 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.info_text1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-		self.info_text1.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
-		self.info_text1.Enable( False )
+		self.CMD_IN = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 175,25 ), 0 )
+		wSizer13.Add( self.CMD_IN, 0, wx.TOP|wx.LEFT, 5 )
 
-		fgSizer2.Add( self.info_text1, 0, wx.ALL, 5 )
-
-		self.info_text2 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
-		self.info_text2.Wrap( -1 )
-
-		self.info_text2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-		self.info_text2.Enable( False )
-
-		fgSizer2.Add( self.info_text2, 0, wx.ALL, 5 )
-
-		self.info_text3 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
-		self.info_text3.Wrap( -1 )
-
-		self.info_text3.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-		self.info_text3.Enable( False )
-
-		fgSizer2.Add( self.info_text3, 0, wx.ALL, 5 )
-
-		self.info_text4 = wx.StaticText( self, wx.ID_ANY, u"Info---", wx.DefaultPosition, wx.Size( 100,20 ), wx.ALIGN_RIGHT )
-		self.info_text4.Wrap( -1 )
-
-		self.info_text4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-		self.info_text4.Enable( False )
-
-		fgSizer2.Add( self.info_text4, 0, wx.ALL, 5 )
+		self.Push = wx.Button( self, wx.ID_ANY, u"↑", wx.DefaultPosition, wx.Size( 25,25 ), 0 )
+		wSizer13.Add( self.Push, 0, wx.TOP, 5 )
 
 
-		bSizer181.Add( fgSizer2, 0, wx.ALIGN_RIGHT, 5 )
-
-		self.Control = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,50 ), 0 )
-		self.Control.Enable( False )
-
-		bSizer181.Add( self.Control, 0, wx.ALIGN_RIGHT, 5 )
+		bSizer181.Add( wSizer13, 0, 0, 5 )
 
 
 		wSizer8.Add( bSizer181, 0, 0, 5 )
@@ -760,11 +740,12 @@ class Main ( wx.Frame ):
 		self.B_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.Tip4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.Tip4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
-		self.Control.Bind( wx.EVT_BUTTON, self.LLL )
+		self.Push.Bind( wx.EVT_BUTTON, self.CMD_Enter )
 		self.Fast.Bind( wx.EVT_BUTTON, self.Fast_on )
 		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
 		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
 		self.Fast_Star3.Bind( wx.EVT_BUTTON, self.FStar3 )
+		self.Bottom_Bar2.Bind( wx.EVT_BUTTON, self.BT2 )
 		self.Bind( wx.EVT_TIMER, self.Net_Tick, id=NetTimer )
 		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=MainTimer )
 		self.Bind( wx.EVT_TIMER, self.Update_Variables, id=VarTimer )
@@ -1018,7 +999,7 @@ class Main ( wx.Frame ):
 
 
 
-	def LLL( self, event ):
+	def CMD_Enter( self, event ):
 		event.Skip()
 
 	def Fast_on( self, event ):
@@ -1031,6 +1012,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def FStar3( self, event ):
+		event.Skip()
+
+	def BT2( self, event ):
 		event.Skip()
 
 	def Net_Tick( self, event ):

@@ -5,7 +5,6 @@ import wx
 
 import os
 
-from wx.core import version
 import GUI_Version
 
 ##############################
@@ -21,7 +20,7 @@ class CalcFrame(GUI_Version.Main):
         for root, dirs, files in os.walk('./DATA/Version/'):  
             ##print(root) #当前目录路径  
             ##print(dirs) #当前路径下所有子目录  
-            print(files) #当前路径下所有非目录子文件  
+            ##print(files) #当前路径下所有非目录子文件  
             self.Place.SetLabel('日志路径: ' + root)
 
         self.Version_L.SetSelection(-1)

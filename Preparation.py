@@ -16,6 +16,8 @@ import wx
 import hashlib
 import os.path
 import configparser
+import win32com.client
+import win32gui
 
 import GUI_Preparation
 
@@ -28,6 +30,16 @@ class CalcFrame(GUI_Preparation.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_Preparation.Main.__init__(self, parent)
+
+		if proc_exist('RBS_Software2021.exe') == 2:
+			print('PreParation:程序已启动-->退出')
+			##win32gui.ShowWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
+			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
+			wx.Exit()
+		else:
+			print('PreParation:程序无冲突-->启动')
+
+
 		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
@@ -142,6 +154,16 @@ def main():
 	app.MainLoop()
 	wx.App.SetExitOnFrameDelete(False)
 
+
+def proc_exist(process_name):
+	''' 程序运行检查 '''
+	is_exist = False
+	wmi = win32com.client.GetObject('winmgmts:')
+	processCodeCov = wmi.ExecQuery(
+		'select * from Win32_Process where name=\"%s\"' % (process_name))
+	Program_num = len(processCodeCov)
+	
+	return Program_num
 
 if __name__ == "__main__":
 	global ppt_check
