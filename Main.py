@@ -44,6 +44,7 @@ import M_WALP
 import M_Version
 import M_History
 import M_Date
+import M_File
 
 import WeaterAPI # 天气API
 
@@ -62,10 +63,12 @@ import win32api
 import psutil
 import time
 import ping3
+import random
 ##import gc # 内存库
 
 # 核心库
 import wx
+import wx.adv
 import GUI
 import configparser # 设置文件(.cfg)库
 import logging.handlers # 日志库
@@ -76,30 +79,33 @@ import logging.handlers # 日志库
 
 
 class CalcFrame(GUI.Main):
+
+	# ↓↓↓↓↓ 定义wx.ID ↓↓↓↓↓
+	MENU_EXIT   = wx.NewIdRef()
+
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent) # 初始化
 
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
-		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg
+		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg,screen_size_x,screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
 		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
 		transparent = cfg.get('main', 'transparent')
+		is_exe = cfg.get('main', 'is_exe')
+		screen_size_x = int(cfg.get('screen', 'size_x'))
+		screen_size_y = int(cfg.get('screen', 'size_y'))
 
-		Self_CMD(self, '载入设置完成')
+		Self_CMD(self, '载入设置完成') # 向自定义控制台发送消息
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display()))) # 信息收集
 		print('屏幕分辨率:' + str(wx.ClientDisplayRect()))
 		print('彩色模式:' + str(wx.ColourDisplay()))
 		print('GUI大小:' + str(self.Size))
-		
-		self.Weater.SetLabel(WeaterAPI.Now_weather())
 
-		self.SetDropTarget(FileDrop(self)) # 声明:接受文件拖放
-
-		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO)) # 设置GUI图标(左上角)
+		Self_CMD(self, str(self.Size))
 
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = 'NONE'
@@ -109,6 +115,20 @@ class CalcFrame(GUI.Main):
 
 		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
 		self.version.SetLabel('#V' + version) # 设置版本号
+
+		if is_exe == 'True': # 主界面大小设置
+			self.SetSize(screen_size_x - 10,screen_size_y - 10)
+			screen_size_x = screen_size_x - 10
+			screen_size_y = screen_size_y - 10
+		else:
+			self.SetSize(screen_size_x,screen_size_y)
+
+		self.Weater.SetLabel(WeaterAPI.Now_weather()) # 设置天气信息
+
+		self.taskBar = wx.adv.TaskBarIcon() # 声明:启用系统托盘
+		self.SetDoubleBuffered(True) # 声明:启用双缓冲
+		self.SetDropTarget(FileDrop(self)) # 声明:接受文件拖放
+		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO)) # 设置GUI图标(左上角)
 
 		''' 系统自带状态栏(备选方案)
 		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
@@ -159,6 +179,9 @@ class CalcFrame(GUI.Main):
 		'''
 		windows_关闭程序
 		'''
+		if self.taskBar.IsAvailable == True:
+			self.taskBar.RemoveIcon()
+
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -175,6 +198,9 @@ class CalcFrame(GUI.Main):
 		'''
 		self_关闭程序
 		'''
+		if self.taskBar.IsAvailable == True:
+			self.taskBar.RemoveIcon()
+		
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -198,8 +224,31 @@ class CalcFrame(GUI.Main):
 			del self # 删除变量
 			gc.collect() # 调用GC库释放内存
 			'''
+			self.NetTimer.Stop()
+			self.Timer.Stop()
+			self.VarTimer.Stop()
+			self.PPT_Timer.Stop()
+
+			self.taskBar.SetIcon(wx.Icon(os.path.join("./ICOV4.ico"), wx.BITMAP_TYPE_ICO), "RBS_Software2021") # 设置系统托盘图标
+
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBar) # 右键单击托盘图标
+			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
+			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBar) # 左键双击托盘图标
+			##self.taskBar.Bind(wx.EVT_MENU, self.OnShow, id=self.MENU_SHOW) # 显示窗口
+			##self.taskBar.Bind(wx.EVT_MENU, self.OnHide, id=self.MENU_HIDE) # 隐藏窗口
+			##self.taskBar.Bind(wx.EVT_MENU, self.OnOpenFolder, id=self.MENU_FOLFER) # 打开输出目录
+			##self.taskBar.Bind(wx.EVT_MENU, self.OnConfig, id=self.MENU_CONFIG) # 设置
+			self.taskBar.Bind(wx.EVT_MENU, self.Quit, id=self.MENU_EXIT) # 退出
+
+
 		else:
 			self.Enable(True)
+			self.NetTimer.Start(1000)
+			self.Timer.Start(1000)
+			self.VarTimer.Start(100)
+			self.PPT_Timer.Start(1000)
+
+			self.taskBar.RemoveIcon()
 
 	def Cmd(self, event):
 		# 打开Cmd
@@ -219,7 +268,10 @@ class CalcFrame(GUI.Main):
 
 	def Update(self, event):
 		# 打开<联网更新>界面
-		win32api.ShellExecute(0, 'open', 'Update.exe', '','',1)
+		if proc_exist('Update.exe'):
+			print('程序已运行')
+		else:
+			win32api.ShellExecute(0, 'open', 'Update.exe', '','',1)
 
 	def HOME(self, event):
 		''' 返回主界面 '''
@@ -237,6 +289,17 @@ class CalcFrame(GUI.Main):
 	def CMD_Enter(self, event):
 		CMD(self, self.CMD_IN.GetValue())
 		self.CMD_IN.SetValue('')
+
+	def OnTaskBar(self, event):
+		'''
+		系统托盘图标_对应操作
+		'''
+		menu = wx.Menu()
+		menu.AppendSeparator()
+		menu.Append(self.MENU_EXIT, "退出") # 使用系统托盘退出的方法会引发一个C++的错误,错误原因未知,解决方法未知,不会导致可见的问题
+
+		self.taskBar.PopupMenu(menu) # 显示托盘菜单
+		menu.Destroy() # 销毁托盘菜单
 
 	def BT2(self, event):
 		M_Date.main()
@@ -296,7 +359,7 @@ class CalcFrame(GUI.Main):
 		else:
 			self.Network.SetLabel('Net:' + ping + 'ms')
 
-		Self_CMD(self, '网络延迟:' + ping + 'ms')
+		##Self_CMD(self, '网络延迟:' + ping + 'ms')
 
 	# ------------------------------------------------------------------------
 
@@ -1127,6 +1190,16 @@ class FileDrop(wx.FileDropTarget):
 
 			print('文件类型:' + file_type)
 
+		if len(filenames) > 1:
+			print('警告:暂不支持多文件拖放,取最后一个文件')
+
+		File_cfg = configparser.ConfigParser()
+		File_cfg.read('./cfg/File.cfg')
+		File_cfg.set('File', 'path', name)
+		File_cfg.set('File', 'type', str(file_type))
+		File_cfg.write(open('./cfg/File.cfg', 'w'))
+
+		##M_File.main() # 如果直接这样打开会阻塞线程,windows资源管理器也会卡住
 
 		return True
 
@@ -1142,7 +1215,7 @@ def main(check):
 	'''
 	Log()  # 初始化LOG设置
 	logging.debug('Document integrity check文件完整性检查:' + check)
-	
+
 
 	app = wx.App(False)  # GUI循环及前置设置
 	frame = CalcFrame(None)
@@ -1214,7 +1287,7 @@ def Log():
 	cfg = configparser.ConfigParser()  # 读取设置文件
 	cfg.read('./cfg/main.cfg')
 	log_place = cfg.get('main', 'LOG')
-	
+
 	output_dir = log_place  # 定义文件夹位置(不区分大小写)
 	log_name = '{}.log'.format(
 		time.strftime('%Y-%m-%d-%H-%M'))  # 定义文件后缀名和命名规则
@@ -1313,7 +1386,6 @@ def start(self):
 		self.Fast_Star1.Show(False)
 		self.Fast_Star2.Show(False)
 		self.Fast_Star3.Show(False)
-
 		resize(self)
 		self.SetBackgroundColour('White')
 
@@ -1509,8 +1581,8 @@ def resize(self):
 	通过更改窗口大小触发-->界面刷新
 	(这种刷新有别于一般的Refresh,可以让错位的子项复位)
 	'''
-	self.SetSize(751, 450)
-	self.SetSize(750, 450)
+	self.SetSize(screen_size_x + 1, screen_size_y)
+	self.SetSize(screen_size_x, screen_size_y)
 
 
 def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, LocalFile2, LocalFile3, LocalFile4):
@@ -1585,6 +1657,10 @@ def CMD(self, info):
 		self.CMD_OUT.SetValue('')
 	elif info == 'time':
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Time:' + time.strftime('%H:%M:%S'))
+	elif info == 'random':
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>random:' + str(random.random()))
+	elif info == 'close' or info == 'quit' or info == 'kill':
+		self.Destroy()
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 

@@ -31,15 +31,6 @@ class CalcFrame(GUI_Preparation.Main):
 		# 定义主函数
 		GUI_Preparation.Main.__init__(self, parent)
 
-		if proc_exist('RBS_Software2021.exe') == 2:
-			print('PreParation:程序已启动-->退出')
-			##win32gui.ShowWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
-			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
-			wx.Exit()
-		else:
-			print('PreParation:程序无冲突-->启动')
-
-
 		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
@@ -47,6 +38,19 @@ class CalcFrame(GUI_Preparation.Main):
 		version = cfg.get('main', 'VERSION')
 		fast_setup = cfg.get('main', 'fast_setup')
 		self.Version.SetLabel(str('#Version:   ' + version))
+
+		if proc_exist('RBS_Software2021.exe') == 2:
+			print('PreParation:程序已启动-->退出')
+			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
+			wx.Exit()
+		elif proc_exist('RBS_Software2021.exe') == 1:
+			print('PreParation:程序无冲突-->启动')
+			cfg.set('main', 'is_exe', 'True')
+			cfg.write(open('./cfg/main.cfg', 'w'))
+		else:
+			print('PreParation:程序无冲突-->启动')
+			cfg.set('main', 'is_exe', 'False')
+			cfg.write(open('./cfg/main.cfg', 'w'))
 
 		if fast_setup == 'True':
 			self.Fast_Timer.Start(1, True)

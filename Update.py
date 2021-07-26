@@ -131,6 +131,8 @@ class CalcFrame(GUI_Update.Main):
 				print('文件已更新--来源:' + file_from + '去到:' + file_to)
 			print('文件更新完成,重启主程序')
 
+			##wx.MilliSleep(3000)
+
 			try:
 				win32api.ShellExecute(0, 'open', 'RBS_Software2021.exe', '','',1)
 			except BaseException:

@@ -22,22 +22,59 @@ class Main ( wx.Frame ):
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+		bSizer2 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, u"本功能尚未完成，请别催我．．．．．．得加钱", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText3.Wrap( -1 )
+		ListChoices = []
+		self.List = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 100,300 ), ListChoices, 0 )
+		bSizer2.Add( self.List, 0, wx.ALL, 5 )
 
-		bSizer2.Add( self.m_staticText3, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-		self.local_version = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.local_version.Wrap( -1 )
+		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		bSizer2.Add( self.local_version, 0, wx.ALL, 5 )
+		self.Plug_in_version = wx.StaticText( self, wx.ID_ANY, u"插件协议版本：", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
+		self.Plug_in_version.Wrap( -1 )
 
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"＿＿＿＿", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText7.Wrap( -1 )
+		wSizer1.Add( self.Plug_in_version, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		bSizer2.Add( self.m_staticText7, 0, wx.ALL, 5 )
+		Version_choiseChoices = [ u"#100" ]
+		self.Version_choise = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), Version_choiseChoices, 0 )
+		self.Version_choise.SetSelection( 0 )
+		wSizer1.Add( self.Version_choise, 0, wx.ALL, 5 )
+
+
+		bSizer3.Add( wSizer1, 0, 0, 5 )
+
+		self.T_Name = wx.StaticText( self, wx.ID_ANY, u"插件:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_Name.Wrap( -1 )
+
+		bSizer3.Add( self.T_Name, 0, wx.ALL, 5 )
+
+		self.T_Author = wx.StaticText( self, wx.ID_ANY, u"作者:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_Author.Wrap( -1 )
+
+		bSizer3.Add( self.T_Author, 0, wx.ALL, 5 )
+
+		self.T_PVersion = wx.StaticText( self, wx.ID_ANY, u"插件版本:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_PVersion.Wrap( -1 )
+
+		bSizer3.Add( self.T_PVersion, 0, wx.ALL, 5 )
+
+		self.T_SVersion = wx.StaticText( self, wx.ID_ANY, u"适用版本:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_SVersion.Wrap( -1 )
+
+		bSizer3.Add( self.T_SVersion, 0, wx.ALL, 5 )
+
+		self.T_State = wx.StaticText( self, wx.ID_ANY, u"状态:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_State.Wrap( -1 )
+
+		bSizer3.Add( self.T_State, 0, wx.ALL, 5 )
+
+		self.Info = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 260,100 ), wx.TE_MULTILINE )
+		bSizer3.Add( self.Info, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+
+		bSizer2.Add( bSizer3, 1, wx.EXPAND, 5 )
 
 
 		self.SetSizer( bSizer2 )
@@ -47,6 +84,7 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.List.Bind( wx.EVT_LISTBOX, self.Setup )
 
 	def __del__( self ):
 		pass
@@ -54,6 +92,9 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, overide them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def Setup( self, event ):
 		event.Skip()
 
 

@@ -570,47 +570,49 @@ class Main ( wx.Frame ):
 
 		bSizer8.Add( bSizer63, 1, wx.EXPAND, 5 )
 
-		Bsizer = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+		fgSizer3 = wx.FlexGridSizer( 0, 6, 0, 0 )
+		fgSizer3.SetFlexibleDirection( wx.BOTH )
+		fgSizer3.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_NONE )
 
 		self.Space1 = wx.Button( self, wx.ID_ANY, u">", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Space1, 0, 0, 5 )
+		fgSizer3.Add( self.Space1, 0, 0, 5 )
 
 		self.Bottom_Bar1 = wx.Button( self, wx.ID_ANY, u"    ------", wx.DefaultPosition, wx.Size( 295,20 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Bottom_Bar1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Bottom_Bar1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Bottom_Bar1, 0, 0, 5 )
+		fgSizer3.Add( self.Bottom_Bar1, 0, 0, 5 )
 
 		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Space2, 0, 0, 5 )
+		fgSizer3.Add( self.Space2, 0, 0, 5 )
 
 		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 250,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Bottom_Bar2, 0, 0, 5 )
+		fgSizer3.Add( self.Bottom_Bar2, 0, 0, 5 )
 
 		self.Space3 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Space3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Space3, 0, 0, 5 )
+		fgSizer3.Add( self.Space3, 0, 0, 5 )
 
-		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 172,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 175,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
-		Bsizer.Add( self.Bottom_Bar3, 0, 0, 5 )
+		fgSizer3.Add( self.Bottom_Bar3, 0, 0, 5 )
 
 
-		bSizer8.Add( Bsizer, 0, 0, 0 )
+		bSizer8.Add( fgSizer3, 0, 0, 5 )
 
 
 		self.SetSizer( bSizer8 )
