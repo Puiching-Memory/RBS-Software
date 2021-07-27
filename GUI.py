@@ -50,10 +50,16 @@ class Main ( wx.Frame ):
 		self.Weater.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.ToolBar_Main.AddControl( self.Weater )
-		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 330,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 300,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.Note.Wrap( -1 )
 
 		self.ToolBar_Main.AddControl( self.Note )
+		self.B_File = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+
+		self.B_File.SetBitmap( wx.Bitmap( u"pictures/File.png", wx.BITMAP_TYPE_ANY ) )
+		self.B_File.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
+
+		self.ToolBar_Main.AddControl( self.B_File )
 		self.B_Log = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
 
 		self.B_Log.SetBitmap( wx.Bitmap( u"pictures/更新日志25X25.png", wx.BITMAP_TYPE_ANY ) )
@@ -124,7 +130,7 @@ class Main ( wx.Frame ):
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G6 )
-		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G7 )
@@ -647,6 +653,9 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_ERASE_BACKGROUND, self.Sacc )
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
+		self.B_File.Bind( wx.EVT_BUTTON, self.File )
+		self.B_File.Bind( wx.EVT_ENTER_WINDOW, self.H_File )
+		self.B_File.Bind( wx.EVT_LEAVE_WINDOW, self.L_File )
 		self.B_Log.Bind( wx.EVT_BUTTON, self.Log )
 		self.B_Log.Bind( wx.EVT_ENTER_WINDOW, self.H_LOG )
 		self.B_Log.Bind( wx.EVT_LEAVE_WINDOW, self.L_LOG )
@@ -768,6 +777,15 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Change_Size( self, event ):
+		event.Skip()
+
+	def File( self, event ):
+		event.Skip()
+
+	def H_File( self, event ):
+		event.Skip()
+
+	def L_File( self, event ):
 		event.Skip()
 
 	def Log( self, event ):

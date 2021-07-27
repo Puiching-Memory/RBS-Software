@@ -45,6 +45,7 @@ import M_Version
 import M_History
 import M_Date
 import M_File
+import M_QRcode
 
 import WeaterAPI # 天气API
 
@@ -273,6 +274,9 @@ class CalcFrame(GUI.Main):
 		else:
 			win32api.ShellExecute(0, 'open', 'Update.exe', '','',1)
 
+	def File(self, event):
+		M_File.main()
+
 	def HOME(self, event):
 		''' 返回主界面 '''
 		Home(self)
@@ -464,6 +468,14 @@ class CalcFrame(GUI.Main):
 		Hover = 36
 
 		self.B_Quit.SetBackgroundColour(color_Hover)
+
+	def H_File(self, event):
+		self.Bottom_Bar1.SetLabel('File manager')
+		self.SetCursor(wx.Cursor(6))
+		global Hover
+		Hover = 37
+
+		self.B_File.SetBackgroundColour(color_Hover)
 
 	def Class1(self, event):
 		''' 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 '''
@@ -715,6 +727,11 @@ class CalcFrame(GUI.Main):
 		self.B_Quit.SetBackgroundColour(
 			self.ToolBar_Main.GetBackgroundColour())
 
+	def L_File(self, event):
+		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
+		self.SetCursor(wx.Cursor(1))
+		self.B_File.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
+
 	# -----------------------------------------------------------------------
 
 	def Function1(self, event):
@@ -787,7 +804,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			return
+			M_QRcode.main()
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
@@ -1053,12 +1070,12 @@ class CalcFrame(GUI.Main):
 
 		self.T_F1.SetLabel("音频分析器")
 		self.T_F2.SetLabel("大学评分数据库")
-		self.T_F3.SetLabel("NONE")
+		self.T_F3.SetLabel("二维码")
 		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('对于音频的可视化分析')
 		self.Tip2.SetLabel('临时模块-数据库已完成20%')
-		self.Tip3.SetLabel('什么都没有呢!')
+		self.Tip3.SetLabel('二维码生成系统')
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -1199,6 +1216,8 @@ class FileDrop(wx.FileDropTarget):
 		File_cfg.set('File', 'type', str(file_type))
 		File_cfg.write(open('./cfg/File.cfg', 'w'))
 
+		wx.MessageBox('检测到文件类型:' + str(file_type))
+
 		##M_File.main() # 如果直接这样打开会阻塞线程,windows资源管理器也会卡住
 
 		return True
@@ -1267,6 +1286,7 @@ def Color_Set(self, note, color_Main, color_Bottom, color_SideL):
 	self.B_Setting.SetBackgroundColour(color_Main)
 	self.B_About.SetBackgroundColour(color_Main)
 	self.B_Update.SetBackgroundColour(color_Main)
+	self.B_File.SetBackgroundColour(color_Main)
 
 	# self.SetBackgroundColour('#F9B7B0') # 主界面背景颜色设置
 	self.Bottom_Bar1.SetBackgroundColour(color_Bottom)  # 主界面底部颜色设置

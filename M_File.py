@@ -4,7 +4,9 @@
 import wx
 
 import GUI_File
-import configparser
+import os
+from os.path import join, getsize
+import shutil
 
 ##############################
 # GUI的函数桥接
@@ -16,12 +18,13 @@ class CalcFrame(GUI_File.Main):
         # 定义主函数
         GUI_File.Main.__init__(self, parent)
 
-        cfg = configparser.ConfigParser()
-        cfg.read('./cfg/File.cfg')
-        File_Tpye = cfg.get('File', 'type')
-        print(File_Tpye)
+        Refresh(self)
 
-        self.File_Type.SetLabel('文件类型:' + File_Tpye)
+    def Clean(self, event):
+        shutil.rmtree('./Cache/')
+        os.mkdir('./Cache')
+
+        Refresh(self)
 
 ##############################
 # 主函数
@@ -33,6 +36,33 @@ def main():
     frame = CalcFrame(None)
     frame.Show(True)
     app.MainLoop()
+
+def Refresh(self):
+        file_list = []
+        size = 0
+        
+        for root, dirs, files in os.walk('./'):
+            for name in files:
+                file_list.append(root + '/' +name)
+                
+            size += sum([getsize(join(root, name)) for name in files])
+
+        self.FileNum_ALL.SetLabel('本地文件数:' + str(len(file_list)))
+        self.FileSize_ALL.SetLabel('本地文件大小:' + str(round(size / 1024 / 1024)) + 'MB  |  ' + str(size) + '字节')
+        self.G_Size.SetValue(round(size / 1024 / 1024) / 10)
+        self.AlreadyUsed.SetLabel('%' + str(round(size / 1024 / 1024) / 10))
+
+        file_list = []
+        size = 0
+        
+        for root, dirs, files in os.walk('./Cache/'):
+            for name in files:
+                file_list.append(root + '/' +name)
+                
+            size += sum([getsize(join(root, name)) for name in files])
+
+        self.FileNum_Cache.SetLabel('缓存文件数:' + str(len(file_list)))
+        self.FileSize_Cache.SetLabel('缓存占用空间:' + str(round(size / 1024)) + 'KB  |  ' + str(size) + '字节')
 
 
 if __name__ == "__main__":

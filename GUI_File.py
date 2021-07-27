@@ -24,15 +24,55 @@ class Main ( wx.Frame ):
 
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"文件处理器", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"文件管理器", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText1.Wrap( -1 )
 
 		bSizer2.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		self.File_Type = wx.StaticText( self, wx.ID_ANY, u"文件类型:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.File_Type.Wrap( -1 )
+		self.FileNum_ALL = wx.StaticText( self, wx.ID_ANY, u"本地文件数：", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileNum_ALL.Wrap( -1 )
 
-		bSizer2.Add( self.File_Type, 0, wx.ALL, 5 )
+		bSizer2.Add( self.FileNum_ALL, 0, wx.ALL, 5 )
+
+		self.FileSize_ALL = wx.StaticText( self, wx.ID_ANY, u"本地文件大小:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileSize_ALL.Wrap( -1 )
+
+		bSizer2.Add( self.FileSize_ALL, 0, wx.ALL, 5 )
+
+		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"额定空间:1GB", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText5.Wrap( -1 )
+
+		wSizer1.Add( self.m_staticText5, 0, wx.ALL, 5 )
+
+		self.G_Size = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 200,-1 ), wx.GA_HORIZONTAL )
+		self.G_Size.SetValue( 0 )
+		wSizer1.Add( self.G_Size, 0, wx.ALL, 5 )
+
+		self.AlreadyUsed = wx.StaticText( self, wx.ID_ANY, u"已使用:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.AlreadyUsed.Wrap( -1 )
+
+		wSizer1.Add( self.AlreadyUsed, 0, wx.ALL, 5 )
+
+
+		bSizer2.Add( wSizer1, 0, 0, 5 )
+
+		self.m_staticline1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		bSizer2.Add( self.m_staticline1, 0, wx.EXPAND |wx.ALL, 5 )
+
+		self.FileNum_Cache = wx.StaticText( self, wx.ID_ANY, u"缓存文件数:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileNum_Cache.Wrap( -1 )
+
+		bSizer2.Add( self.FileNum_Cache, 0, wx.ALL, 5 )
+
+		self.FileSize_Cache = wx.StaticText( self, wx.ID_ANY, u"缓存占用空间:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileSize_Cache.Wrap( -1 )
+
+		bSizer2.Add( self.FileSize_Cache, 0, wx.ALL, 5 )
+
+		self.B_clean = wx.Button( self, wx.ID_ANY, u"清空缓存", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer2.Add( self.B_clean, 0, wx.ALL, 5 )
 
 
 		self.SetSizer( bSizer2 )
@@ -40,7 +80,15 @@ class Main ( wx.Frame ):
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.B_clean.Bind( wx.EVT_BUTTON, self.Clean )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, overide them in your derived class
+	def Clean( self, event ):
+		event.Skip()
 
 
