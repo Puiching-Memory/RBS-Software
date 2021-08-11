@@ -10,6 +10,7 @@ import qrcode.image.svg
 from qrcode.image.styledpil import StyledPilImage
 import qrcode.image.styles.moduledrawers
 import qrcode.image.styles.colormasks
+from wx.core import App
 
 import GUI_QRcode
 import shutil
@@ -23,6 +24,10 @@ class CalcFrame(GUI_QRcode.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_QRcode.Main.__init__(self, parent)
+
+	def __del__(self):
+		print(1)
+		return super().__del__()
 
 	def RUN(self, event):
 		self.B_Run.Enable(False)
@@ -141,14 +146,20 @@ class CalcFrame(GUI_QRcode.Main):
 		elif self.F_choise.GetSelection() == 1:
 			shutil.copy('./Cache/BuildQR.svg', path)
 
+	def Close(self, event):
+		##wx.Yield()
+		self.Destroy()
+		#wx.App.ExitMainLoop(M_app)
+		##self.Destroy()
+
 ##############################
 # 主函数
 ##############################
 def main():
-	app = wx.App(False)
-	frame = CalcFrame(None)
-	frame.Show(True)
-	app.MainLoop()
+	M_app = wx.App(False)
+	M_frame = CalcFrame(None)
+	M_frame.Show(True)
+	M_app.MainLoop()
 
 
 if __name__ == "__main__":

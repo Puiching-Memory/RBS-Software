@@ -10,10 +10,11 @@
 import wx
 import wx.xrc
 
-NetTimer = 1000
-MainTimer = 1001
-VarTimer = 1002
-PPT_TIMER = 1003
+Net_Timer = 1000
+PFM_Timer = 1001
+PRAM_Timer = 1002
+PRO_Timer = 1003
+Time_Timer = 1004
 
 ###########################################################################
 ## Class Main
@@ -30,76 +31,87 @@ class Main ( wx.Frame ):
 
 		bSizer8 = wx.BoxSizer( wx.VERTICAL )
 
-		self.ToolBar_Main = wx.ToolBar( self, wx.ID_ANY, wx.Point( -1,-1 ), wx.DefaultSize, wx.TB_NOALIGN|wx.TB_NODIVIDER|wx.TB_NOICONS|wx.TB_NO_TOOLTIPS )
-		self.ToolBar_Main.SetToolSeparation( 0 )
-		self.ToolBar_Main.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
+		fgSizer31 = wx.FlexGridSizer( 0, 11, 0, 0 )
+		fgSizer31.SetFlexibleDirection( wx.BOTH )
+		fgSizer31.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_NONE )
 
-		self.version = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,-1 ), 0 )
-		self.version.Wrap( -1 )
+		self.version = wx.Button( self, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,25 ), wx.BORDER_NONE )
+		self.version.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.version.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.version )
-		self.Network = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"Net:N/A", wx.DefaultPosition, wx.Size( 60,-1 ), 0 )
-		self.Network.Wrap( -1 )
+		fgSizer31.Add( self.version, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
+		self.Network = wx.Button( self, wx.ID_ANY, u"Net:N/A", wx.DefaultPosition, wx.Size( 60,25 ), wx.BORDER_NONE )
 		self.Network.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Network.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.Network )
-		self.Weater = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"Weater", wx.DefaultPosition, wx.Size( 80,-1 ), 0 )
-		self.Weater.Wrap( -1 )
+		fgSizer31.Add( self.Network, 0, 0, 5 )
 
-		self.Weater.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Weather = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 90,25 ), wx.BORDER_NONE )
+		self.Weather.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
+		self.Weather.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Weather.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.Weater )
-		self.Note = wx.StaticText( self.ToolBar_Main, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 300,-1 ), wx.ALIGN_CENTER_HORIZONTAL )
-		self.Note.Wrap( -1 )
+		fgSizer31.Add( self.Weather, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.ToolBar_Main.AddControl( self.Note )
-		self.B_File = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		self.Note = wx.Button( self, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 295,25 ), wx.BORDER_NONE )
+		self.Note.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Note.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
+
+		fgSizer31.Add( self.Note, 0, 0, 5 )
+
+		self.B_File = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_File.SetBitmap( wx.Bitmap( u"pictures/File.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_File.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_File )
-		self.B_Log = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_File, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Log = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_Log.SetBitmap( wx.Bitmap( u"pictures/更新日志25X25.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_Log.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_Log )
-		self.B_Setting = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_Log, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Setting = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_Setting.SetBitmap( wx.Bitmap( u"pictures/设置25X25.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_Setting.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_Setting )
-		self.B_About = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_Setting, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_About = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_About.SetBitmap( wx.Bitmap( u"pictures/关于25X25.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_About.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_About )
-		self.B_Cmd = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_About, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Cmd = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_Cmd.SetBitmap( wx.Bitmap( u"pictures/控制台.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_Cmd.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_Cmd )
-		self.B_Update = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_Cmd, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Update = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_Update.SetBitmap( wx.Bitmap( u"pictures/更新.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_Update.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 		self.B_Update.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_Update )
-		self.B_Quit = wx.Button( self.ToolBar_Main, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		fgSizer31.Add( self.B_Update, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Quit = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 30,25 ), wx.BORDER_NONE )
 
 		self.B_Quit.SetBitmap( wx.Bitmap( u"pictures/关闭按钮25X25.png", wx.BITMAP_TYPE_ANY ) )
 		self.B_Quit.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
-		self.ToolBar_Main.AddControl( self.B_Quit )
-		self.ToolBar_Main.Realize()
+		fgSizer31.Add( self.B_Quit, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		bSizer8.Add( self.ToolBar_Main, 0, wx.EXPAND, 5 )
+
+		bSizer8.Add( fgSizer31, 0, 0, 0 )
 
 		self.m_toolBar2 = wx.ToolBar( self, wx.ID_ANY, wx.Point( -1,-1 ), wx.Size( 450,25 ), wx.TB_NOALIGN|wx.TB_NODIVIDER|wx.TB_NOICONS|wx.TB_NO_TOOLTIPS )
 		self.m_toolBar2.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
@@ -122,7 +134,7 @@ class Main ( wx.Frame ):
 		self.G4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G4 )
-		self.G5 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"历史 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G5 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"历史 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G5.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G5 )
@@ -235,7 +247,7 @@ class Main ( wx.Frame ):
 
 		wSizer81.Add( self.Star1, 0, wx.ALL, 5 )
 
-		self.Help1 = wx.Button( self, wx.ID_ANY, u"0", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
+		self.Help1 = wx.Button( self, wx.ID_ANY, u"0123", wx.DefaultPosition, wx.Size( 20,20 ), wx.BORDER_NONE|wx.BU_NOTEXT )
 
 		self.Help1.SetBitmap( wx.Bitmap( u"pictures/帮助20.png", wx.BITMAP_TYPE_ANY ) )
 		self.Help1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -576,7 +588,7 @@ class Main ( wx.Frame ):
 
 		bSizer8.Add( bSizer63, 1, wx.EXPAND, 5 )
 
-		fgSizer3 = wx.FlexGridSizer( 0, 6, 0, 0 )
+		fgSizer3 = wx.FlexGridSizer( 0, 7, 0, 0 )
 		fgSizer3.SetFlexibleDirection( wx.BOTH )
 		fgSizer3.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_NONE )
 
@@ -599,7 +611,8 @@ class Main ( wx.Frame ):
 
 		fgSizer3.Add( self.Space2, 0, 0, 5 )
 
-		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 250,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 200,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar2.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
 		self.Bottom_Bar2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
@@ -611,11 +624,19 @@ class Main ( wx.Frame ):
 
 		fgSizer3.Add( self.Space3, 0, 0, 5 )
 
-		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 175,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 180,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar3.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
 		self.Bottom_Bar3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
 
 		fgSizer3.Add( self.Bottom_Bar3, 0, 0, 5 )
+
+		self.Bottom_Bar4 = wx.Button( self, wx.ID_ANY, u"N/A", wx.DefaultPosition, wx.Size( 50,20 ), wx.BORDER_NONE )
+		self.Bottom_Bar4.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
+		self.Bottom_Bar4.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Bottom_Bar4.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+
+		fgSizer3.Add( self.Bottom_Bar4, 0, 0, 5 )
 
 
 		bSizer8.Add( fgSizer3, 0, 0, 5 )
@@ -623,21 +644,25 @@ class Main ( wx.Frame ):
 
 		self.SetSizer( bSizer8 )
 		self.Layout()
-		self.NetTimer = wx.Timer()
-		self.NetTimer.SetOwner( self, NetTimer )
-		self.NetTimer.Start( 10000 )
+		self.Net_Timer = wx.Timer()
+		self.Net_Timer.SetOwner( self, Net_Timer )
+		self.Net_Timer.Start( 10000 )
 
-		self.Timer = wx.Timer()
-		self.Timer.SetOwner( self, MainTimer )
-		self.Timer.Start( 1000 )
+		self.PFM_Timer = wx.Timer()
+		self.PFM_Timer.SetOwner( self, PFM_Timer )
+		self.PFM_Timer.Start( 3000 )
 
-		self.VarTimer = wx.Timer()
-		self.VarTimer.SetOwner( self, VarTimer )
-		self.VarTimer.Start( 1000 )
+		self.PRAM_Timer = wx.Timer()
+		self.PRAM_Timer.SetOwner( self, PRAM_Timer )
+		self.PRAM_Timer.Start( 60000 )
 
-		self.PPT_Timer = wx.Timer()
-		self.PPT_Timer.SetOwner( self, PPT_TIMER )
-		self.PPT_Timer.Start( 1000 )
+		self.PRO_Timer = wx.Timer()
+		self.PRO_Timer.SetOwner( self, PRO_Timer )
+		self.PRO_Timer.Start( 3000 )
+
+		self.Time_Timer = wx.Timer()
+		self.Time_Timer.SetOwner( self, Time_Timer )
+		self.Time_Timer.Start( 900 )
 
 		self.Bar = self.CreateStatusBar( 6, wx.STB_ELLIPSIZE_END, wx.ID_ANY )
 		self.Bar.SetFont( wx.Font( 6, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
@@ -653,6 +678,11 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_ERASE_BACKGROUND, self.Sacc )
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
+		self.version.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
+		self.version.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
+		self.Network.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
+		self.Network.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
+		self.Weather.Bind( wx.EVT_BUTTON, self.GetWeather )
 		self.B_File.Bind( wx.EVT_BUTTON, self.File )
 		self.B_File.Bind( wx.EVT_ENTER_WINDOW, self.H_File )
 		self.B_File.Bind( wx.EVT_LEAVE_WINDOW, self.L_File )
@@ -674,6 +704,7 @@ class Main ( wx.Frame ):
 		self.B_Quit.Bind( wx.EVT_BUTTON, self.Quit )
 		self.B_Quit.Bind( wx.EVT_ENTER_WINDOW, self.H_QUT )
 		self.B_Quit.Bind( wx.EVT_LEAVE_WINDOW, self.L_QUT )
+		self.m_toolBar2.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
 		self.G1.Bind( wx.EVT_BUTTON, self.G_1 )
 		self.G1.Bind( wx.EVT_ENTER_WINDOW, self.Class1 )
 		self.G1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave1 )
@@ -756,11 +787,15 @@ class Main ( wx.Frame ):
 		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
 		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
 		self.Fast_Star3.Bind( wx.EVT_BUTTON, self.FStar3 )
+		self.Space1.Bind( wx.EVT_BUTTON, self.Space1_Change )
+		self.Space2.Bind( wx.EVT_BUTTON, self.Space2_Change )
 		self.Bottom_Bar2.Bind( wx.EVT_BUTTON, self.BT2 )
-		self.Bind( wx.EVT_TIMER, self.Net_Tick, id=NetTimer )
-		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=MainTimer )
-		self.Bind( wx.EVT_TIMER, self.Update_Variables, id=VarTimer )
-		self.Bind( wx.EVT_TIMER, self.PPT_check, id=PPT_TIMER )
+		self.Space3.Bind( wx.EVT_BUTTON, self.Space3_Change )
+		self.Bind( wx.EVT_TIMER, self.Net_Tick, id=Net_Timer )
+		self.Bind( wx.EVT_TIMER, self.PFM_Tick, id=PFM_Timer )
+		self.Bind( wx.EVT_TIMER, self.PRAM_Tick, id=PRAM_Timer )
+		self.Bind( wx.EVT_TIMER, self.PRO_Tick, id=PRO_Timer )
+		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=Time_Timer )
 
 	def __del__( self ):
 		pass
@@ -777,6 +812,17 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Change_Size( self, event ):
+		event.Skip()
+
+	def OnLeftDown( self, event ):
+		event.Skip()
+
+	def OnLeftUp( self, event ):
+		event.Skip()
+
+
+
+	def GetWeather( self, event ):
 		event.Skip()
 
 	def File( self, event ):
@@ -841,6 +887,7 @@ class Main ( wx.Frame ):
 
 	def L_QUT( self, event ):
 		event.Skip()
+
 
 	def G_1( self, event ):
 		event.Skip()
@@ -1034,19 +1081,31 @@ class Main ( wx.Frame ):
 	def FStar3( self, event ):
 		event.Skip()
 
+	def Space1_Change( self, event ):
+		event.Skip()
+
+	def Space2_Change( self, event ):
+		event.Skip()
+
 	def BT2( self, event ):
+		event.Skip()
+
+	def Space3_Change( self, event ):
 		event.Skip()
 
 	def Net_Tick( self, event ):
 		event.Skip()
 
+	def PFM_Tick( self, event ):
+		event.Skip()
+
+	def PRAM_Tick( self, event ):
+		event.Skip()
+
+	def PRO_Tick( self, event ):
+		event.Skip()
+
 	def Time_Tick( self, event ):
-		event.Skip()
-
-	def Update_Variables( self, event ):
-		event.Skip()
-
-	def PPT_check( self, event ):
 		event.Skip()
 
 

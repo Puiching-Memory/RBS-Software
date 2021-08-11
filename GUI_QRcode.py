@@ -201,6 +201,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.B_Run.Bind( wx.EVT_BUTTON, self.RUN )
 		self.B_Save.Bind( wx.EVT_BUTTON, self.Save )
 
@@ -209,6 +210,9 @@ class Main ( wx.Frame ):
 
 
 	# Virtual event handlers, overide them in your derived class
+	def Close( self, event ):
+		event.Skip()
+
 	def RUN( self, event ):
 		event.Skip()
 

@@ -22,39 +22,41 @@
 # ↓↓↓↓↓ import ↓↓↓↓↓
 
 # 功能库
-import M_Roll
-import M_Element
-import M_Pinyin
-import M_Roster #打包后空间过大
-import M_Gene
-import M_About
-import M_Pi
-import M_Capslook
-import M_Base_conversion
-import M_Traditional_Chinese
-import M_BMI
-import M_PPTNG
-import M_Download
-import M_Timer
-import M_PPT
-import M_Idion
-import M_DDT
-import M_Music
-import M_WALP
-import M_Version
-import M_History
-import M_Date
-import M_File
-import M_QRcode
+import M_Roll # 随机数生成器
+import M_Element # 元素周期表
+import M_Pinyin # 中文转拼音
+import M_Roster # 值日表
+import M_Gene # 基因数据库
+import M_About # 关于信息
+import M_Pi # 圆周率计算器
+import M_Capslook # 大小写转换
+import M_Base_conversion # 十进制转换器
+import M_Traditional_Chinese # 中文繁体简体互转
+import M_BMI # BMI计算器
+import M_PPTNG # PPT导出图片
+import M_Download # 下载器
+import M_Timer # 计时器
+import M_PPT # PPT小工具
+import M_Idion # 成语接龙
+import M_DDT # '外挂'集合
+import M_Music # 音乐分析器
+import M_WALP # WALP地理信息系统
+import M_Version # 版本查看器
+import M_History # 历史上的今天
+import M_Date # 日期查看器
+import M_File # 文件管理器
+import M_QRcode # 二维码生成器
+import M_BingWallPaper # 必应壁纸
 
 import WeaterAPI # 天气API
 
-import User
-import Setting
-import Plug_in
+import User # 用户界面
+import Setting # 设置界面
+import Plug_in # 插件
 
 # 临时库
 import L_College
+import YOLO
 
 # 辅助功能库
 import sys
@@ -73,6 +75,7 @@ import wx.adv
 import GUI
 import configparser # 设置文件(.cfg)库
 import logging.handlers # 日志库
+import threading # 多线程
 
 ###########################################################################
 # Class Main
@@ -86,9 +89,10 @@ class CalcFrame(GUI.Main):
 
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent) # 初始化
+		self.threads = []
 
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
-		global Main_State, FUN_State, version, setup, Color_G, Hover, color_Hover, last, cfg,screen_size_x,screen_size_y
+		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x,screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
@@ -98,40 +102,44 @@ class CalcFrame(GUI.Main):
 		is_exe = cfg.get('main', 'is_exe')
 		screen_size_x = int(cfg.get('screen', 'size_x'))
 		screen_size_y = int(cfg.get('screen', 'size_y'))
+		Is_complete = cfg.get('Check', 'Is_complete')
+
+		Log()  # 初始化LOG设置
+		logging.debug('Document integrity check文件完整性检查:' + Is_complete)
 
 		Self_CMD(self, '载入设置完成') # 向自定义控制台发送消息
+		Self_CMD(self, '文件完整性检查:' + Is_complete)
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display()))) # 信息收集
 		print('屏幕分辨率:' + str(wx.ClientDisplayRect()))
 		print('彩色模式:' + str(wx.ColourDisplay()))
 		print('GUI大小:' + str(self.Size))
 
-		Self_CMD(self, str(self.Size))
 
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = 'NONE'
 		Hover = 0  # 检测当前Hover的按钮是哪个
-		color_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
-		Color_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
+		colour_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
+		Colour_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
 		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
 		self.version.SetLabel('#V' + version) # 设置版本号
 
-		if is_exe == 'True': # 主界面大小设置
+		if is_exe == 'True': # 主界面大小设置(针对打包后程序的调整)
 			self.SetSize(screen_size_x - 10,screen_size_y - 10)
 			screen_size_x = screen_size_x - 10
 			screen_size_y = screen_size_y - 10
 		else:
 			self.SetSize(screen_size_x,screen_size_y)
 
-		self.Weater.SetLabel(WeaterAPI.Now_weather()) # 设置天气信息
+		self.Weather.SetLabel(WeaterAPI.Now_weather()) # 获取and显示天气信息
 
 		self.taskBar = wx.adv.TaskBarIcon() # 声明:启用系统托盘
 		self.SetDoubleBuffered(True) # 声明:启用双缓冲
 		self.SetDropTarget(FileDrop(self)) # 声明:接受文件拖放
 		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO)) # 设置GUI图标(左上角)
 
-		''' 系统自带状态栏(备选方案)
+		''' 系统状态栏(弃用方案)
 		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
 		self.Bar.SetStatusText(self.Space1.GetLabel(), 0)
 		self.Bar.SetStatusText(self.Bottom_Bar1.GetLabel(), 1)
@@ -170,7 +178,7 @@ class CalcFrame(GUI.Main):
 		if setup == 1:
 			dc = event.GetDC()
 			dc.DrawBitmap(wx.Bitmap("./pictures/Background.jpg"), 0, 0)
-			# print(1)
+			##print(1)
 		else:
 			dc = event.GetDC()
 			dc.Clear()
@@ -180,7 +188,12 @@ class CalcFrame(GUI.Main):
 		'''
 		windows_关闭程序
 		'''
-		if self.taskBar.IsAvailable == True:
+		while self.threads: # 移除其他线程
+			thread = self.threads[0]
+			thread.timeToQuit.set()
+			self.threads.remove(thread)
+
+		if self.taskBar.IsAvailable == True: # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
 		cfg.read('./cfg/main.cfg')
@@ -193,15 +206,20 @@ class CalcFrame(GUI.Main):
 		logging.debug(
 			str('windows quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
 		# 关闭程序
-		sys.exit(0)
+		wx.CallAfter(sys.exit, 0)
 
 	def Quit(self, event):
 		'''
 		self_关闭程序
 		'''
-		if self.taskBar.IsAvailable == True:
+		while self.threads: # 移除其他线程
+			thread = self.threads[0]
+			thread.timeToQuit.set()
+			self.threads.remove(thread)
+
+		if self.taskBar.IsAvailable == True: # 移除托盘图标
 			self.taskBar.RemoveIcon()
-		
+
 		cfg.read('./cfg/main.cfg')
 		cfg.set('History', 'LAST', FUN_State)
 		cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -211,7 +229,7 @@ class CalcFrame(GUI.Main):
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
 		# 关闭程序
-		self.Close(event)
+		wx.CallAfter(self.Destroy)
 
 	def Ico(self, event):
 		'''
@@ -225,10 +243,11 @@ class CalcFrame(GUI.Main):
 			del self # 删除变量
 			gc.collect() # 调用GC库释放内存
 			'''
-			self.NetTimer.Stop()
-			self.Timer.Stop()
-			self.VarTimer.Stop()
-			self.PPT_Timer.Stop()
+			self.Net_Timer.Stop()
+			self.PFM_Timer.Stop()
+			self.PRAM_Timer.Stop()
+			self.PRO_Timer.Stop()
+			self.Time_Timer.Stop()
 
 			self.taskBar.SetIcon(wx.Icon(os.path.join("./ICOV4.ico"), wx.BITMAP_TYPE_ICO), "RBS_Software2021") # 设置系统托盘图标
 
@@ -239,15 +258,16 @@ class CalcFrame(GUI.Main):
 			##self.taskBar.Bind(wx.EVT_MENU, self.OnHide, id=self.MENU_HIDE) # 隐藏窗口
 			##self.taskBar.Bind(wx.EVT_MENU, self.OnOpenFolder, id=self.MENU_FOLFER) # 打开输出目录
 			##self.taskBar.Bind(wx.EVT_MENU, self.OnConfig, id=self.MENU_CONFIG) # 设置
-			self.taskBar.Bind(wx.EVT_MENU, self.Quit, id=self.MENU_EXIT) # 退出
+			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT) # 退出
 
 
 		else:
 			self.Enable(True)
-			self.NetTimer.Start(1000)
-			self.Timer.Start(1000)
-			self.VarTimer.Start(100)
-			self.PPT_Timer.Start(1000)
+			self.Net_Timer.Start(10000)
+			self.PFM_Timer.Start(3000)
+			self.PRAM_Timer.Start(60000)
+			self.PRO_Timer.Start(3000)
+			self.Time_Timer.Start(900)
 
 			self.taskBar.RemoveIcon()
 
@@ -272,7 +292,8 @@ class CalcFrame(GUI.Main):
 		if proc_exist('Update.exe'):
 			print('程序已运行')
 		else:
-			win32api.ShellExecute(0, 'open', 'Update.exe', '','',1)
+			wx.CallAfter(win32api.ShellExecute, 0, 'open', 'Update.exe', '','',1)
+
 
 	def File(self, event):
 		M_File.main()
@@ -290,9 +311,31 @@ class CalcFrame(GUI.Main):
 	def LLL(self, event):
 		L_College.main()
 
+	def GetWeather(self, event):
+		self.Weather.Enable(False)
+		self.Weather.SetLabel(WeaterAPI.Now_weather())
+		print('获取天气信息...')
+		self.Weather.Enable(True)
+
 	def CMD_Enter(self, event):
 		CMD(self, self.CMD_IN.GetValue())
 		self.CMD_IN.SetValue('')
+
+	def move_start(self, frame_pos):
+		##print(random.random())
+		self.SetPosition(frame_pos)
+	
+
+	def OnLeftDown(self, event):
+		thread = WorkerThread(self)
+		self.threads.append(thread)
+		thread.start()
+
+	def OnLeftUp(self, event):
+		if self.threads:
+			self.threads[0].timeToQuit.set()
+			self.threads.remove(self.threads[0])
+
 
 	def OnTaskBar(self, event):
 		'''
@@ -319,8 +362,8 @@ class CalcFrame(GUI.Main):
 
 	# ---------------------------------------------------------------------
 
-	def Time_Tick(self, event):
-		''' 计时器-资源监视器 '''
+	def PFM_Tick(self, event):
+		''' 计时器-性能监视器 '''
 		global CPU_text, RAM_text # 定义全局变量
 		Line1 = psutil.swap_memory()
 		Line2 = psutil.cpu_times_percent()
@@ -329,21 +372,33 @@ class CalcFrame(GUI.Main):
 		RAM_text = str(Line1.percent) + "%"
 
 		self.Bottom_Bar3.SetLabel('CPU:' + CPU_text + '  RAM:' + RAM_text)
-		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
 
-	def Update_Variables(self, event):
-		''' 计时器-变量监视器 '''
-		# 收集变量值并输出到日志
-		'''
-		logging.debug(
-			str('##########检查点:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
-		logging.debug(Main_State)
-		logging.debug(CPU_text)
-		logging.debug(RAM_text)
-		logging.debug(HDD_text)
-		'''
 
-	def PPT_check(self, event):
+	def PRAM_Tick(self, event):
+		'''
+		计时器-内存监视器
+		'''
+		process_lst = []
+		mem = 0
+		try:
+			for pid in psutil.pids():
+				p = psutil.Process(pid)
+				if (p.name() == 'RBS_Software2021.exe'):
+					process_lst.append(p)
+
+			for i in process_lst:
+				##print(i.memory_info()[1] / 1024 / 1024)
+				mem = mem + i.memory_info()[1] / 1024 / 1024
+
+			self.Bottom_Bar4.SetLabel(str(round(mem)) + 'MB')
+		except:
+			self.Bottom_Bar4.SetLabel('--MB')
+
+
+	def PRO_Tick(self, event):
+		'''
+		计时器-后台探针
+		'''
 		if proc_exist('POWERPNT.EXE'):
 			##print('PPT is running')
 			self.PPT_Timer.Stop()
@@ -357,13 +412,21 @@ class CalcFrame(GUI.Main):
 		'''
 		计时器-网络监视器
 		'''
-		ping = str(int(ping3.ping('www.baidu.com') * 1000))[0:3]
-		if int(ping) == 0:
+		try:
+			ping = str(int(ping3.ping('www.baidu.com') * 1000))[0:3]
+			if int(ping) == 0:
+				self.Network.SetLabel('Net:Ero')
+			else:
+				self.Network.SetLabel('Net:' + ping + 'ms')
+		except:
 			self.Network.SetLabel('Net:Ero')
-		else:
-			self.Network.SetLabel('Net:' + ping + 'ms')
 
-		##Self_CMD(self, '网络延迟:' + ping + 'ms')
+
+	def Time_Tick(self, event):
+		'''
+		计时器-时间显示
+		'''
+		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
 
 	# ------------------------------------------------------------------------
 
@@ -393,28 +456,28 @@ class CalcFrame(GUI.Main):
 		Hover = 14
 
 	def Hover_L1(self, event):
-		self.Side1.SetBackgroundColour(color_Hover)
+		self.Side1.SetBackgroundColour(colour_Hover)
 		self.Bottom_Bar1.SetLabel('Back to HOME')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 41
 
 	def Hover_L2(self, event):
-		self.Side2.SetBackgroundColour(color_Hover)
+		self.Side2.SetBackgroundColour(colour_Hover)
 		self.Bottom_Bar1.SetLabel('check the plug-in')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 42
 
 	def Hover_L3(self, event):
-		self.Side3.SetBackgroundColour(color_Hover)
+		self.Side3.SetBackgroundColour(colour_Hover)
 		self.Bottom_Bar1.SetLabel('login as user')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
 		Hover = 43
 
 	def Hover_L4(self, event):
-		self.Side4.SetBackgroundColour(color_Hover)
+		self.Side4.SetBackgroundColour(colour_Hover)
 		self.Bottom_Bar1.SetLabel('Background service program')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
@@ -427,7 +490,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 31
 
-		self.B_Log.SetBackgroundColour(color_Hover)
+		self.B_Log.SetBackgroundColour(colour_Hover)
 
 	def H_SET(self, event):
 		self.Bottom_Bar1.SetLabel('software setting')
@@ -435,7 +498,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 32
 
-		self.B_Setting.SetBackgroundColour(color_Hover)
+		self.B_Setting.SetBackgroundColour(colour_Hover)
 
 	def H_ABO(self, event):
 		self.Bottom_Bar1.SetLabel('About us')
@@ -443,7 +506,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 33
 
-		self.B_About.SetBackgroundColour(color_Hover)
+		self.B_About.SetBackgroundColour(colour_Hover)
 
 	def H_CMD(self, event):
 		self.Bottom_Bar1.SetLabel('open cmd on windows')
@@ -451,7 +514,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 34
 
-		self.B_Cmd.SetBackgroundColour(color_Hover)
+		self.B_Cmd.SetBackgroundColour(colour_Hover)
 
 	def H_UPD(self, event):
 		self.Bottom_Bar1.SetLabel('check to update online')
@@ -459,7 +522,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 35
 
-		self.B_Update.SetBackgroundColour(color_Hover)
+		self.B_Update.SetBackgroundColour(colour_Hover)
 
 	def H_QUT(self, event):
 		self.Bottom_Bar1.SetLabel('quit/end the software')
@@ -467,7 +530,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 36
 
-		self.B_Quit.SetBackgroundColour(color_Hover)
+		self.B_Quit.SetBackgroundColour(colour_Hover)
 
 	def H_File(self, event):
 		self.Bottom_Bar1.SetLabel('File manager')
@@ -475,7 +538,7 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 37
 
-		self.B_File.SetBackgroundColour(color_Hover)
+		self.B_File.SetBackgroundColour(colour_Hover)
 
 	def Class1(self, event):
 		''' 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 '''
@@ -484,7 +547,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 1:
 			event.Skip()
 		else:
-			self.G1.SetBackgroundColour(Color_G)
+			self.G1.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 21
 
@@ -494,7 +557,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 2:
 			event.Skip()
 		else:
-			self.G2.SetBackgroundColour(Color_G)
+			self.G2.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 22
 
@@ -504,7 +567,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 3:
 			event.Skip()
 		else:
-			self.G3.SetBackgroundColour(Color_G)
+			self.G3.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 23
 
@@ -514,7 +577,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 4:
 			event.Skip()
 		else:
-			self.G4.SetBackgroundColour(Color_G)
+			self.G4.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 24
 
@@ -524,7 +587,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 5:
 			event.Skip()
 		else:
-			self.G5.SetBackgroundColour(Color_G)
+			self.G5.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 25
 
@@ -534,7 +597,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 6:
 			event.Skip()
 		else:
-			self.G6.SetBackgroundColour(Color_G)
+			self.G6.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 26
 
@@ -544,7 +607,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 7:
 			event.Skip()
 		else:
-			self.G7.SetBackgroundColour(Color_G)
+			self.G7.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 27
 
@@ -554,7 +617,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 8:
 			event.Skip()
 		else:
-			self.G8.SetBackgroundColour(Color_G)
+			self.G8.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 28
 
@@ -564,7 +627,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 9:
 			event.Skip()
 		else:
-			self.G9.SetBackgroundColour(Color_G)
+			self.G9.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 29
 
@@ -574,7 +637,7 @@ class CalcFrame(GUI.Main):
 		if Main_State == 10:
 			event.Skip()
 		else:
-			self.G10.SetBackgroundColour(Color_G)
+			self.G10.SetBackgroundColour(Colour_G)
 		global Hover
 		Hover = 210
 
@@ -677,60 +740,60 @@ class CalcFrame(GUI.Main):
 			self.G10.SetForegroundColour('black')
 
 	def Leave_L1(self, event):
-		self.Side1.SetBackgroundColour(color_SideL)
+		self.Side1.SetBackgroundColour(colour_SideL)
 		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L2(self, event):
-		self.Side2.SetBackgroundColour(color_SideL)
+		self.Side2.SetBackgroundColour(colour_SideL)
 		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L3(self, event):
-		self.Side3.SetBackgroundColour(color_SideL)
+		self.Side3.SetBackgroundColour(colour_SideL)
 		self.SetCursor(wx.Cursor(1))
 
 	def Leave_L4(self, event):
-		self.Side4.SetBackgroundColour(color_SideL)
+		self.Side4.SetBackgroundColour(colour_SideL)
 		self.SetCursor(wx.Cursor(1))
 
 	def L_LOG(self, event):
 		''' 顶部功能按钮提示 '''
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
-		self.B_Log.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
+		self.B_Log.SetBackgroundColour(self.version.GetBackgroundColour())
 
 	def L_SET(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_Setting.SetBackgroundColour(
-			self.ToolBar_Main.GetBackgroundColour())
+			self.version.GetBackgroundColour())
 
 	def L_ABO(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_About.SetBackgroundColour(
-			self.ToolBar_Main.GetBackgroundColour())
+			self.version.GetBackgroundColour())
 
 	def L_CMD(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
-		self.B_Cmd.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
+		self.B_Cmd.SetBackgroundColour(self.version.GetBackgroundColour())
 
 	def L_UPD(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_Update.SetBackgroundColour(
-			self.ToolBar_Main.GetBackgroundColour())
+			self.version.GetBackgroundColour())
 
 	def L_QUT(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_Quit.SetBackgroundColour(
-			self.ToolBar_Main.GetBackgroundColour())
+			self.version.GetBackgroundColour())
 
 	def L_File(self, event):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
-		self.B_File.SetBackgroundColour(self.ToolBar_Main.GetBackgroundColour())
+		self.B_File.SetBackgroundColour(self.version.GetBackgroundColour())
 
 	# -----------------------------------------------------------------------
 
@@ -774,7 +837,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 4:
 			M_PPTNG.main()
 		elif Main_State == 5:
-			return
+			M_BingWallPaper.main()
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
@@ -829,7 +892,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			return
+			YOLO.video_demo()
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
@@ -842,22 +905,29 @@ class CalcFrame(GUI.Main):
 	def G_1(self, event):
 		''' 1号功能分区-语文 '''
 
-		global Main_State, color_Hover, color_SideL  # 定义(全局)状态变量
+		global Main_State, colour_Hover, colour_SideL  # 定义(全局)状态变量
 		Main_State = 1
 
-		Color_clean(self)  # 清空所有颜色
+		Colour_clean(self)  # 清空所有颜色
 
 		start(self)
 
-		color_Main = "#FD0006"  # 主界面颜色定义
-		color_Bottom = "#FE3F44"
-		color_SideL = '#FE7276'
-		color_Hover = '#A60000'
-		note = '醉后不知天在水，满船清梦压星河'  # 主界面留言定义
+		colour_cfg = configparser.ConfigParser() # 主界面颜色定义
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page1.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)  # 主界面颜色设置
+		note = open('./DATA/Main/Note/Note1.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1) # 随机抽取一条
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G1.SetBackgroundColour(color_Main)  # 主界面颜色设置
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)  # 主界面颜色设置
+
+		self.G1.SetBackgroundColour(colour_Main)  # 主界面颜色设置
 		self.G1.SetForegroundColour("White")  # 按钮字体颜色设置
 
 		self.T_F1.SetLabel("中文转拼音")  # 设置功能按钮的标签
@@ -877,22 +947,29 @@ class CalcFrame(GUI.Main):
 
 	def G_2(self, event):
 		''' 2号功能分区-数学 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 2
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#FF7400"
-		color_Bottom = "#FF9640"
-		color_SideL = '#FFB273'
-		color_Hover = '#A64B00'
-		note = 'eiπ+1=0'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page2.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note2.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G2.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G2.SetBackgroundColour(colour_Main)
 		self.G2.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("圆周率")
@@ -912,22 +989,29 @@ class CalcFrame(GUI.Main):
 	def G_3(self, event):
 		''' 3号功能分区-英语 '''
 
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 3
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#FFAA00"
-		color_Bottom = "#FFBF40"
-		color_SideL = '#FFD073'
-		color_Hover = '#A66F00'
-		note = 'Don＇t let dream just be your dream. '
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page3.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+		
+		note = open('./DATA/Main/Note/Note3.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
 
-		self.G3.SetBackgroundColour(color_Main)
+		self.G3.SetBackgroundColour(colour_Main)
 		self.G3.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("大小写转换")
@@ -947,22 +1031,29 @@ class CalcFrame(GUI.Main):
 	def G_4(self, event):
 		''' 4号功能分区-信息 '''
 
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 4
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#9FEE00"
-		color_Bottom = "#B9F73E"
-		color_SideL = '#C9F76F'
-		color_Hover = '#679B00'
-		note = '11011111101010010'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page4.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+		
+		note = open('./DATA/Main/Note/Note4.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
+		
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
-
-		self.G4.SetBackgroundColour(color_Main)
+		self.G4.SetBackgroundColour(colour_Main)
 		self.G4.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("下载器")
@@ -982,31 +1073,38 @@ class CalcFrame(GUI.Main):
 	def G_5(self, event):
 		''' 5号功能分区-历史 '''
 
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 5
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#00CC00"
-		color_Bottom = "#39E639"
-		color_SideL = '#67E667'
-		color_Hover = '#008500'
-		note = '铭记历史，不忘初心'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page5.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note5.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G5.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G5.SetBackgroundColour(colour_Main)
 		self.G5.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("历史上的今天")
-		self.T_F2.SetLabel("NONE")
+		self.T_F2.SetLabel("必应壁纸")
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('数据来自www.ipip5.com')
-		self.Tip2.SetLabel('什么都没有呢!')
+		self.Tip2.SetLabel('朋友,不知道用什么壁纸?来这找找吧')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
@@ -1016,22 +1114,29 @@ class CalcFrame(GUI.Main):
 
 	def G_6(self, event):
 		''' 6号功能分区-地理 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 6
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#009999"
-		color_Bottom = "#33CCCC"
-		color_SideL = '#5CCCCC'
-		color_Hover = '#006363'
-		note = '所爱在山海，山海皆可平'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page6.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note6.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G6.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G6.SetBackgroundColour(colour_Main)
 		self.G6.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("WALP")
@@ -1050,33 +1155,40 @@ class CalcFrame(GUI.Main):
 
 	def G_7(self, event):
 		''' 7号功能分区-物理 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 7
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#1240AB"
-		color_Bottom = "#4671D5"
-		color_SideL = '#6C8CD5'
-		color_Hover = '#06266F'
-		note = '探天地之物，究万物之理'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page7.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note7.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G7.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G7.SetBackgroundColour(colour_Main)
 		self.G7.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("音频分析器")
 		self.T_F2.SetLabel("大学评分数据库")
 		self.T_F3.SetLabel("二维码")
-		self.T_F4.SetLabel("NONE")
+		self.T_F4.SetLabel("YOLO实时对象检测")
 
 		self.Tip1.SetLabel('对于音频的可视化分析')
 		self.Tip2.SetLabel('临时模块-数据库已完成20%')
 		self.Tip3.SetLabel('二维码生成系统')
-		self.Tip4.SetLabel('什么都没有呢!')
+		self.Tip4.SetLabel('基于openCV和YOLOV3数据集的深度神经网络算法')
 
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
 
@@ -1084,22 +1196,29 @@ class CalcFrame(GUI.Main):
 
 	def G_8(self, event):
 		''' 8号功能分区-化学 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 8
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#3914AF"
-		color_Bottom = "#6A48D7"
-		color_SideL = '#876ED7'
-		color_Hover = '#200772'
-		note = '氟F 铀U 碳C 钾K 钇Y 氧O 铀U '
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page8.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note8.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G8.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G8.SetBackgroundColour(colour_Main)
 		self.G8.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("元素周期表")
@@ -1118,22 +1237,29 @@ class CalcFrame(GUI.Main):
 
 	def G_9(self, event):
 		''' 9号功能分区-生物 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 9
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#7109AA"
-		color_Bottom = "#9F3ED5"
-		color_SideL = '#AD66D5'
-		color_Hover = '#48036F'
-		note = '你知道吗:秋水仙素的味道是苦的'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page9.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note9.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G9.SetBackgroundColour(color_Main)
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G9.SetBackgroundColour(colour_Main)
 		self.G9.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("基因库")
@@ -1152,22 +1278,30 @@ class CalcFrame(GUI.Main):
 
 	def G_10(self, event):
 		''' 10号功能分区-通用 '''
-		global Main_State, color_Hover, color_SideL
+		global Main_State, colour_Hover, colour_SideL
 		Main_State = 10
 
-		Color_clean(self)
+		Colour_clean(self)
 
 		start(self)
 
-		color_Main = "#CD0074"
-		color_Bottom = "#E6399B"
-		color_SideL = '#E667AF'
-		color_Hover = '#85004B'
-		note = 'Dont use void main'
+		colour_cfg = configparser.ConfigParser()
+		colour_cfg.read('./DATA/Main/Theme/colourful/Page10.cfg')
+		colour_Main = colour_cfg.get('colour', 'colour_Main')
+		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		Color_Set(self, note, color_Main, color_Bottom, color_SideL)
+		note = open('./DATA/Main/Note/Note10.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = note.readlines()
+		roll = random.randint(0, len(note) - 1)
+		note = note[roll]
+		note = note.replace('\n', '')
 
-		self.G10.SetBackgroundColour(color_Main)
+		
+		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
+
+		self.G10.SetBackgroundColour(colour_Main)
 		self.G10.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("随机数生成器")
@@ -1216,11 +1350,38 @@ class FileDrop(wx.FileDropTarget):
 		File_cfg.set('File', 'type', str(file_type))
 		File_cfg.write(open('./cfg/File.cfg', 'w'))
 
-		wx.MessageBox('检测到文件类型:' + str(file_type))
+		wx.CallAfter(wx.MessageBox, '检测到文件:' +  file_type) # 延期呼叫事件--wx自带的一种多线程方法
 
 		##M_File.main() # 如果直接这样打开会阻塞线程,windows资源管理器也会卡住
 
 		return True
+
+###########################################################################
+# 窗口拖动处理Class
+# Window Move Class
+###########################################################################
+class WorkerThread(threading.Thread):
+    def __init__(self, frame):
+        threading.Thread.__init__(self)
+        self.frame = frame
+        self.timeToQuit = threading.Event()
+        self.timeToQuit.clear()
+        self.system_mouse_pos = win32api.GetCursorPos()
+
+    def run(self):
+        x = self.system_mouse_pos[0] - self.frame.GetPosition()[0]
+        y = self.system_mouse_pos[1] - self.frame.GetPosition()[1]
+        while 1:
+            self.timeToQuit.wait(0.01)
+            if self.timeToQuit.isSet():
+                break
+            self.system_mouse_pos = win32api.GetCursorPos()
+            frame_pos_x = self.system_mouse_pos[0] - x
+            frame_pos_y = self.system_mouse_pos[1] - y
+            frame_pos = (frame_pos_x, frame_pos_y)
+            wx.CallAfter(self.frame.move_start, frame_pos)
+        else:
+            wx.CallAfter(self.frame.move_stop, self)
 
 ###########################################################################
 # 主函数
@@ -1228,14 +1389,10 @@ class FileDrop(wx.FileDropTarget):
 ###########################################################################
 
 
-def main(check):
+def main():
 	'''
 	主函数
 	'''
-	Log()  # 初始化LOG设置
-	logging.debug('Document integrity check文件完整性检查:' + check)
-
-
 	app = wx.App(False)  # GUI循环及前置设置
 	frame = CalcFrame(None)
 	frame.Show(True)
@@ -1243,22 +1400,22 @@ def main(check):
 	app.MainLoop()
 
 
-def Color_clean(self):
+def Colour_clean(self):
 	''' 用于清空全部按钮的颜色设置(GUI) '''
 	# 设置按钮背景颜色和字体颜色
-	BackGround_Color = "White"
+	BackGround_Colour = "White"
 	Foreground_Colour = "Black"
 
-	self.G1.SetBackgroundColour(BackGround_Color)
-	self.G2.SetBackgroundColour(BackGround_Color)
-	self.G3.SetBackgroundColour(BackGround_Color)
-	self.G4.SetBackgroundColour(BackGround_Color)
-	self.G5.SetBackgroundColour(BackGround_Color)
-	self.G6.SetBackgroundColour(BackGround_Color)
-	self.G7.SetBackgroundColour(BackGround_Color)
-	self.G8.SetBackgroundColour(BackGround_Color)
-	self.G9.SetBackgroundColour(BackGround_Color)
-	self.G10.SetBackgroundColour(BackGround_Color)
+	self.G1.SetBackgroundColour(BackGround_Colour)
+	self.G2.SetBackgroundColour(BackGround_Colour)
+	self.G3.SetBackgroundColour(BackGround_Colour)
+	self.G4.SetBackgroundColour(BackGround_Colour)
+	self.G5.SetBackgroundColour(BackGround_Colour)
+	self.G6.SetBackgroundColour(BackGround_Colour)
+	self.G7.SetBackgroundColour(BackGround_Colour)
+	self.G8.SetBackgroundColour(BackGround_Colour)
+	self.G9.SetBackgroundColour(BackGround_Colour)
+	self.G10.SetBackgroundColour(BackGround_Colour)
 
 	self.G1.SetForegroundColour(Foreground_Colour)
 	self.G2.SetForegroundColour(Foreground_Colour)
@@ -1271,35 +1428,39 @@ def Color_clean(self):
 	self.G9.SetForegroundColour(Foreground_Colour)
 	self.G10.SetForegroundColour(Foreground_Colour)
 
-	BackGround_Color = None
+	BackGround_Colour = None
 	Foreground_Colour = None
 
 
-def Color_Set(self, note, color_Main, color_Bottom, color_SideL):
+def Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL):
 	''' 用于设置主界面的颜色(GUI) '''
 	self.Note.SetLabel(note)  # 主界面留言设置
-	self.ToolBar_Main.SetBackgroundColour(color_Main)
 
-	self.B_Quit.SetBackgroundColour(color_Main)  # 按钮背景颜色设置
-	self.B_Cmd.SetBackgroundColour(color_Main)
-	self.B_Log.SetBackgroundColour(color_Main)
-	self.B_Setting.SetBackgroundColour(color_Main)
-	self.B_About.SetBackgroundColour(color_Main)
-	self.B_Update.SetBackgroundColour(color_Main)
-	self.B_File.SetBackgroundColour(color_Main)
+	self.version.SetBackgroundColour(colour_Main) # 按钮背景颜色设置
+	self.Network.SetBackgroundColour(colour_Main)
+	self.Note.SetBackgroundColour(colour_Main)
+	self.B_Quit.SetBackgroundColour(colour_Main)
+	self.B_Cmd.SetBackgroundColour(colour_Main)
+	self.B_Log.SetBackgroundColour(colour_Main)
+	self.B_Setting.SetBackgroundColour(colour_Main)
+	self.B_About.SetBackgroundColour(colour_Main)
+	self.B_Update.SetBackgroundColour(colour_Main)
+	self.B_File.SetBackgroundColour(colour_Main)
+	self.Weather.SetBackgroundColour(colour_Main)
 
 	# self.SetBackgroundColour('#F9B7B0') # 主界面背景颜色设置
-	self.Bottom_Bar1.SetBackgroundColour(color_Bottom)  # 主界面底部颜色设置
-	self.Bottom_Bar2.SetBackgroundColour(color_Bottom)
-	self.Bottom_Bar3.SetBackgroundColour(color_Bottom)
-	self.Space1.SetBackgroundColour(color_Bottom)
-	self.Space2.SetBackgroundColour(color_Bottom)
-	self.Space3.SetBackgroundColour(color_Bottom)
+	self.Bottom_Bar1.SetBackgroundColour(colour_Bottom)  # 主界面底部颜色设置
+	self.Bottom_Bar2.SetBackgroundColour(colour_Bottom)
+	self.Bottom_Bar3.SetBackgroundColour(colour_Bottom)
+	self.Bottom_Bar4.SetBackgroundColour(colour_Bottom)
+	self.Space1.SetBackgroundColour(colour_Bottom)
+	self.Space2.SetBackgroundColour(colour_Bottom)
+	self.Space3.SetBackgroundColour(colour_Bottom)
 
-	self.Side1.SetBackgroundColour(color_SideL)  # 主界面左侧边栏颜色设置
-	self.Side2.SetBackgroundColour(color_SideL)
-	self.Side3.SetBackgroundColour(color_SideL)
-	self.Side4.SetBackgroundColour(color_SideL)
+	self.Side1.SetBackgroundColour(colour_SideL)  # 主界面左侧边栏颜色设置
+	self.Side2.SetBackgroundColour(colour_SideL)
+	self.Side3.SetBackgroundColour(colour_SideL)
+	self.Side4.SetBackgroundColour(colour_SideL)
 
 
 def Log():
@@ -1480,8 +1641,8 @@ def Home(self):
 	'''
 	返回初始界面
 	'''
-	global setup, Main_State, color_Hover
-	color_Hover = '#A65F00'
+	global setup, Main_State, colour_Hover
+	colour_Hover = '#A65F00'
 
 	cfg.set('History', 'LAST', FUN_State)
 	cfg.set('History', 'MAINSTATE', str(Main_State))
@@ -1563,21 +1724,24 @@ def Home(self):
 	self.Bottom_Bar1.SetBackgroundColour(botm)
 	self.Bottom_Bar2.SetBackgroundColour(botm)
 	self.Bottom_Bar3.SetBackgroundColour(botm)
+	self.Bottom_Bar4.SetBackgroundColour(botm)
 	self.Space1.SetBackgroundColour(botm)
 	self.Space2.SetBackgroundColour(botm)
 	self.Space3.SetBackgroundColour(botm)
 
-	self.ToolBar_Main.SetBackgroundColour(top)
 	self.B_Quit.SetBackgroundColour(top)
 	self.B_Cmd.SetBackgroundColour(top)
 	self.B_Log.SetBackgroundColour(top)
 	self.B_Setting.SetBackgroundColour(top)
 	self.B_About.SetBackgroundColour(top)
 	self.B_Update.SetBackgroundColour(top)
+	self.B_File.SetBackgroundColour(top)
+
+	self.Weather.SetBackgroundColour(top)
 
 	self.Fast.SetLabel(FUN_State)
 
-	Color_clean(self)
+	Colour_clean(self)
 
 	last = cfg.get('History', 'LAST')
 
@@ -1673,11 +1837,11 @@ def CMD(self, info):
 	'''
 	控制台指令处理
 	'''
-	if info == 'clear':
+	if info == 'clear' or info == 'clean' or info == 'cls':
 		self.CMD_OUT.SetValue('')
 	elif info == 'time':
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Time:' + time.strftime('%H:%M:%S'))
-	elif info == 'random':
+	elif info == 'random' or info == 'stochastic':
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>random:' + str(random.random()))
 	elif info == 'close' or info == 'quit' or info == 'kill':
 		self.Destroy()
@@ -1685,5 +1849,4 @@ def CMD(self, info):
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
 if __name__ == "__main__":
-	check = 'Unrunning(Self_On)'  # 不经引导程序启动时的自我设置
-	main(check)
+	main()

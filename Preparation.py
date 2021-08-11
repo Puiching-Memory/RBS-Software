@@ -31,6 +31,14 @@ class CalcFrame(GUI_Preparation.Main):
 		# 定义主函数
 		GUI_Preparation.Main.__init__(self, parent)
 
+		size = self.GetSize()
+		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath()
+		path.AddRoundedRectangle(0,0,600,400,10)
+
+		self.SetShape(path)
+
+		##self.SetSize(500,300)
+
 		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
@@ -46,11 +54,11 @@ class CalcFrame(GUI_Preparation.Main):
 		elif proc_exist('RBS_Software2021.exe') == 1:
 			print('PreParation:程序无冲突-->启动')
 			cfg.set('main', 'is_exe', 'True')
-			cfg.write(open('./cfg/main.cfg', 'w'))
 		else:
 			print('PreParation:程序无冲突-->启动')
 			cfg.set('main', 'is_exe', 'False')
-			cfg.write(open('./cfg/main.cfg', 'w'))
+
+		cfg.write(open('./cfg/main.cfg', 'w'))
 
 		if fast_setup == 'True':
 			self.Fast_Timer.Start(1, True)
@@ -59,6 +67,7 @@ class CalcFrame(GUI_Preparation.Main):
 		else:
 			self.Timer.Start(100, True)
 			print('设置不合法')
+			
 
 	def Time_Tick(self, event):
 		self.Text.SetLabel("加载主程序")
@@ -119,6 +128,9 @@ class CalcFrame(GUI_Preparation.Main):
 			check = 'ERROR'
 		print(hexd)
 
+		cfg.set('Check', 'Is_complete', check)
+		cfg.write(open('./cfg/main.cfg', 'w'))
+
 		p = f = m = hexd = list_hash = line = None
 		##############################
 
@@ -129,9 +141,9 @@ class CalcFrame(GUI_Preparation.Main):
 		##self.Timer.Stop()
 
 		##wx.MessageBox("你好!欢迎使用RBS-software!\nRBS是应用于教育行业的工具箱软件\n作者:@广州市培正中学-悦社-张凯\n最后编辑时间:2021/7/03 凌晨1:21\n'现在即是未来'", "致未来的你们:", wx.OK) # 启动通知
-		self.Destroy()
+		wx.CallAfter(self.Destroy)
 		
-		Main.main(check)
+		wx.CallAfter(Main.main)
 
 	def Fast_Tick(self, event):
 		self.Text.SetLabel('<<快速启动模式>>')
@@ -139,12 +151,12 @@ class CalcFrame(GUI_Preparation.Main):
 
 		import Main
 
-		check = 'Unrunning(Fast_Setup)'
-
+		cfg.set('Check', 'Is_complete', 'not running')
+		cfg.write(open('./cfg/main.cfg', 'w'))
 
 		self.Destroy()
 		
-		Main.main(check)
+		Main.main()
 
 ##############################
 # 主函数
