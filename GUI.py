@@ -23,7 +23,7 @@ Time_Timer = 1004
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software CC2021", pos = wx.DefaultPosition, size = wx.Size( 750,450 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.MINIMIZE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software CC2021", pos = wx.DefaultPosition, size = wx.Size( 750,450 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.MAXIMIZE_BOX|wx.MINIMIZE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
@@ -497,8 +497,8 @@ class Main ( wx.Frame ):
 
 		wSizer12.Add( self.B_Side_Close, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"          Helper", wx.DefaultPosition, wx.Size( 150,20 ), 0 )
-		self.Side_Tip.SetLabelMarkup( u"          Helper" )
+		self.Side_Tip = wx.StaticText( self, wx.ID_ANY, u"插件列表", wx.DefaultPosition, wx.Size( 70,25 ), wx.ALIGN_CENTER_HORIZONTAL )
+		self.Side_Tip.SetLabelMarkup( u"插件列表" )
 		self.Side_Tip.Wrap( -1 )
 
 		self.Side_Tip.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
@@ -507,11 +507,18 @@ class Main ( wx.Frame ):
 
 		wSizer12.Add( self.Side_Tip, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
+		self.B_Side_Refresh = wx.Button( self, wx.ID_ANY, u"⏲", wx.DefaultPosition, wx.Size( 25,25 ), 0 )
+		wSizer12.Add( self.B_Side_Refresh, 0, wx.ALL, 5 )
+
+		self.B_Side_Run = wx.Button( self, wx.ID_ANY, u"▷", wx.DefaultPosition, wx.Size( 50,25 ), 0 )
+		wSizer12.Add( self.B_Side_Run, 0, wx.ALL, 5 )
+
 
 		bSizer181.Add( wSizer12, 0, 0, 5 )
 
-		self.info = wx.TextCtrl( self, wx.ID_ANY, u"选中一个帮助焦点以显示帮助", wx.DefaultPosition, wx.Size( 200,140 ), wx.TE_MULTILINE|wx.TE_READONLY )
-		bSizer181.Add( self.info, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		Plug_in_boxChoices = []
+		self.Plug_in_box = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 200,140 ), Plug_in_boxChoices, 0 )
+		bSizer181.Add( self.Plug_in_box, 0, wx.ALL, 5 )
 
 		self.CMD_OUT = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,100 ), wx.TE_MULTILINE|wx.TE_READONLY )
 		bSizer181.Add( self.CMD_OUT, 0, wx.ALL, 5 )
@@ -782,6 +789,8 @@ class Main ( wx.Frame ):
 		self.B_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.Tip4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.Tip4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.B_Side_Refresh.Bind( wx.EVT_BUTTON, self.Plug_in_refresh )
+		self.B_Side_Run.Bind( wx.EVT_BUTTON, self.Plug_in_run )
 		self.Push.Bind( wx.EVT_BUTTON, self.CMD_Enter )
 		self.Fast.Bind( wx.EVT_BUTTON, self.Fast_on )
 		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
@@ -1065,6 +1074,12 @@ class Main ( wx.Frame ):
 
 
 
+
+	def Plug_in_refresh( self, event ):
+		event.Skip()
+
+	def Plug_in_run( self, event ):
+		event.Skip()
 
 	def CMD_Enter( self, event ):
 		event.Skip()

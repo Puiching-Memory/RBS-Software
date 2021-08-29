@@ -1,9 +1,0 @@
-DEBUG:root:Document integrity check文件完整性检查:OK
-DEBUG:urllib3.util.retry:Converted retries value: 0 -> Retry(total=0, connect=None, read=None, redirect=None, status=None)
-DEBUG:urllib3.util.retry:Converted retries value: 0 -> Retry(total=0, connect=None, read=None, redirect=None, status=None)
-DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.seniverse.com:443
-DEBUG:urllib3.connectionpool:https://api.seniverse.com:443 "GET /v3/weather/now.json?key=SeKlaz6rgKiOYNaTX&location=guangzhou&language=zh-Hans&unit=c HTTP/1.1" 200 263
-DEBUG:root:Initialization complete初始化完成:2021/07/26*17:11:53
-DEBUG:root:Version软件版本:021.07.25
-DEBUG:root:self quit:2021/07/26*17:13:10
-DEBUG:root:windows quit:2021/07/26*17:13:10

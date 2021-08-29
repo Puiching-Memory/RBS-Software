@@ -40,7 +40,12 @@ class Main ( wx.Frame ):
 		Version_choiseChoices = [ u"#100" ]
 		self.Version_choise = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), Version_choiseChoices, 0 )
 		self.Version_choise.SetSelection( 0 )
-		wSizer1.Add( self.Version_choise, 0, wx.ALL, 5 )
+		wSizer1.Add( self.Version_choise, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Change = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
+		self.B_Change.Enable( False )
+
+		wSizer1.Add( self.B_Change, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer3.Add( wSizer1, 0, 0, 5 )
@@ -85,6 +90,7 @@ class Main ( wx.Frame ):
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.List.Bind( wx.EVT_LISTBOX, self.Setup )
+		self.B_Change.Bind( wx.EVT_BUTTON, self.Change )
 
 	def __del__( self ):
 		pass
@@ -95,6 +101,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Setup( self, event ):
+		event.Skip()
+
+	def Change( self, event ):
 		event.Skip()
 
 

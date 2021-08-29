@@ -8,6 +8,17 @@ RBS is a toolbox software used in education industry.
 - 中文版本:[README_cn.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README_cn.md)
 - English version:[README.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README.md)
 
+# >Structure
+
+| entrance           | major   | modular(logic) | modular(Visual interface) |
+| ------------------ | ------- | -------------- | ------------------------- |
+| Preparation.py     | Main.py | M_QRcode.py    | GUI_QRcode.py             |
+| GUI_Preparation.py | GUI.py  | M_Timer.py     | GUI_Timer.py              |
+|                    |         | M_Roll.py      | GUI_Roll.py               |
+|                    |         | M_***.py       | GUI_***.py                |
+
+*Each module has its corresponding GUI program(Note the files with 'GUI' in their names)
+
 # >Running on Python3.8
 
 ##### Library list
@@ -67,15 +78,19 @@ pip install -r requirements.txt
 pip install pyinstaller==4.5.1
 ```
 
+```
+pip install tinyaes==1.0.1
+```
+
 ##### Packaging command
 
-Full version
+Full version ↓↓↓
 
 ```
 pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software2021  --key ZKPuichingMemory -w --collect-submodules pynput
 ```
 
-Lightweight version
+Lightweight version ↓↓↓
 
 ```
 pyinstaller -D Preparation.py -y -n RBS_Software2021 -w --collect-submodules pynput

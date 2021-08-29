@@ -1,1 +1,0 @@
-cfg/main.cfg

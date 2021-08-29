@@ -67,11 +67,13 @@ import psutil
 import time
 import ping3
 import random
+import subprocess
 ##import gc # 内存库
 
 # 核心库
 import wx
 import wx.adv
+##from wxgl.scene import WxGLScene
 import GUI
 import configparser # 设置文件(.cfg)库
 import logging.handlers # 日志库
@@ -88,9 +90,9 @@ class CalcFrame(GUI.Main):
 	MENU_EXIT   = wx.NewIdRef()
 
 	def __init__(self, parent):
-		GUI.Main.__init__(self, parent) # 初始化
+		GUI.Main.__init__(self, parent) # 初始化GUI
 		self.threads = []
-
+		
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x,screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
@@ -115,7 +117,13 @@ class CalcFrame(GUI.Main):
 		print('彩色模式:' + str(wx.ColourDisplay()))
 		print('GUI大小:' + str(self.Size))
 
-
+		#载入插件-----------------------
+		Plug_in_list = open('./DATA/main/plug_in/List.txt')
+		Plug_in_list = Plug_in_list.readlines()
+		for i in range(0, len(Plug_in_list)):
+			self.Plug_in_box.Append(str(Plug_in_list[i]).replace('\n', ''))
+			print(str(Plug_in_list[i]).replace('\n', ''))
+		#------------------------------
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = 'NONE'
 		Hover = 0  # 检测当前Hover的按钮是哪个
@@ -170,6 +178,9 @@ class CalcFrame(GUI.Main):
 		logging.debug('Version软件版本:' + version)
 
 		Self_CMD(self, '初始化完成,日志已保存')
+
+
+
 
 	def Sacc(self, event):
 		'''
@@ -335,6 +346,46 @@ class CalcFrame(GUI.Main):
 		if self.threads:
 			self.threads[0].timeToQuit.set()
 			self.threads.remove(self.threads[0])
+
+
+	def Plug_in_refresh(self, event):
+		self.Plug_in_box.Clear()
+		Plug_in_list = open('./DATA/main/plug_in/List.txt')
+		Plug_in_list = Plug_in_list.readlines()
+		for i in range(0, len(Plug_in_list)):
+			self.Plug_in_box.Append(str(Plug_in_list[i]).replace('\n', ''))
+			print(str(Plug_in_list[i]).replace('\n', ''))
+
+	def Plug_in_run(self, event):
+		pass
+		path = './plug-in/' + self.Plug_in_box.GetString(self.Plug_in_box.GetSelection())
+		print(path)
+		entrance = open(path + '/entrance.txt')
+		entrance = entrance.readlines()[0]
+
+		path = os.path.abspath(path + '/' + entrance)
+		#----------------------------------------------------------------
+		'''可读取数据的调用方式
+		bat = subprocess.Popen("cmd.exe /c" + path,
+								stdout=subprocess.PIPE, 
+								stderr=subprocess.STDOUT,
+								encoding=None,
+								shell=False)
+		curline = bat.stdout.readline()
+		while (curline != b''):
+			return_data = curline
+			print(curline)
+			curline = bat.stdout.readline()
+
+		bat.wait()
+
+		print(bat.returncode)
+		if bat.returncode == 0:
+			print('bat -> Python:运行成功')
+		'''
+		#-----------------------------------------------------------------
+
+		os.system('start ' + path)
 
 
 	def OnTaskBar(self, event):
@@ -1188,7 +1239,7 @@ class CalcFrame(GUI.Main):
 		self.Tip1.SetLabel('对于音频的可视化分析')
 		self.Tip2.SetLabel('临时模块-数据库已完成20%')
 		self.Tip3.SetLabel('二维码生成系统')
-		self.Tip4.SetLabel('基于openCV和YOLOV3数据集的深度神经网络算法')
+		self.Tip4.SetLabel('基于openCV和YOLOV3数据集的\n深度神经网络算法')
 
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
 
@@ -1267,7 +1318,7 @@ class CalcFrame(GUI.Main):
 		self.T_F3.SetLabel("NONE")
 		self.T_F4.SetLabel("NONE")
 
-		self.Tip1.SetLabel('从本地数据库中获取基因数列,然后进行蛋白质转录')
+		self.Tip1.SetLabel('从本地数据库中获取基因数列\n然后进行蛋白质转录')
 		self.Tip2.SetLabel('什么都没有呢!')
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
@@ -1549,9 +1600,11 @@ def start(self):
 		self.CMD_OUT.Show(buer)
 		self.CMD_IN.Show(buer)
 		self.Push.Show(buer)
+		self.B_Side_Refresh.Show(buer)
+		self.B_Side_Run.Show(buer)
 
 		self.Side_Tip.Show(buer)
-		self.info.Show(buer)
+		self.Plug_in_box.Show(buer)
 
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
@@ -1621,9 +1674,11 @@ def start(self):
 		self.CMD_OUT.Show(buer)
 		self.CMD_IN.Show(buer)
 		self.Push.Show(buer)
+		self.B_Side_Refresh.Show(buer)
+		self.B_Side_Run.Show(buer)
 
 		self.Side_Tip.Show(buer)
-		self.info.Show(buer)
+		self.Plug_in_box.Show(buer)
 
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
@@ -1696,12 +1751,14 @@ def Home(self):
 	self.Side4.Show(buer)
 
 	self.B_Side_Close.Show(buer)
+	self.B_Side_Refresh.Show(buer)
+	self.B_Side_Run.Show(buer)
 	self.CMD_OUT.Show(buer)
 	self.CMD_IN.Show(buer)
 	self.Push.Show(buer)
 
 	self.Side_Tip.Show(buer)
-	self.info.Show(buer)
+	self.Plug_in_box.Show(buer)
 
 	self.Line1.Show(buer)
 	self.Line2.Show(buer)
@@ -1736,6 +1793,9 @@ def Home(self):
 	self.B_About.SetBackgroundColour(top)
 	self.B_Update.SetBackgroundColour(top)
 	self.B_File.SetBackgroundColour(top)
+	self.version.SetBackgroundColour(top)
+	self.Network.SetBackgroundColour(top)
+	self.Note.SetBackgroundColour(top)
 
 	self.Weather.SetBackgroundColour(top)
 

@@ -1,4 +1,4 @@
-import pip
+
 import subprocess
 import os
 
@@ -18,7 +18,7 @@ def Update():
 
     # 执行升级命令，pip每次取一个包进行升级，
     for nu in need_update:
-        com_update = 'pip install -U {py}'.format(py=nu)
+        com_update = 'python -m pip install --upgrade {py}'.format(py=nu)
         print("执行命令:", com_update)
         subprocess.call(com_update)
         print("---------- 执行结束-----------\n".format(com=com_update))
