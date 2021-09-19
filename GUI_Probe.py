@@ -10,8 +10,6 @@
 import wx
 import wx.xrc
 
-Frame = 1000
-
 ###########################################################################
 ## Class Main
 ###########################################################################
@@ -19,11 +17,25 @@ Frame = 1000
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = Frame, title = u"WXGL", pos = wx.DefaultPosition, size = wx.Size( 800,600 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Probe", pos = wx.DefaultPosition, size = wx.Size( 400,300 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
+		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+
+		self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"程序探针", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1.Wrap( -1 )
+
+		bSizer2.Add( self.m_staticText1, 0, wx.ALL, 5 )
+
+		m_checkList1Choices = [u"PowerPoint", u"NONE"]
+		self.m_checkList1 = wx.CheckListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_checkList1Choices, 0 )
+		bSizer2.Add( self.m_checkList1, 0, wx.ALL, 5 )
+
+
+		self.SetSizer( bSizer2 )
+		self.Layout()
 
 		self.Centre( wx.BOTH )
 

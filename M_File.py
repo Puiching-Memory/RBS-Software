@@ -18,13 +18,17 @@ class CalcFrame(GUI_File.Main):
         # 定义主函数
         GUI_File.Main.__init__(self, parent)
 
-        Refresh(self)
+        Refresh_File(self)
+        Refresh_Log(self)
 
     def Clean(self, event):
         shutil.rmtree('./Cache/')
         os.mkdir('./Cache')
+        shutil.rmtree('./Log/')
+        os.mkdir('./Log')
 
-        Refresh(self)
+        Refresh_File(self)
+        Refresh_Log(self)
 
 ##############################
 # 主函数
@@ -37,7 +41,7 @@ def main():
     frame.Show(True)
     app.MainLoop()
 
-def Refresh(self):
+def Refresh_File(self):
         file_list = []
         size = 0
         
@@ -64,6 +68,18 @@ def Refresh(self):
         self.FileNum_Cache.SetLabel('缓存文件数:' + str(len(file_list)))
         self.FileSize_Cache.SetLabel('缓存占用空间:' + str(round(size / 1024)) + 'KB  |  ' + str(size) + '字节')
 
+def Refresh_Log(self):
+        file_list = []
+        size = 0
+        
+        for root, dirs, files in os.walk('./Log/'):
+            for name in files:
+                file_list.append(root + '/' +name)
+                
+            size += sum([getsize(join(root, name)) for name in files])
+
+        self.FileNum_Log.SetLabel('日志文件数:' + str(len(file_list)))
+        self.FileSize_Log.SetLabel('日志占用空间:' + str(round(size / 1024)) + 'KB  |  ' + str(size) + '字节')
 
 if __name__ == "__main__":
     main()

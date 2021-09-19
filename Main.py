@@ -34,9 +34,8 @@ import M_Base_conversion # 十进制转换器
 import M_Traditional_Chinese # 中文繁体简体互转
 import M_BMI # BMI计算器
 import M_PPTNG # PPT导出图片
-import M_Download # 下载器
+##import M_Pylint # Python语法检查器
 import M_Timer # 计时器
-import M_PPT # PPT小工具
 import M_Idion # 成语接龙
 import M_DDT # '外挂'集合
 import M_Music # 音乐分析器
@@ -47,16 +46,21 @@ import M_Date # 日期查看器
 import M_File # 文件管理器
 import M_QRcode # 二维码生成器
 import M_BingWallPaper # 必应壁纸
+##import M_WxGL # 3D模块OpenGL
+import M_Trigonometric # 三角函数
 
 import WeaterAPI # 天气API
 
 import User # 用户界面
 import Setting # 设置界面
 import Plug_in # 插件
+import Probe # 探针
+
+import P_PPT # PPT小工具
 
 # 临时库
 import L_College
-import YOLO
+##import YOLO
 
 # 辅助功能库
 import sys
@@ -92,7 +96,7 @@ class CalcFrame(GUI.Main):
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent) # 初始化GUI
 		self.threads = []
-		
+
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x,screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
@@ -125,7 +129,7 @@ class CalcFrame(GUI.Main):
 			print(str(Plug_in_list[i]).replace('\n', ''))
 		#------------------------------
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
-		FUN_State = 'NONE'
+		FUN_State = -1
 		Hover = 0  # 检测当前Hover的按钮是哪个
 		colour_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
 		Colour_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
@@ -159,11 +163,8 @@ class CalcFrame(GUI.Main):
 		'''
 		start(self)  # 初始化界面布局函数(纯操作,无计算)
 
-		if last != 'NONE':
-			self.Fast.SetLabel(last)
-
-		if Main_State == 'NONE':
-			Main_State = 0
+		if last != '-1':
+			self.Fast.SetLabel(last_list(int(Main_State),int(last)))
 
 		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
 			self.Fast.SetBackgroundColour(
@@ -208,7 +209,7 @@ class CalcFrame(GUI.Main):
 			self.taskBar.RemoveIcon()
 
 		cfg.read('./cfg/main.cfg')
-		cfg.set('History', 'LAST', FUN_State)
+		cfg.set('History', 'LAST', str(FUN_State))
 		cfg.set('History', 'MAINSTATE', str(Main_State))
 		cfg.set('History', 'COLOR', str(
 			self.Bottom_Bar1.GetBackgroundColour()))
@@ -232,7 +233,7 @@ class CalcFrame(GUI.Main):
 			self.taskBar.RemoveIcon()
 
 		cfg.read('./cfg/main.cfg')
-		cfg.set('History', 'LAST', FUN_State)
+		cfg.set('History', 'LAST', str(FUN_State))
 		cfg.set('History', 'MAINSTATE', str(Main_State))
 		cfg.set('History', 'COLOR', str(
 			self.Bottom_Bar1.GetBackgroundColour()))
@@ -305,7 +306,6 @@ class CalcFrame(GUI.Main):
 		else:
 			wx.CallAfter(win32api.ShellExecute, 0, 'open', 'Update.exe', '','',1)
 
-
 	def File(self, event):
 		M_File.main()
 
@@ -319,6 +319,9 @@ class CalcFrame(GUI.Main):
 	def User(self, event):
 		User.main()
 
+	def Probe(self, event):
+		Probe.main()
+		
 	def LLL(self, event):
 		L_College.main()
 
@@ -329,13 +332,13 @@ class CalcFrame(GUI.Main):
 		self.Weather.Enable(True)
 
 	def CMD_Enter(self, event):
-		CMD(self, self.CMD_IN.GetValue())
-		self.CMD_IN.SetValue('')
+		if self.CMD_IN.GetValue() != "":
+			CMD(self, self.CMD_IN.GetValue())
+			self.CMD_IN.SetValue('')
 
 	def move_start(self, frame_pos):
 		##print(random.random())
 		self.SetPosition(frame_pos)
-	
 
 	def OnLeftDown(self, event):
 		thread = WorkerThread(self)
@@ -346,7 +349,6 @@ class CalcFrame(GUI.Main):
 		if self.threads:
 			self.threads[0].timeToQuit.set()
 			self.threads.remove(self.threads[0])
-
 
 	def Plug_in_refresh(self, event):
 		self.Plug_in_box.Clear()
@@ -367,7 +369,7 @@ class CalcFrame(GUI.Main):
 		#----------------------------------------------------------------
 		'''可读取数据的调用方式
 		bat = subprocess.Popen("cmd.exe /c" + path,
-								stdout=subprocess.PIPE, 
+								stdout=subprocess.PIPE,
 								stderr=subprocess.STDOUT,
 								encoding=None,
 								shell=False)
@@ -387,7 +389,6 @@ class CalcFrame(GUI.Main):
 
 		os.system('start ' + path)
 
-
 	def OnTaskBar(self, event):
 		'''
 		系统托盘图标_对应操作
@@ -399,14 +400,68 @@ class CalcFrame(GUI.Main):
 		self.taskBar.PopupMenu(menu) # 显示托盘菜单
 		menu.Destroy() # 销毁托盘菜单
 
+	def Hot_Key_Down(self, event):
+		print('检测到快捷键:' + str(event.GetKeyCode()))
+		key = int(event.GetKeyCode())
+
+		if key == 27: # ESC
+			self.Close(self)
+		elif key == 49: # 1
+			self.G_1(self)
+		elif key == 50: # 2
+			self.G_2(self)
+		elif key == 51: # 3
+			self.G_3(self)
+		elif key == 52: # 4
+			self.G_4(self)
+		elif key == 53: # 5
+			self.G_5(self)
+		elif key == 54: # 6
+			self.G_6(self)
+		elif key == 55: # 7
+			self.G_7(self)
+		elif key == 56: # 8
+			self.G_8(self)
+		elif key == 57: # 9
+			self.G_9(self)
+		elif key == 48: # 0
+			self.G_10(self)
+		
+		elif key == 340: # F1
+			self.File(self)
+		elif key == 341: # F2
+			self.Log(self)
+		elif key == 342: # F3
+			self.Setting(self)
+		elif key == 343: # F4
+			self.About(self)
+
 	def BT2(self, event):
 		M_Date.main()
 
 	def Fast_on(self, event):
-		check_name = ['中文转拼音', '简-繁转换', '成语接龙', '', '圆周率', '', '', '', '大小写转换', '', '', '', '下载器', 'PPT出图', 'BMI', 'DDT', '',
-					  '', '', '', '', '', '', '', '', '', '', '', '元素周期表', '', '', '', '基因库', '', '', '', '随机数生成器', '进制转换', '值日表', '计时器']
-		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None, M_Pi, None, None, None, M_Capslook, None, None, None, M_Download, M_PPTNG, M_BMI, M_DDT, None, None,
-						None, None, None, None, None, None, None, None, None, None, M_Element, None, None, None, M_Gene, None, None, None, M_Roll, M_Base_conversion, M_Roster, M_Timer]
+		check_name = ['拼音转换', '简繁转换', '成语接龙', '', 
+					'圆周率', '3DMA', '三角函数', '', 
+					'大小转换', '', '', '', 
+					'Py检查', 'PPNG', 'BMI', 'DDT', 
+					'历史今天','Bing', '', '',
+					'WALP', '', '', '',
+					'音频分析', '大学评分', 'QR码', '',
+					'元素周期', '', '', '',
+					'基因库', '', '', '',
+					'随机数', '进制转换', '值日表', '计时器']
+
+		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None,
+						M_Pi, None, M_Trigonometric, None,
+						M_Capslook, None, None, None,
+						M_Pylint, M_PPTNG, M_BMI, M_DDT,
+						M_History, M_BingWallPaper,None, None,
+						M_WALP, None, None, None,
+						M_Music, L_College, M_QRcode, None,
+						M_Element, None, None, None,
+						M_Gene, None, None, None,
+						M_Roll, M_Base_conversion, M_Roster, M_Timer]
+
 		for (name, program) in zip(check_name, into_program):
 			if name == self.Fast.GetLabel():
 				program.main()
@@ -423,7 +478,6 @@ class CalcFrame(GUI.Main):
 		RAM_text = str(Line1.percent) + "%"
 
 		self.Bottom_Bar3.SetLabel('CPU:' + CPU_text + '  RAM:' + RAM_text)
-
 
 	def PRAM_Tick(self, event):
 		'''
@@ -445,10 +499,10 @@ class CalcFrame(GUI.Main):
 		except:
 			self.Bottom_Bar4.SetLabel('--MB')
 
-
 	def PRO_Tick(self, event):
 		'''
 		计时器-后台探针
+		'''
 		'''
 		if proc_exist('POWERPNT.EXE'):
 			##print('PPT is running')
@@ -457,7 +511,7 @@ class CalcFrame(GUI.Main):
 		else:
 			event.Skip()
 			##print('no such process...')
-
+		'''
 
 	def Net_Tick(self, event):
 		'''
@@ -471,7 +525,6 @@ class CalcFrame(GUI.Main):
 				self.Network.SetLabel('Net:' + ping + 'ms')
 		except:
 			self.Network.SetLabel('Net:Ero')
-
 
 	def Time_Tick(self, event):
 		'''
@@ -851,85 +904,88 @@ class CalcFrame(GUI.Main):
 	def Function1(self, event):
 		''' 点击事件_按钮1 '''
 		global FUN_State
-		FUN_State = self.T_F1.GetLabel()
+		FUN_State = 1
 
 		if Main_State == 1:
-			M_Pinyin.main()
+			wx.CallAfter(M_Pinyin.main)
 		elif Main_State == 2:
-			M_Pi.main()
+			wx.CallAfter(M_Pi.main)
 		elif Main_State == 3:
-			M_Capslook.main()
+			wx.CallAfter(M_Capslook.main)
 		elif Main_State == 4:
-			M_Download.main()
+			##wx.CallAfter(M_Pylint.main)
+			pass
 		elif Main_State == 5:
-			M_History.main()
+			wx.CallAfter(M_History.main)
 		elif Main_State == 6:
-			M_WALP.main()
+			wx.CallAfter(M_WALP.main)
 		elif Main_State == 7:
-			M_Music.main()
+			wx.CallAfter(M_Music.main)
 		elif Main_State == 8:
-			M_Element.main()
+			wx.CallAfter(M_Element.main)
 		elif Main_State == 9:
-			M_Gene.main()
+			wx.CallAfter(M_Gene.main)
 		elif Main_State == 10:
-			M_Roll.main()
+			wx.CallAfter(M_Roll.main)	
 
 	def Function2(self, event):
 		''' 点击事件_按钮2 '''
 		global FUN_State
-		FUN_State = self.T_F2.GetLabel()
+		FUN_State = 2
 
 		if Main_State == 1:
-			M_Traditional_Chinese.main()
+			wx.CallAfter(M_Traditional_Chinese.main)
 		elif Main_State == 2:
+			##M_WxGL.main()
+			wx.MessageBox('未启用,敬请期待!','提示',wx.OK)
 			return
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			M_PPTNG.main()
+			wx.CallAfter(M_PPTNG.main)
 		elif Main_State == 5:
-			M_BingWallPaper.main()
+			wx.CallAfter(M_BingWallPaper.main)
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			L_College.main()
+			wx.CallAfter(L_College.main)
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			M_Base_conversion.main()
+			wx.CallAfter(M_Base_conversion.main)
 
 	def Function3(self, event):
 		''' 点击事件_按钮3 '''
 		global FUN_State
-		FUN_State = self.T_F3.GetLabel()
+		FUN_State = 3
 
 		if Main_State == 1:
-			M_Idion.main()
+			wx.CallAfter(M_Idion.main)
 		elif Main_State == 2:
-			return
+			wx.CallAfter(M_Trigonometric.main)
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			M_BMI.main()
+			wx.CallAfter(M_BMI.main)
 		elif Main_State == 5:
 			return
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			M_QRcode.main()
+			wx.CallAfter(M_QRcode.main)
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			M_Roster.main()
+			wx.CallAfter(M_Roster.main)
 
 	def Function4(self, event):
 		''' 点击事件_按钮4 '''
 		global FUN_State
-		FUN_State = self.T_F4.GetLabel()
+		FUN_State = 4
 		if Main_State == 1:
 			return
 		elif Main_State == 2:
@@ -937,19 +993,20 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			M_DDT.main()
+			wx.CallAfter(M_DDT.main)
 		elif Main_State == 5:
 			return
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			YOLO.video_demo()
+			##YOLO.video_demo()
+			return
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			M_Timer.main()
+			wx.CallAfter(M_Timer.main)
 
 	# --------------------------------------------------------------------
 
@@ -1024,13 +1081,13 @@ class CalcFrame(GUI.Main):
 		self.G2.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("圆周率")
-		self.T_F2.SetLabel("NONE")
-		self.T_F3.SetLabel("NONE")
+		self.T_F2.SetLabel("3D_Math")
+		self.T_F3.SetLabel("三角函数")
 		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('记录了小数点后一万位,支持本地解算')
-		self.Tip2.SetLabel('什么都没有呢!')
-		self.Tip3.SetLabel('什么都没有呢!')
+		self.Tip2.SetLabel('创建3D的数学模型')
+		self.Tip3.SetLabel('简单的三角函数计算器')
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		Function_icon(self, 0, 0, 0, 0, 1, 0, 0, 0)
@@ -1053,7 +1110,7 @@ class CalcFrame(GUI.Main):
 		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-		
+
 		note = open('./DATA/Main/Note/Note3.txt', 'r', encoding='utf-8') # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
@@ -1095,24 +1152,24 @@ class CalcFrame(GUI.Main):
 		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-		
+
 		note = open('./DATA/Main/Note/Note4.txt', 'r', encoding='utf-8') # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
 		note = note.replace('\n', '')
-		
+
 		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
 
 		self.G4.SetBackgroundColour(colour_Main)
 		self.G4.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("下载器")
+		self.T_F1.SetLabel("Python语法检查")
 		self.T_F2.SetLabel("PPT出图")
 		self.T_F3.SetLabel("BMI")
 		self.T_F4.SetLabel("DDT")
 
-		self.Tip1.SetLabel('单线程下载器,确保你输入的url是可用的!')
+		self.Tip1.SetLabel('基于Pylint的Python语法检查器')
 		self.Tip2.SetLabel('将选定文件夹内的所有PPT导出为图片')
 		self.Tip3.SetLabel('BMI计算器,简单,易用,但没人关心这个')
 		self.Tip4.SetLabel('(DDT)破环性实验功能，谨慎使用，任何造成的损失后果自负')
@@ -1349,7 +1406,7 @@ class CalcFrame(GUI.Main):
 		note = note[roll]
 		note = note.replace('\n', '')
 
-		
+
 		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
 
 		self.G10.SetBackgroundColour(colour_Main)
@@ -1412,27 +1469,27 @@ class FileDrop(wx.FileDropTarget):
 # Window Move Class
 ###########################################################################
 class WorkerThread(threading.Thread):
-    def __init__(self, frame):
-        threading.Thread.__init__(self)
-        self.frame = frame
-        self.timeToQuit = threading.Event()
-        self.timeToQuit.clear()
-        self.system_mouse_pos = win32api.GetCursorPos()
+	def __init__(self, frame):
+		threading.Thread.__init__(self)
+		self.frame = frame
+		self.timeToQuit = threading.Event()
+		self.timeToQuit.clear()
+		self.system_mouse_pos = win32api.GetCursorPos()
 
-    def run(self):
-        x = self.system_mouse_pos[0] - self.frame.GetPosition()[0]
-        y = self.system_mouse_pos[1] - self.frame.GetPosition()[1]
-        while 1:
-            self.timeToQuit.wait(0.01)
-            if self.timeToQuit.isSet():
-                break
-            self.system_mouse_pos = win32api.GetCursorPos()
-            frame_pos_x = self.system_mouse_pos[0] - x
-            frame_pos_y = self.system_mouse_pos[1] - y
-            frame_pos = (frame_pos_x, frame_pos_y)
-            wx.CallAfter(self.frame.move_start, frame_pos)
-        else:
-            wx.CallAfter(self.frame.move_stop, self)
+	def run(self):
+		x = self.system_mouse_pos[0] - self.frame.GetPosition()[0]
+		y = self.system_mouse_pos[1] - self.frame.GetPosition()[1]
+		while 1:
+			self.timeToQuit.wait(0.01)
+			if self.timeToQuit.isSet():
+				break
+			self.system_mouse_pos = win32api.GetCursorPos()
+			frame_pos_x = self.system_mouse_pos[0] - x
+			frame_pos_y = self.system_mouse_pos[1] - y
+			frame_pos = (frame_pos_x, frame_pos_y)
+			wx.CallAfter(self.frame.move_start, frame_pos)
+		else:
+			wx.CallAfter(self.frame.move_stop, self)
 
 ###########################################################################
 # 主函数
@@ -1699,7 +1756,7 @@ def Home(self):
 	global setup, Main_State, colour_Hover
 	colour_Hover = '#A65F00'
 
-	cfg.set('History', 'LAST', FUN_State)
+	cfg.set('History', 'LAST', str(FUN_State))
 	cfg.set('History', 'MAINSTATE', str(Main_State))
 	cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
 	cfg.write(open('./cfg/main.cfg', 'w'))
@@ -1799,14 +1856,14 @@ def Home(self):
 
 	self.Weather.SetBackgroundColour(top)
 
-	self.Fast.SetLabel(FUN_State)
+	self.Fast.SetLabel(str(FUN_State))
+
+	self.Note.SetLabel('Welcome to RBS_Software')
 
 	Colour_clean(self)
 
-	last = cfg.get('History', 'LAST')
-
-	if last != 'NONE':
-		self.Fast.SetLabel(last)
+	if FUN_State != -1:
+		self.Fast.SetLabel(last_list(Main_State,FUN_State))
 	else:
 		self.Fast.SetLabel('NONE')
 
@@ -1905,8 +1962,119 @@ def CMD(self, info):
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>random:' + str(random.random()))
 	elif info == 'close' or info == 'quit' or info == 'kill':
 		self.Destroy()
+	elif info == 'Net_Check':
+		os.system('ping localhost && ping www.baidu.com && ipconfig -all && msdt.exe /id NetworkDiagnosticsNetworkAdapter')
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Net_Check:网络检查已执行')
+	elif info == 'Sound_Check':
+		os.system('msdt.exe /id AudioPlaybackDiagnostic')
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Sound_Check:声音检查已执行')
+	elif info == 'help' or info == '?':
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Help:内置CMD程序版本:021.09.04\n可使用的命令:\nhelp\nquit\ntime\nrandom\nNet_Check\nSound_Check')
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
+	self.CMD_OUT.SetInsertionPointEnd() # 设置光标到末尾
+
+def last_list(X,Y):
+	'''
+	使用给定的XY坐标返回功能模块的名字
+	'''
+	name = 'NONE'
+
+	if X == 0:
+		name = 'NONE'
+	elif X == 1:
+		if Y == 1:
+			name = '拼音转换'
+		elif Y == 2:
+			name = '简繁转换'
+		elif Y == 3:
+			name = '成语接龙'
+		else:
+			name = 'NONE'
+	elif X == 2:
+		if Y == 1:
+			name = '圆周率'
+		elif Y == 2:
+			name = '3DMA'
+		elif Y == 3:
+			name = '三角函数'
+		else:
+			name = 'NONE'
+	elif X == 3:
+		if Y == 1:
+			name = '大小转换'
+		elif Y == 2:
+			name = 'NONE'
+		elif Y == 3:
+			name = 'NONE'
+		else:
+			name = 'NONE'
+	elif X == 4:
+		if Y == 1:
+			name = 'Py检查'
+		elif Y == 2:
+			name = 'PPNG'
+		elif Y == 3:
+			name = 'BMI'
+		else:
+			name = 'DDT'
+	elif X == 5:
+		if Y == 1:
+			name = '历史今天'
+		elif Y == 2:
+			name = 'Bing'
+		elif Y == 3:
+			name = 'NONE'
+		else:
+			name = 'NONE'
+	elif X == 6:
+		if Y == 1:
+			name = 'WALP'
+		elif Y == 2:
+			name = 'NONE'
+		elif Y == 3:
+			name = 'NONE'
+		else:
+			name = 'NONE'
+	elif X == 7:
+		if Y == 1:
+			name = '音频分析'
+		elif Y == 2:
+			name = '大学评分'
+		elif Y == 3:
+			name = 'QR码'
+		else:
+			name = 'NONE'
+	elif X == 8:
+		if Y == 1:
+			name = '元素周期'
+		elif Y == 2:
+			name = 'NONE'
+		elif Y == 3:
+			name = 'NONE'
+		else:
+			name = 'NONE'
+	elif X == 9:
+		if Y == 1:
+			name = '基因库'
+		elif Y == 2:
+			name = 'NONE'
+		elif Y == 3:
+			name = 'NONE'
+		else:
+			name = 'NONE'
+	elif X == 10:
+		if Y == 1:
+			name = '随机数'
+		elif Y == 2:
+			name = '进制转换'
+		elif Y == 3:
+			name = '值日表'
+		else:
+			name = '计时器'
+
+	return name
+	
 if __name__ == "__main__":
 	main()

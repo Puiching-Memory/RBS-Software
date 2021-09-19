@@ -61,18 +61,35 @@ class Main ( wx.Frame ):
 		self.m_staticline1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer2.Add( self.m_staticline1, 0, wx.EXPAND |wx.ALL, 5 )
 
+		fgSizer1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+		fgSizer1.SetFlexibleDirection( wx.BOTH )
+		fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
 		self.FileNum_Cache = wx.StaticText( self, wx.ID_ANY, u"缓存文件数:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.FileNum_Cache.Wrap( -1 )
 
-		bSizer2.Add( self.FileNum_Cache, 0, wx.ALL, 5 )
+		fgSizer1.Add( self.FileNum_Cache, 0, wx.ALL, 5 )
 
 		self.FileSize_Cache = wx.StaticText( self, wx.ID_ANY, u"缓存占用空间:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.FileSize_Cache.Wrap( -1 )
 
-		bSizer2.Add( self.FileSize_Cache, 0, wx.ALL, 5 )
+		fgSizer1.Add( self.FileSize_Cache, 0, wx.ALL, 5 )
 
-		self.B_clean = wx.Button( self, wx.ID_ANY, u"清空缓存", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer2.Add( self.B_clean, 0, wx.ALL, 5 )
+		self.FileNum_Log = wx.StaticText( self, wx.ID_ANY, u"日志文件数:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileNum_Log.Wrap( -1 )
+
+		fgSizer1.Add( self.FileNum_Log, 0, wx.ALL, 5 )
+
+		self.FileSize_Log = wx.StaticText( self, wx.ID_ANY, u"日志占用空间:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FileSize_Log.Wrap( -1 )
+
+		fgSizer1.Add( self.FileSize_Log, 0, wx.ALL, 5 )
+
+
+		bSizer2.Add( fgSizer1, 0, 0, 5 )
+
+		self.B_clean = wx.Button( self, wx.ID_ANY, u"清空缓存", wx.DefaultPosition, wx.Size( 300,-1 ), 0 )
+		bSizer2.Add( self.B_clean, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
 		self.SetSizer( bSizer2 )

@@ -3,6 +3,7 @@
 ##############################
 import wx
 import random
+import time
 
 import GUI_Roll
 
@@ -45,7 +46,45 @@ class CalcFrame(GUI_Roll.Main):
 				self.Out.SetValue(num_list)
 			else:
 				self.Out.SetValue(str(num_list))
-				
+	
+
+	def GO(self,event):
+		self.B_GO.Enable(False)
+		min = self.MIN.GetValue()
+		max = self.MAX.GetValue()
+
+		for i in range(0,100):
+			print(i)
+			if i <= 90:
+				wx.MilliSleep(10)
+				self.T_GO.SetLabel(str(random.randint(min, max)))
+				Resize(self)
+			elif i <= 95:
+				wx.MilliSleep(50)
+				self.T_GO.SetLabel(str(random.randint(min, max)))
+				Resize(self)
+			elif i <= 100:
+				wx.MilliSleep(150)
+				self.T_GO.SetLabel(str(random.randint(min, max)))
+				Resize(self)
+
+		self.B_GO.Enable(True)
+
+	def Single(self,event):
+		self.Retry.Show(False)
+		self.Enter.Show(False)
+		self.T_3.Show(False)
+		self.NUM.Show(False)
+		self.B_Run.Show(False)
+		self.Out.Show(False)
+
+		self.B_GO.Show(True)
+		self.T_GO.Show(True)
+
+		self.B_Single.Show(False)
+		self.B_WTF.Show(False)
+
+		Resize(self)
 
 ##############################
 # 主函数
@@ -55,6 +94,11 @@ def main():
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
+
+
+def Resize(self):
+	self.SetSize(500,401)
+	self.SetSize(500,400)
 
 
 if __name__ == "__main__":

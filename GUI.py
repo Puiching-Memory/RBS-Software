@@ -54,7 +54,7 @@ class Main ( wx.Frame ):
 
 		fgSizer31.Add( self.Weather, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Note = wx.Button( self, wx.ID_ANY, u"welcome to RBS_Software", wx.DefaultPosition, wx.Size( 295,25 ), wx.BORDER_NONE )
+		self.Note = wx.Button( self, wx.ID_ANY, u"Ｗelcome to RBS_Software", wx.DefaultPosition, wx.Size( 295,25 ), wx.BORDER_NONE )
 		self.Note.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Note.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
@@ -121,7 +121,7 @@ class Main ( wx.Frame ):
 		self.G1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G1 )
-		self.G2 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"数学 1", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.G2 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"数学 3", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
 		self.G2.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
@@ -142,7 +142,7 @@ class Main ( wx.Frame ):
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G6 )
-		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G7 = wx.Button( self.m_toolBar2, wx.ID_ANY, u"物理 4", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		self.m_toolBar2.AddControl( self.G7 )
@@ -601,47 +601,47 @@ class Main ( wx.Frame ):
 
 		self.Space1 = wx.Button( self, wx.ID_ANY, u">", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Space1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Space1.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Space1, 0, 0, 5 )
 
 		self.Bottom_Bar1 = wx.Button( self, wx.ID_ANY, u"    ------", wx.DefaultPosition, wx.Size( 295,20 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Bottom_Bar1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Bottom_Bar1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Bottom_Bar1, 0, 0, 5 )
 
 		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Space2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Space2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Space2, 0, 0, 5 )
 
 		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 200,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar2.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
 		self.Bottom_Bar2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Bottom_Bar2.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Bottom_Bar2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Bottom_Bar2, 0, 0, 5 )
 
 		self.Space3 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
 		self.Space3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Space3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Space3.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Space3, 0, 0, 5 )
 
 		self.Bottom_Bar3 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 180,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar3.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
 		self.Bottom_Bar3.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Bottom_Bar3.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Bottom_Bar3.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Bottom_Bar3, 0, 0, 5 )
 
 		self.Bottom_Bar4 = wx.Button( self, wx.ID_ANY, u"N/A", wx.DefaultPosition, wx.Size( 50,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar4.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
 		self.Bottom_Bar4.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Bottom_Bar4.SetBackgroundColour( wx.Colour( 255, 201, 60 ) )
+		self.Bottom_Bar4.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		fgSizer3.Add( self.Bottom_Bar4, 0, 0, 5 )
 
@@ -684,6 +684,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.Bind( wx.EVT_ERASE_BACKGROUND, self.Sacc )
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
+		self.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
 		self.version.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
 		self.version.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
@@ -751,6 +752,7 @@ class Main ( wx.Frame ):
 		self.Side3.Bind( wx.EVT_BUTTON, self.User )
 		self.Side3.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L3 )
 		self.Side3.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L3 )
+		self.Side4.Bind( wx.EVT_BUTTON, self.Probe )
 		self.Side4.Bind( wx.EVT_ENTER_WINDOW, self.Hover_L4 )
 		self.Side4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L4 )
 		self.T_F1.Bind( wx.EVT_ENTER_WINDOW, self.Hover1 )
@@ -818,6 +820,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Ico( self, event ):
+		event.Skip()
+
+	def Hot_Key_Down( self, event ):
 		event.Skip()
 
 	def Change_Size( self, event ):
@@ -1013,6 +1018,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Leave_L3( self, event ):
+		event.Skip()
+
+	def Probe( self, event ):
 		event.Skip()
 
 	def Hover_L4( self, event ):

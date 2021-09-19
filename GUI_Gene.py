@@ -24,7 +24,7 @@ class Main ( wx.Frame ):
 
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"生命计划-基因库", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
+		self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, u"基因库", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.m_staticText2.Wrap( -1 )
 
 		self.m_staticText2.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "方正黑体简体" ) )

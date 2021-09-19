@@ -15,9 +15,11 @@
 import wx
 import hashlib
 import os.path
+import os
 import configparser
 import win32com.client
 import win32gui
+import zipfile
 
 import GUI_Preparation
 
@@ -67,23 +69,32 @@ class CalcFrame(GUI_Preparation.Main):
 		else:
 			self.Timer.Start(100, True)
 			print('设置不合法')
-			
+
 
 	def Time_Tick(self, event):
 		self.Text.SetLabel("加载主程序")
 
 		import Main
 
+		##wx.CallAfter(self.Bar.SetSize,(40,8))
 		self.Bar.SetSize(40, 8)
 		self.Bar.SetLabel('20%')
 
-		self.Text.SetLabel("加载必需库文件")
+		self.Text.SetLabel("生成压缩文件")
+
+		directory = 'DATA'
+		file_paths = get_all_file_paths(directory)
+
+		with zipfile.ZipFile('DATA_LCK.zip', 'w') as zip:
+		#遍历写入文件
+			for file in file_paths:
+				zip.write(file)
 
 		##wx.MilliSleep(100)
 		self.Bar.SetSize(80, 8)
 		self.Bar.SetLabel('40%')
 
-		self.Text.SetLabel("检查文件夹位置")
+		self.Text.SetLabel("检查文件夹")
 
 		for CheckDir in ['Log', 'Cache', 'plug-in']:
 			if os.path.exists(CheckDir):
@@ -103,8 +114,7 @@ class CalcFrame(GUI_Preparation.Main):
 		self.Bar.SetLabel('60%')
 		self.Text.SetLabel("校验数据库完整性")
 		###############################
-		list_hash = ['./DATA/Pi/Pi.txt', './DATA/Gene/Covid19-RNA/RNA.txt',
-					 './DATA/Traditional_Chinese/zhcdict.json', './DATA/Idion/idiom.txt']  # 文件列表,可无限扩展,但我还是建议用外部导入文件
+		list_hash = ['DATA_LCK.zip']  # 文件列表,可无限扩展,但我还是建议用外部导入文件
 		check = open("check.txt", "r")
 		check = check.readlines()
 
@@ -133,16 +143,20 @@ class CalcFrame(GUI_Preparation.Main):
 
 		p = f = m = hexd = list_hash = line = None
 		##############################
+		self.Bar.SetSize(120, 8)
+		self.Bar.SetLabel('60%')
+		self.Text.SetLabel("清理临时数据")
 
+		os.remove('DATA_LCK.zip')
 		##wx.MilliSleep(500)
 		self.Bar.SetSize(190, 8)
 		self.Bar.SetLabel('100%')
-
+		self.Text.SetLabel("加载完成")
 		##self.Timer.Stop()
 
 		##wx.MessageBox("你好!欢迎使用RBS-software!\nRBS是应用于教育行业的工具箱软件\n作者:@广州市培正中学-悦社-张凯\n最后编辑时间:2021/7/03 凌晨1:21\n'现在即是未来'", "致未来的你们:", wx.OK) # 启动通知
 		wx.CallAfter(self.Destroy)
-		
+
 		wx.CallAfter(Main.main)
 
 	def Fast_Tick(self, event):
@@ -155,7 +169,7 @@ class CalcFrame(GUI_Preparation.Main):
 		cfg.write(open('./cfg/main.cfg', 'w'))
 
 		self.Destroy()
-		
+
 		Main.main()
 
 ##############################
@@ -178,8 +192,20 @@ def proc_exist(process_name):
 	processCodeCov = wmi.ExecQuery(
 		'select * from Win32_Process where name=\"%s\"' % (process_name))
 	Program_num = len(processCodeCov)
-	
+
 	return Program_num
+
+def get_all_file_paths(directory):
+	# 初始化文件路径列表
+	file_paths = []
+	for root, directories, files in os.walk(directory):
+		for filename in files:
+			#连接字符串形成完整的路径
+			filepath = os.path.join(root, filename)
+			file_paths.append(filepath)
+
+	# 返回所有文件路径
+	return file_paths
 
 if __name__ == "__main__":
 	global ppt_check
