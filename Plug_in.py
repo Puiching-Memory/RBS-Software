@@ -40,7 +40,11 @@ class CalcFrame(GUI_Plug_in.Main):
 
 
 	def Close(self, event):
-		self.Destroy()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 	def Setup(self, event):
 		global place
@@ -126,6 +130,7 @@ class CalcFrame(GUI_Plug_in.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

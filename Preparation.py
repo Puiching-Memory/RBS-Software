@@ -21,6 +21,8 @@ import win32com.client
 import win32gui
 import zipfile
 
+from wx.core import Frame
+
 import GUI_Preparation
 
 ##############################
@@ -39,138 +41,138 @@ class CalcFrame(GUI_Preparation.Main):
 
 		self.SetShape(path)
 
-		##self.SetSize(500,300)
+		if proc_exist('RBS_Software2021.exe') == 2:
+			print('PreParation:程序已启动-->退出')
+			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
+			self.Destroy()
+		elif proc_exist('RBS_Software2021.exe') == 1:
+			print('PreParation:程序无冲突-->启动')
+		else:
+			print('PreParation:程序无冲突-->启动')
+
+		#############################################################
+		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))
 
 		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
+		cfg.read('./cfg/setting.cfg')
+		fast_setup = cfg.get('performance', 'fast_on')
+
 		cfg.read('./cfg/main.cfg')
 		version = cfg.get('main', 'VERSION')
-		fast_setup = cfg.get('main', 'fast_setup')
 		self.Version.SetLabel(str('#Version:   ' + version))
 
-		if proc_exist('RBS_Software2021.exe') == 2:
-			print('PreParation:程序已启动-->退出')
-			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
-			wx.Exit()
-		elif proc_exist('RBS_Software2021.exe') == 1:
-			print('PreParation:程序无冲突-->启动')
-			cfg.set('main', 'is_exe', 'True')
-		else:
-			print('PreParation:程序无冲突-->启动')
-			cfg.set('main', 'is_exe', 'False')
-
 		cfg.write(open('./cfg/main.cfg', 'w'))
 
-		if fast_setup == 'True':
-			self.Fast_Timer.Start(1, True)
-		elif fast_setup == 'False':
-			self.Timer.Start(100, True)
+		if fast_setup == 'False':
+			self.m_timer1.Start(1000,True)
+
+		elif fast_setup == 'True':
+			self.m_timer2.Start(1000,True)
+
 		else:
-			self.Timer.Start(100, True)
+			self.Destroy()
 			print('设置不合法')
 
+	def timer_Fast(self, event):			
+			
+			self.Text.SetLabel('<<快速启动模式>>')
+			
+			import Main
+			Frame_main = Main.Pre_main()
 
-	def Time_Tick(self, event):
-		self.Text.SetLabel("加载主程序")
+			cfg.set('Check', 'Is_complete', 'not running')
+			cfg.write(open('./cfg/main.cfg', 'w'))
 
-		import Main
+			Frame_main.Show()
+			wx.CallAfter(self.Hide)
+			wx.CallAfter(self.Colour_timer.Stop)
 
-		##wx.CallAfter(self.Bar.SetSize,(40,8))
-		self.Bar.SetSize(40, 8)
-		self.Bar.SetLabel('20%')
+	def Timer_Normal(self, event):
+			self.Text.SetLabel("加载主程序库")
 
-		self.Text.SetLabel("生成压缩文件")
+			import Main			
+			Frame_main = Main.Pre_main()
 
-		directory = 'DATA'
-		file_paths = get_all_file_paths(directory)
+			self.Text.SetLabel("生成压缩文件")
 
-		with zipfile.ZipFile('DATA_LCK.zip', 'w') as zip:
-		#遍历写入文件
-			for file in file_paths:
-				zip.write(file)
+			directory = 'DATA'
+			file_paths = get_all_file_paths(directory)
 
-		##wx.MilliSleep(100)
-		self.Bar.SetSize(80, 8)
-		self.Bar.SetLabel('40%')
+			with zipfile.ZipFile('DATA_LCK.zip', 'w') as zip:
+			#遍历写入文件
+				for file in file_paths:
+					zip.write(file)
 
-		self.Text.SetLabel("检查文件夹")
+			self.Text.SetLabel("检查文件夹")
 
-		for CheckDir in ['Log', 'Cache', 'plug-in']:
-			if os.path.exists(CheckDir):
-				print(str("确定存在:" + CheckDir))
+			for CheckDir in ['Log', 'Cache', 'plug-in']:
+				if os.path.exists(CheckDir):
+					print(str("确定存在:" + CheckDir))
+				else:
+					print(str("文件夹丢失:" + CheckDir))
+					os.makedirs(CheckDir)
+
+			CheckDir = None
+
+			self.Text.SetLabel("校验数据库完整性")
+			###############################
+			list_hash = ['DATA_LCK.zip']  # 文件列表,可无限扩展,但我还是建议用外部导入文件
+			check = open("check.txt", "r")
+			check = check.readlines()
+
+			for i in range(0, len(check)):
+				check[i] = check[i].rstrip("\n")
+
+			hexd = []
+
+			for p in list_hash:
+				m = hashlib.md5()
+				with open(p, "rb") as f:
+					for line in f:
+						m.update(line)
+					hexd.append(m.hexdigest())
+
+			if hexd == check:
+				print('OK')
+				check = 'OK'
 			else:
-				print(str("文件夹丢失:" + CheckDir))
-				os.makedirs(CheckDir)
+				print('ERROR')
+				check = 'ERROR'
+			print(hexd)
 
-		CheckDir = None
+			cfg.set('Check', 'Is_complete', check)
+			cfg.write(open('./cfg/main.cfg', 'w'))
 
-		##wx.MilliSleep(100)
-		self.Bar.SetSize(90, 8)
-		self.Bar.SetLabel('45%')
+			p = f = m = hexd = list_hash = line = None
+			##############################
+			self.Text.SetLabel("清理临时数据")
 
-		##wx.MilliSleep(200)
-		self.Bar.SetSize(120, 8)
-		self.Bar.SetLabel('60%')
-		self.Text.SetLabel("校验数据库完整性")
-		###############################
-		list_hash = ['DATA_LCK.zip']  # 文件列表,可无限扩展,但我还是建议用外部导入文件
-		check = open("check.txt", "r")
-		check = check.readlines()
+			os.remove('DATA_LCK.zip')
 
-		for i in range(0, len(check)):
-			check[i] = check[i].rstrip("\n")
+			self.Text.SetLabel("加载完成")
 
-		hexd = []
+			wx.Sleep(1)
 
-		for p in list_hash:
-			m = hashlib.md5()
-			with open(p, "rb") as f:
-				for line in f:
-					m.update(line)
-				hexd.append(m.hexdigest())
+			Frame_main.Show()
+			wx.CallAfter(self.Hide)
+			wx.CallAfter(self.Colour_timer.Stop)
 
-		if hexd == check:
-			print('OK')
-			check = 'OK'
-		else:
-			print('ERROR')
-			check = 'ERROR'
-		print(hexd)
 
-		cfg.set('Check', 'Is_complete', check)
-		cfg.write(open('./cfg/main.cfg', 'w'))
-
-		p = f = m = hexd = list_hash = line = None
-		##############################
-		self.Bar.SetSize(120, 8)
-		self.Bar.SetLabel('60%')
-		self.Text.SetLabel("清理临时数据")
-
-		os.remove('DATA_LCK.zip')
-		##wx.MilliSleep(500)
-		self.Bar.SetSize(190, 8)
-		self.Bar.SetLabel('100%')
-		self.Text.SetLabel("加载完成")
-		##self.Timer.Stop()
-
-		##wx.MessageBox("你好!欢迎使用RBS-software!\nRBS是应用于教育行业的工具箱软件\n作者:@广州市培正中学-悦社-张凯\n最后编辑时间:2021/7/03 凌晨1:21\n'现在即是未来'", "致未来的你们:", wx.OK) # 启动通知
-		wx.CallAfter(self.Destroy)
-
-		wx.CallAfter(Main.main)
-
-	def Fast_Tick(self, event):
-		self.Text.SetLabel('<<快速启动模式>>')
-		self.Bar.SetSize(100, 8)
-
-		import Main
-
-		cfg.set('Check', 'Is_complete', 'not running')
-		cfg.write(open('./cfg/main.cfg', 'w'))
-
-		self.Destroy()
-
-		Main.main()
+	def Colour(self, event):
+		if self.CB1.GetBackgroundColour() == (255,0,0,255):
+			self.CB2.SetBackgroundColour(wx.Colour(255,128,0))
+			self.CB1.SetBackgroundColour(wx.Colour(255,255,255))
+		elif self.CB2.GetBackgroundColour() == (255,128,0,255):
+			self.CB3.SetBackgroundColour(wx.Colour(255,255,0))
+			self.CB2.SetBackgroundColour(wx.Colour(255,255,255))
+		elif self.CB3.GetBackgroundColour() == (255,255,0,255):
+			self.CB4.SetBackgroundColour(wx.Colour(0,255,0))
+			self.CB3.SetBackgroundColour(wx.Colour(255,255,255))
+		elif self.CB4.GetBackgroundColour() == (0,255,0,255):
+			self.CB1.SetBackgroundColour(wx.Colour(255,0,0))
+			self.CB4.SetBackgroundColour(wx.Colour(255,255,255))
 
 ##############################
 # 主函数
@@ -179,10 +181,9 @@ class CalcFrame(GUI_Preparation.Main):
 
 def main():
 	app = wx.App(False)
-	frame = CalcFrame(None)
-	frame.Show(True)
+	frame_Pre = CalcFrame(None)
+	frame_Pre.Show(True)
 	app.MainLoop()
-	wx.App.SetExitOnFrameDelete(False)
 
 
 def proc_exist(process_name):
@@ -208,6 +209,4 @@ def get_all_file_paths(directory):
 	return file_paths
 
 if __name__ == "__main__":
-	global ppt_check
-	ppt_check = 0
 	main()

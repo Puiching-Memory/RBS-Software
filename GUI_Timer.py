@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -27,14 +27,14 @@ class Main ( wx.Frame ):
 		self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"计时器", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText4.Wrap( -1 )
 
-		self.m_staticText4.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.m_staticText4.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		bSizer2.Add( self.m_staticText4, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
 		self.MIN = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 60, 0 )
-		self.MIN.SetFont( wx.Font( 30, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.MIN.SetFont( wx.Font( 30, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer1.Add( self.MIN, 0, wx.ALL, 5 )
 
@@ -44,7 +44,7 @@ class Main ( wx.Frame ):
 		wSizer1.Add( self.text1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.SEC = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 0, 60, 30 )
-		self.SEC.SetFont( wx.Font( 30, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.SEC.SetFont( wx.Font( 30, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer1.Add( self.SEC, 0, wx.ALL, 5 )
 
@@ -61,21 +61,21 @@ class Main ( wx.Frame ):
 		self.Text_min = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.Text_min.Wrap( -1 )
 
-		self.Text_min.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.Text_min.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer2.Add( self.Text_min, 0, wx.ALL, 5 )
 
 		self.mao = wx.StaticText( self, wx.ID_ANY, u":", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.mao.Wrap( -1 )
 
-		self.mao.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.mao.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer2.Add( self.mao, 0, wx.ALL, 5 )
 
 		self.Text_sec = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.Text_sec.Wrap( -1 )
 
-		self.Text_sec.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.Text_sec.SetFont( wx.Font( 50, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		wSizer2.Add( self.Text_sec, 0, wx.ALL, 5 )
 
@@ -105,7 +105,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
-		self.Bind( wx.EVT_CLOSE, self.close )
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.RUN.Bind( wx.EVT_BUTTON, self.run )
 		self.Stop.Bind( wx.EVT_BUTTON, self.stop )
 		self.Pause.Bind( wx.EVT_BUTTON, self.pause )
@@ -115,8 +115,8 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
-	def close( self, event ):
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
 		event.Skip()
 
 	def run( self, event ):

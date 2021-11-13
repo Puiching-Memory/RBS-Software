@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -55,7 +55,7 @@ class Main ( wx.Frame ):
 		self.Out1 = wx.StaticText( self, wx.ID_ANY, u"000", wx.DefaultPosition, wx.Size( -1,-1 ), 0 )
 		self.Out1.Wrap( -1 )
 
-		self.Out1.SetFont( wx.Font( 48, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.Out1.SetFont( wx.Font( 48, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		bSizer2.Add( self.Out1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
@@ -66,6 +66,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.input1.Bind( wx.EVT_SPINCTRLDOUBLE, self.RUN )
 		self.input1.Bind( wx.EVT_TEXT, self.RUN )
 		self.input1.Bind( wx.EVT_TEXT_ENTER, self.RUN )
@@ -77,7 +78,10 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
+
 	def RUN( self, event ):
 		event.Skip()
 

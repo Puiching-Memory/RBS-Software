@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -55,7 +55,6 @@ class Main ( wx.Frame ):
 		self.GRID1.SetColSize( 17, 50 )
 		self.GRID1.EnableDragColMove( False )
 		self.GRID1.EnableDragColSize( True )
-		self.GRID1.SetColLabelSize( 30 )
 		self.GRID1.SetColLabelValue( 0, u"IA" )
 		self.GRID1.SetColLabelValue( 1, u"IIA" )
 		self.GRID1.SetColLabelValue( 2, u"IIIB" )
@@ -74,6 +73,7 @@ class Main ( wx.Frame ):
 		self.GRID1.SetColLabelValue( 15, u"VIA" )
 		self.GRID1.SetColLabelValue( 16, u"VIIA" )
 		self.GRID1.SetColLabelValue( 17, u"0" )
+		self.GRID1.SetColLabelSize( 30 )
 		self.GRID1.SetColLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
 
 		# Rows
@@ -87,7 +87,6 @@ class Main ( wx.Frame ):
 		self.GRID1.SetRowSize( 7, 60 )
 		self.GRID1.SetRowSize( 8, 60 )
 		self.GRID1.EnableDragRowSize( True )
-		self.GRID1.SetRowLabelSize( 30 )
 		self.GRID1.SetRowLabelValue( 0, u"1" )
 		self.GRID1.SetRowLabelValue( 1, u"2" )
 		self.GRID1.SetRowLabelValue( 2, u"3" )
@@ -97,6 +96,7 @@ class Main ( wx.Frame ):
 		self.GRID1.SetRowLabelValue( 6, u"7" )
 		self.GRID1.SetRowLabelValue( 7, u"镧系" )
 		self.GRID1.SetRowLabelValue( 8, u"锕系" )
+		self.GRID1.SetRowLabelSize( 30 )
 		self.GRID1.SetRowLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
 
 		# Label Appearance
@@ -113,7 +113,15 @@ class Main ( wx.Frame ):
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -58,7 +58,7 @@ class Main ( wx.Frame ):
 		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"你好，这里是PuiChing Memory项目组。 PuiChing Memory是一个多广度，重体验的（广州市培正中学）系列衍生（文创）项目。 本质上是（通用技术课程）的作业形式。 培正人，希望在2021年我们都能一起回首，一起展望.\n\nHello, this is puiching memory project team. Puiching memory is a multi breadth, experience oriented (Guangzhou Peizheng middle school) series derivative (cultural and creative) project. In essence, it is the form of homework (general technology course). Peizheng people hope that in 2021 we can all look back and look forward together.", wx.DefaultPosition, wx.Size( -1,140 ), 0 )
 		self.m_staticText8.Wrap( -1 )
 
-		self.m_staticText8.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.m_staticText8.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑 Light" ) )
 
 		bSizer4.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
@@ -94,7 +94,15 @@ class Main ( wx.Frame ):
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
 
 

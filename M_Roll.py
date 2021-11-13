@@ -86,15 +86,22 @@ class CalcFrame(GUI_Roll.Main):
 
 		Resize(self)
 
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
+
 ##############################
 # 主函数
 ##############################
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
-
 
 def Resize(self):
 	self.SetSize(500,401)

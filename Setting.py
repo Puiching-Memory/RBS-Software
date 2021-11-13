@@ -3,6 +3,7 @@
 ##############################
 import wx
 import configparser
+import time
 
 import GUI_Setting
 
@@ -17,86 +18,59 @@ class CalcFrame(GUI_Setting.Main):
 		# 定义主函数
 		GUI_Setting.Main.__init__(self, parent)
 
-		global cfg
-
-		# 读取cfg配置文件
+		global cfg, TREY, log_path, fast_on
 		cfg = configparser.ConfigParser()
-		cfg.read('./cfg/main.cfg')
+		cfg.read('./cfg/setting.cfg')
+		TREY = cfg.get('window', 'transparency')
+		log_path = cfg.get('log', 'path')
+		fast_on = cfg.get('performance', 'fast_on')
 
-		fastsetup = cfg.get('main', 'FAST_SETUP')
-		top_color = cfg.get('main', 'TOP_COLOR')
-		bottom_color = cfg.get('main', 'BOTTOM_COLOR')
-		transparent = cfg.get('main', 'transparent')
-		##print(font_size, font_family, font_style, font_weight, font_underlined, font_name)
+		start(self)
 
-		if fastsetup == 'False':
-			fastsetup = False
-		elif fastsetup == 'True':
-			fastsetup = True
-		else:
-			print('参数错误')
 
-		# 主界面初始化操作
-		#font = wx.Font(font_size, font_family, font_style, font_weight, font_underlined, faceName=font_name)
-		self.Top_color.SetColour(top_color)
-		self.Bot_color.SetColour(bottom_color)
-		self.fastsetup.SetValue(fastsetup)
-		self.M_transparent.SetValue(int(transparent))
+		self.Bar.SetStatusWidths([200,1,1]) #Bar区域宽度-像素
 
-	def Application( self, event ):
-		self.B_Application.Enable(False)
-		anaylize(self)
-		print('apply')
+	def TREY(self, event):
+		self.TREY_text.SetLabel(str(self.TREY_slider.GetValue()))
 
-	def Changed(self, event):
-		self.B_Application.Enable(True)
-		self.B_Cancel.Enable(True)
+	def Auto_Save(self, event):
+		self.Bar.SetStatusText('自动保存时间:' + str(time.time()), 0)
+		save(self)
 
-	def Cancel( self, event ):
-		self.B_Application.Enable(True)
-		fastsetup = cfg.get('main', 'FAST_SETUP')
-		top_color = cfg.get('main', 'TOP_COLOR')
-		bottom_color = cfg.get('main', 'BOTTOM_COLOR')
-		transparent = cfg.get('main', 'transparent')
-		log_place = cfg.get('main', 'LOG')
-
-		if fastsetup == 'False':
-			fastsetup = False
-		elif fastsetup == 'True':
-			fastsetup = True
-		else:
-			print('参数错误')
-
-		self.Top_color.SetColour(top_color)
-		self.Bot_color.SetColour(bottom_color)
-		self.fastsetup.SetValue(fastsetup)
-		self.M_transparent.SetValue(int(transparent))
-		self.LOG_P.SetPath(log_place)
-
+	def Close(self, event):
+		self.Save_Timer.Stop()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 ##############################
 # 主函数
 ##############################
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
 
-def anaylize(self):
-	if self.fastsetup.IsChecked() == False:
-		cfg.set('main', 'fast_setup', 'False')
-		##print(1)
+def start(self):
+	self.TREY_slider.SetValue(int(TREY))
+	self.TREY_text.SetLabel(TREY)
+	self.Log_File_picker.SetPath(log_path)
+
+	if fast_on == 'False':
+		self.Fast_on_Box.SetValue(False)
 	else:
-		cfg.set('main', 'fast_setup', 'True')
-		##print(2)
+		self.Fast_on_Box.SetValue(True)
 
-	cfg.set('main', 'transparent', str(self.M_transparent.GetValue()))
-	##print(self.fastsetup.IsChecked())
-	cfg.set('main', 'LOG', self.LOG_P.GetPath())
-
-	cfg.write(open('./cfg/main.cfg', 'w'))
+def save(self):
+	cfg.set('window', 'transparency', str(self.TREY_slider.GetValue()))
+	cfg.set('log', 'path', self.Log_File_picker.GetPath())
+	cfg.set('performance', 'fast_on', str(self.Fast_on_Box.IsChecked()))
+	cfg.write(open('./cfg/setting.cfg', 'w'))
 
 if __name__ == "__main__":
 	main()

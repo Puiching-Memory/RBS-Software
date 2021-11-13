@@ -13,38 +13,46 @@ import GUI_Version
 
 
 class CalcFrame(GUI_Version.Main):
-    def __init__(self, parent):
-        # 定义主函数
-        GUI_Version.Main.__init__(self, parent)
-        ##global 
-        for root, dirs, files in os.walk('./DATA/Version/'):  
-            ##print(root) #当前目录路径  
-            ##print(dirs) #当前路径下所有子目录  
-            ##print(files) #当前路径下所有非目录子文件  
-            self.Place.SetLabel('日志路径: ' + root)
+	def __init__(self, parent):
+		# 定义主函数
+		GUI_Version.Main.__init__(self, parent)
+		##global 
+		for root, dirs, files in os.walk('./DATA/Version/'):  
+			##print(root) #当前目录路径  
+			##print(dirs) #当前路径下所有子目录  
+			##print(files) #当前路径下所有非目录子文件  
+			self.Place.SetLabel('日志路径: ' + root)
 
-        self.Version_L.SetSelection(-1)
+		self.Version_L.SetSelection(-1)
 
-        number = len(files)
-        for i in range(0, number):
-            file = files[i]
-            file = file[0:9]
-            ##print(file)
-            self.Version_L.Append(file)
+		number = len(files)
+		for i in range(0, number):
+			file = files[i]
+			file = file[0:9]
+			##print(file)
+			self.Version_L.Append(file)
 
-    def Start(self, event):
-        self.Info.Enable(True)
-        place = './DATA/Version/' + self.Version_L.GetString(self.Version_L.GetSelection()) + '.txt'
-        info = open(place, 'r', encoding='utf-8')
-        Version = str(info.readlines(1))[-15:-6]
-        self.Version_T.SetLabel('版本: ' + Version)
-        ##print(Version)
-        info = open(place, 'r', encoding='utf-8')
-        date = str(info.readlines(1))[-32:-22]
-        self.Date.SetLabel('日期: ' + date)
+	def Start(self, event):
+		self.Info.Enable(True)
+		place = './DATA/Version/' + self.Version_L.GetString(self.Version_L.GetSelection()) + '.txt'
+		info = open(place, 'r', encoding='utf-8')
+		Version = str(info.readlines(1))[-15:-6]
+		self.Version_T.SetLabel('版本: ' + Version)
+		##print(Version)
+		info = open(place, 'r', encoding='utf-8')
+		date = str(info.readlines(1))[-32:-22]
+		self.Date.SetLabel('日期: ' + date)
 
-        info = open(place, 'r', encoding='utf-8')
-        self.Info.SetValue(info.read())
+		info = open(place, 'r', encoding='utf-8')
+		self.Info.SetValue(info.read())
+
+
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 ##############################
 # 主函数
@@ -52,11 +60,12 @@ class CalcFrame(GUI_Version.Main):
 
 
 def main():
-    app = wx.App(False)
-    frame = CalcFrame(None)
-    frame.Show(True)
-    app.MainLoop()
+	global app
+	app = wx.App(False)
+	frame = CalcFrame(None)
+	frame.Show(True)
+	app.MainLoop()
 
 
 if __name__ == "__main__":
-    main()
+	main()

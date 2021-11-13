@@ -128,6 +128,13 @@ class CalcFrame(GUI_Roster.Main):
 		global choise
 		choise = self.choise.Selection
 
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
+
 
 ##############################
 # 主函数
@@ -135,6 +142,7 @@ class CalcFrame(GUI_Roster.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

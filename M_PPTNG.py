@@ -43,6 +43,13 @@ class CalcFrame(GUI_PPTNG.Main):
 			# print ppt_file_name, ppt_dir_path
 			ppt_to_jpg(ppt_file_name,ppt_dir_path)
 
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
+
 
 
 ##############################
@@ -51,6 +58,7 @@ class CalcFrame(GUI_PPTNG.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

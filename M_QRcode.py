@@ -147,19 +147,21 @@ class CalcFrame(GUI_QRcode.Main):
 			shutil.copy('./Cache/BuildQR.svg', path)
 
 	def Close(self, event):
-		##wx.Yield()
-		self.Destroy()
-		#wx.App.ExitMainLoop(M_app)
-		##self.Destroy()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 ##############################
 # 主函数
 ##############################
 def main():
-	M_app = wx.App(False)
-	M_frame = CalcFrame(None)
-	M_frame.Show(True)
-	M_app.MainLoop()
+	global app
+	app = wx.App(False)
+	frame = CalcFrame(None)
+	frame.Show(True)
+	app.MainLoop()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -27,7 +27,7 @@ class Main ( wx.Frame ):
 		self.T_Top = wx.StaticText( self, wx.ID_ANY, u"随机数生成器", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.T_Top.Wrap( -1 )
 
-		self.T_Top.SetFont( wx.Font( 15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.T_Top.SetFont( wx.Font( 15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		bSizer1.Add( self.T_Top, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
@@ -73,20 +73,20 @@ class Main ( wx.Frame ):
 		bSizer1.Add( wSizer2, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.B_Run = wx.Button( self, wx.ID_ANY, u"生成", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.B_Run.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.B_Run.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		bSizer1.Add( self.B_Run, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.T_GO = wx.StaticText( self, wx.ID_ANY, u"-----", wx.DefaultPosition, wx.Size( 100,150 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.T_GO.Wrap( -1 )
 
-		self.T_GO.SetFont( wx.Font( 25, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.T_GO.SetFont( wx.Font( 25, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.T_GO.Hide()
 
 		bSizer1.Add( self.T_GO, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.B_GO = wx.Button( self, wx.ID_ANY, u"GO!", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.B_GO.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.B_GO.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.B_GO.Hide()
 
 		bSizer1.Add( self.B_GO, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -112,6 +112,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.B_Run.Bind( wx.EVT_BUTTON, self.Run )
 		self.B_GO.Bind( wx.EVT_BUTTON, self.GO )
 		self.B_Single.Bind( wx.EVT_BUTTON, self.Single )
@@ -121,7 +122,10 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
+
 	def Run( self, event ):
 		event.Skip()
 

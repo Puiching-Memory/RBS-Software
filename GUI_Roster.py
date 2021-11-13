@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -28,7 +28,7 @@ class Main ( wx.Frame ):
 		self.Main_text = wx.StaticText( self, wx.ID_ANY, u"值日表", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.Main_text.Wrap( -1 )
 
-		self.Main_text.SetFont( wx.Font( 22, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+		self.Main_text.SetFont( wx.Font( 22, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 
 		bSizer1.Add( self.Main_text, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
@@ -44,7 +44,6 @@ class Main ( wx.Frame ):
 		# Columns
 		self.GRID1.EnableDragColMove( False )
 		self.GRID1.EnableDragColSize( True )
-		self.GRID1.SetColLabelSize( 30 )
 		self.GRID1.SetColLabelValue( 0, u"A1" )
 		self.GRID1.SetColLabelValue( 1, u"A2" )
 		self.GRID1.SetColLabelValue( 2, u"A3" )
@@ -53,6 +52,7 @@ class Main ( wx.Frame ):
 		self.GRID1.SetColLabelValue( 5, u"A6" )
 		self.GRID1.SetColLabelValue( 6, u"A7" )
 		self.GRID1.SetColLabelValue( 7, u"A8" )
+		self.GRID1.SetColLabelSize( 30 )
 		self.GRID1.SetColLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
 
 		# Rows
@@ -63,13 +63,13 @@ class Main ( wx.Frame ):
 		self.GRID1.SetRowSize( 4, 30 )
 		self.GRID1.SetRowSize( 5, 30 )
 		self.GRID1.EnableDragRowSize( True )
-		self.GRID1.SetRowLabelSize( 80 )
 		self.GRID1.SetRowLabelValue( 0, u"扫地" )
 		self.GRID1.SetRowLabelValue( 1, u"拖地" )
 		self.GRID1.SetRowLabelValue( 2, u"擦黑板" )
 		self.GRID1.SetRowLabelValue( 3, u"包干区" )
 		self.GRID1.SetRowLabelValue( 4, u"倒垃圾" )
 		self.GRID1.SetRowLabelValue( 5, u"搬饭" )
+		self.GRID1.SetRowLabelSize( 80 )
 		self.GRID1.SetRowLabelAlignment( wx.ALIGN_CENTER, wx.ALIGN_CENTER )
 
 		# Label Appearance
@@ -185,7 +185,7 @@ class Main ( wx.Frame ):
 		self.T_Size = wx.StaticText( self, wx.ID_ANY, u"500X300", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.T_Size.Wrap( -1 )
 
-		self.T_Size.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT, False, "微软雅黑 Light" ) )
+		self.T_Size.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑 Light" ) )
 		self.T_Size.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
 
 		bSizer1.Add( self.T_Size, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.RIGHT|wx.LEFT, 5 )
@@ -199,6 +199,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.GRID1.Bind( wx.grid.EVT_GRID_CELL_CHANGED, self.save )
 		self.Frequency.Bind( wx.EVT_SPINCTRL, self.Update )
 		self.PlaceX.Bind( wx.EVT_SPINCTRL, self.Edit )
@@ -216,7 +217,10 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
+
 	def save( self, event ):
 		event.Skip()
 

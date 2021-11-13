@@ -19,6 +19,13 @@ class CalcFrame(GUI_Idion.Main):
 		word = self.input.GetValue()
 		read(self, word)
 
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
+
 
 
 
@@ -28,6 +35,7 @@ class CalcFrame(GUI_Idion.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

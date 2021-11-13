@@ -34,7 +34,6 @@ import M_Base_conversion # 十进制转换器
 import M_Traditional_Chinese # 中文繁体简体互转
 import M_BMI # BMI计算器
 import M_PPTNG # PPT导出图片
-##import M_Pylint # Python语法检查器
 import M_Timer # 计时器
 import M_Idion # 成语接龙
 import M_DDT # '外挂'集合
@@ -48,6 +47,8 @@ import M_QRcode # 二维码生成器
 import M_BingWallPaper # 必应壁纸
 ##import M_WxGL # 3D模块OpenGL
 import M_Trigonometric # 三角函数
+import M_Draw # 画板
+import M_SSC # 作业扫码登记系统
 
 import WeaterAPI # 天气API
 
@@ -91,7 +92,10 @@ import threading # 多线程
 class CalcFrame(GUI.Main):
 
 	# ↓↓↓↓↓ 定义wx.ID ↓↓↓↓↓
-	MENU_EXIT   = wx.NewIdRef()
+	MENU_EXIT = wx.NewIdRef()
+	MENU_SHOW = wx.NewIdRef()
+	MENU_SET = wx.NewIdRef()
+	MENU_ABOUT = wx.NewIdRef()
 
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent) # 初始化GUI
@@ -100,12 +104,14 @@ class CalcFrame(GUI.Main):
 		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x,screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
+
+		cfg.read('./cfg/setting.cfg')
+		transparent = cfg.get('window', 'transparency')
+
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
 		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
-		transparent = cfg.get('main', 'transparent')
-		is_exe = cfg.get('main', 'is_exe')
 		screen_size_x = int(cfg.get('screen', 'size_x'))
 		screen_size_y = int(cfg.get('screen', 'size_y'))
 		Is_complete = cfg.get('Check', 'Is_complete')
@@ -115,11 +121,6 @@ class CalcFrame(GUI.Main):
 
 		Self_CMD(self, '载入设置完成') # 向自定义控制台发送消息
 		Self_CMD(self, '文件完整性检查:' + Is_complete)
-
-		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display()))) # 信息收集
-		print('屏幕分辨率:' + str(wx.ClientDisplayRect()))
-		print('彩色模式:' + str(wx.ColourDisplay()))
-		print('GUI大小:' + str(self.Size))
 
 		#载入插件-----------------------
 		Plug_in_list = open('./DATA/main/plug_in/List.txt')
@@ -135,14 +136,12 @@ class CalcFrame(GUI.Main):
 		Colour_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
 		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
+
 		self.version.SetLabel('#V' + version) # 设置版本号
 
-		if is_exe == 'True': # 主界面大小设置(针对打包后程序的调整)
-			self.SetSize(screen_size_x - 10,screen_size_y - 10)
-			screen_size_x = screen_size_x - 10
-			screen_size_y = screen_size_y - 10
-		else:
-			self.SetSize(screen_size_x,screen_size_y)
+		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath()
+		path.AddRoundedRectangle(0,0,750,410,10)
+		self.SetShape(path)
 
 		self.Weather.SetLabel(WeaterAPI.Now_weather()) # 获取and显示天气信息
 
@@ -180,6 +179,17 @@ class CalcFrame(GUI.Main):
 
 		Self_CMD(self, '初始化完成,日志已保存')
 
+
+		windows_info_window = wx.adv.NotificationMessage('RBS_Software Info')
+		windows_info_window.SetMessage(wx.GetOsDescription()
+										+'\n屏幕分辨率:' + str(wx.ClientDisplayRect())
+										+'\nversion:' + wx.version())
+		windows_info_window.Show()
+
+		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(self.Size))
+		##wx.Bell() # 系统铃声
+
+		##wx.Shell() # Shell
 
 
 
@@ -240,8 +250,17 @@ class CalcFrame(GUI.Main):
 		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
-		# 关闭程序
-		wx.CallAfter(self.Destroy)
+
+		# 停止计时器
+		self.Net_Timer.Stop()
+		self.PFM_Timer.Stop()
+		self.PRAM_Timer.Stop()
+		self.PRO_Timer.Stop()
+		self.Time_Timer.Stop()
+
+		#销毁GUI
+		##self.Destroy()
+		wx.CallAfter(sys.exit, 0)
 
 	def Ico(self, event):
 		'''
@@ -265,12 +284,11 @@ class CalcFrame(GUI.Main):
 
 			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBar) # 右键单击托盘图标
 			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
-			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBar) # 左键双击托盘图标
-			##self.taskBar.Bind(wx.EVT_MENU, self.OnShow, id=self.MENU_SHOW) # 显示窗口
-			##self.taskBar.Bind(wx.EVT_MENU, self.OnHide, id=self.MENU_HIDE) # 隐藏窗口
-			##self.taskBar.Bind(wx.EVT_MENU, self.OnOpenFolder, id=self.MENU_FOLFER) # 打开输出目录
-			##self.taskBar.Bind(wx.EVT_MENU, self.OnConfig, id=self.MENU_CONFIG) # 设置
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick) # 左键双击托盘图标
 			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT) # 退出
+			self.taskBar.Bind(wx.EVT_MENU, self.OnTaskBarLeftDClick, id=self.MENU_SHOW) # 显示窗口
+			self.taskBar.Bind(wx.EVT_MENU, self.Setting, id=self.MENU_SET) # 设置
+			self.taskBar.Bind(wx.EVT_MENU, self.About, id=self.MENU_ABOUT) # 关于
 
 
 		else:
@@ -283,44 +301,69 @@ class CalcFrame(GUI.Main):
 
 			self.taskBar.RemoveIcon()
 
+	def OnTaskBar(self, event):
+		'''
+		系统托盘图标_对应操作
+		'''
+		menu = wx.Menu()
+		menu.Append(self.MENU_SHOW, "显示窗口")
+		menu.Append(self.MENU_SET, "设置")
+		menu.Append(self.MENU_ABOUT, "关于")
+		menu.AppendSeparator()
+		menu.Append(self.MENU_EXIT, "退出")
+
+		self.taskBar.PopupMenu(menu) # 显示托盘菜单
+		menu.Destroy() # 销毁托盘菜单
+
+	def OnTaskBarLeftDClick(self, event):
+		if self.IsIconized():  # 判断窗口是否是系统托盘
+			self.Iconize(False)  # 恢复窗口
+		if not self.IsShown():  # 判断窗口是否隐藏
+			self.Show(True)  # 显示窗口
+		self.Raise()  # 将窗口提升到顶层
+
 	def Cmd(self, event):
-		# 打开Cmd
-		os.system("C:\WINDOWS\system32\cmd.exe")
+		# 向控制台发送命令
+		##os.system("C:\WINDOWS\system32\cmd.exe")
+		wx.Shell('help')
 
 	def About(self, event):
 		# 打开<关于>界面
-		M_About.main()
+		Frame_About.Show()
 
 	def Log(self, event):
 		# 更新日志
-		M_Version.main()
+		Frame_Version.Show()
 
 	def Setting(self, event):
 		# 打开设置
-		Setting.main()
+		Frame_Setting.Show()
 
 	def Update(self, event):
 		# 打开<联网更新>界面
+		pass
+		'''
 		if proc_exist('Update.exe'):
 			print('程序已运行')
 		else:
 			wx.CallAfter(win32api.ShellExecute, 0, 'open', 'Update.exe', '','',1)
+		'''
 
 	def File(self, event):
-		M_File.main()
+		Frame_File.Show()
 
 	def HOME(self, event):
 		''' 返回主界面 '''
 		Home(self)
 
 	def Plug_in(self, event):
-		Plug_in.main()
+		Frame_Plug_in.Show()
 
 	def User(self, event):
-		User.main()
+		Frame_User.Show()
 
 	def Probe(self, event):
-		Probe.main()
+		Frame_Probe.Show()
 		
 	def LLL(self, event):
 		L_College.main()
@@ -389,17 +432,6 @@ class CalcFrame(GUI.Main):
 
 		os.system('start ' + path)
 
-	def OnTaskBar(self, event):
-		'''
-		系统托盘图标_对应操作
-		'''
-		menu = wx.Menu()
-		menu.AppendSeparator()
-		menu.Append(self.MENU_EXIT, "退出") # 使用系统托盘退出的方法会引发一个C++的错误,错误原因未知,解决方法未知,不会导致可见的问题
-
-		self.taskBar.PopupMenu(menu) # 显示托盘菜单
-		menu.Destroy() # 销毁托盘菜单
-
 	def Hot_Key_Down(self, event):
 		print('检测到快捷键:' + str(event.GetKeyCode()))
 		key = int(event.GetKeyCode())
@@ -439,6 +471,9 @@ class CalcFrame(GUI.Main):
 	def BT2(self, event):
 		M_Date.main()
 
+	def OnMove(self, event):
+		pos = event.GetPosition()
+
 	def Fast_on(self, event):
 		check_name = ['拼音转换', '简繁转换', '成语接龙', '', 
 					'圆周率', '3DMA', '三角函数', '', 
@@ -454,7 +489,7 @@ class CalcFrame(GUI.Main):
 		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None,
 						M_Pi, None, M_Trigonometric, None,
 						M_Capslook, None, None, None,
-						M_Pylint, M_PPTNG, M_BMI, M_DDT,
+						None, M_PPTNG, M_BMI, M_DDT,
 						M_History, M_BingWallPaper,None, None,
 						M_WALP, None, None, None,
 						M_Music, L_College, M_QRcode, None,
@@ -531,6 +566,7 @@ class CalcFrame(GUI.Main):
 		计时器-时间显示
 		'''
 		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
+
 
 	# ------------------------------------------------------------------------
 
@@ -907,26 +943,25 @@ class CalcFrame(GUI.Main):
 		FUN_State = 1
 
 		if Main_State == 1:
-			wx.CallAfter(M_Pinyin.main)
+			Frame_Pinyin.Show()
 		elif Main_State == 2:
-			wx.CallAfter(M_Pi.main)
+			Frame_Pi.Show()
 		elif Main_State == 3:
-			wx.CallAfter(M_Capslook.main)
+			Frame_Capslook.Show()
 		elif Main_State == 4:
-			##wx.CallAfter(M_Pylint.main)
-			pass
+			Frame_SSC.Show()
 		elif Main_State == 5:
-			wx.CallAfter(M_History.main)
+			Frame_History.Show()
 		elif Main_State == 6:
-			wx.CallAfter(M_WALP.main)
+			Frame_WALP.Show()
 		elif Main_State == 7:
-			wx.CallAfter(M_Music.main)
+			Frame_Music.Show()
 		elif Main_State == 8:
-			wx.CallAfter(M_Element.main)
+			Frame_Element.Show()
 		elif Main_State == 9:
-			wx.CallAfter(M_Gene.main)
+			Frame_Gene.Show()
 		elif Main_State == 10:
-			wx.CallAfter(M_Roll.main)	
+			Frame_Roll.Show()
 
 	def Function2(self, event):
 		''' 点击事件_按钮2 '''
@@ -934,7 +969,7 @@ class CalcFrame(GUI.Main):
 		FUN_State = 2
 
 		if Main_State == 1:
-			wx.CallAfter(M_Traditional_Chinese.main)
+			Frame_Traditional_Chinese.Show()
 		elif Main_State == 2:
 			##M_WxGL.main()
 			wx.MessageBox('未启用,敬请期待!','提示',wx.OK)
@@ -942,9 +977,9 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			wx.CallAfter(M_PPTNG.main)
+			Frame_PPTNG.Show()
 		elif Main_State == 5:
-			wx.CallAfter(M_BingWallPaper.main)
+			Frame_BingWallPaper.Show()
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
@@ -954,7 +989,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			wx.CallAfter(M_Base_conversion.main)
+			Frame_Base_conversion.Show()
 
 	def Function3(self, event):
 		''' 点击事件_按钮3 '''
@@ -962,25 +997,25 @@ class CalcFrame(GUI.Main):
 		FUN_State = 3
 
 		if Main_State == 1:
-			wx.CallAfter(M_Idion.main)
+			Frame_Idion.Show()
 		elif Main_State == 2:
-			wx.CallAfter(M_Trigonometric.main)
+			Frame_Trigonometric.Show()
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			wx.CallAfter(M_BMI.main)
+			Frame_BMI.Show()
 		elif Main_State == 5:
 			return
 		elif Main_State == 6:
 			return
 		elif Main_State == 7:
-			wx.CallAfter(M_QRcode.main)
+			Frame_QRcode.Show()
 		elif Main_State == 8:
 			return
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			wx.CallAfter(M_Roster.main)
+			Frame_Roster.Show()
 
 	def Function4(self, event):
 		''' 点击事件_按钮4 '''
@@ -989,11 +1024,11 @@ class CalcFrame(GUI.Main):
 		if Main_State == 1:
 			return
 		elif Main_State == 2:
-			return
+			Frame_Draw.Show()
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
-			wx.CallAfter(M_DDT.main)
+			Frame_DDT.Show()
 		elif Main_State == 5:
 			return
 		elif Main_State == 6:
@@ -1006,7 +1041,7 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 9:
 			return
 		elif Main_State == 10:
-			wx.CallAfter(M_Timer.main)
+			Frame_Timer.Show()
 
 	# --------------------------------------------------------------------
 
@@ -1083,12 +1118,12 @@ class CalcFrame(GUI.Main):
 		self.T_F1.SetLabel("圆周率")
 		self.T_F2.SetLabel("3D_Math")
 		self.T_F3.SetLabel("三角函数")
-		self.T_F4.SetLabel("NONE")
+		self.T_F4.SetLabel("数学画板")
 
 		self.Tip1.SetLabel('记录了小数点后一万位,支持本地解算')
 		self.Tip2.SetLabel('创建3D的数学模型')
 		self.Tip3.SetLabel('简单的三角函数计算器')
-		self.Tip4.SetLabel('什么都没有呢!')
+		self.Tip4.SetLabel('简易数学画板')
 
 		Function_icon(self, 0, 0, 0, 0, 1, 0, 0, 0)
 
@@ -1164,12 +1199,12 @@ class CalcFrame(GUI.Main):
 		self.G4.SetBackgroundColour(colour_Main)
 		self.G4.SetForegroundColour("White")
 
-		self.T_F1.SetLabel("Python语法检查")
+		self.T_F1.SetLabel("RBS_SSC")
 		self.T_F2.SetLabel("PPT出图")
 		self.T_F3.SetLabel("BMI")
 		self.T_F4.SetLabel("DDT")
 
-		self.Tip1.SetLabel('基于Pylint的Python语法检查器')
+		self.Tip1.SetLabel('扫码登记作业系统')
 		self.Tip2.SetLabel('将选定文件夹内的所有PPT导出为图片')
 		self.Tip3.SetLabel('BMI计算器,简单,易用,但没人关心这个')
 		self.Tip4.SetLabel('(DDT)破环性实验功能，谨慎使用，任何造成的损失后果自负')
@@ -1501,12 +1536,99 @@ def main():
 	'''
 	主函数
 	'''
+	global app
+	global Frame_Roll,Frame_Element,Frame_Pinyin,Frame_Roster,Frame_Gene,Frame_About,Frame_Pi,Frame_Capslook
+	global Frame_Base_conversion,Frame_Traditional_Chinese,Frame_BMI,Frame_PPTNG,Frame_Timer,Frame_Idion,Frame_DDT,Frame_Music
+	global Frame_WALP,Frame_Version,Frame_History,Frame_Date,Frame_File,Frame_QRcode,Frame_BingWallPaper,Frame_Trigonometric
+	global Frame_Draw,Frame_SSC
+
+	global Frame_User,Frame_Setting,Frame_Plug_in,Frame_Probe
+
 	app = wx.App(False)  # GUI循环及前置设置
 	frame = CalcFrame(None)
+
 	frame.Show(True)
+	app.SetTopWindow(frame=frame)
+
+	Frame_Roll = M_Roll.CalcFrame(None)
+	Frame_Element = M_Element.CalcFrame(None)
+	Frame_Pinyin = M_Pinyin.CalcFrame(None)
+	Frame_Roster = M_Roster.CalcFrame(None)
+	Frame_Gene = M_Gene.CalcFrame(None)
+	Frame_About = M_About.CalcFrame(None)
+	Frame_Pi = M_Pi.CalcFrame(None)
+	Frame_Capslook = M_Capslook.CalcFrame(None)
+	Frame_Base_conversion = M_Base_conversion.CalcFrame(None)
+	Frame_Traditional_Chinese = M_Traditional_Chinese.CalcFrame(None)
+	Frame_BMI = M_BMI.CalcFrame(None)
+	Frame_PPTNG = M_PPTNG.CalcFrame(None)
+	Frame_Timer = M_Timer.CalcFrame(None)
+	Frame_Idion = M_Idion.CalcFrame(None)
+	Frame_DDT = M_DDT.CalcFrame(None)
+	Frame_Music = M_Music.CalcFrame(None)
+	Frame_WALP = M_WALP.CalcFrame(None)
+	Frame_Version = M_Version.CalcFrame(None)
+	Frame_History = M_History.CalcFrame(None)
+	Frame_Date = M_Date.CalcFrame(None)
+	Frame_File = M_File.CalcFrame(None)
+	Frame_QRcode = M_QRcode.CalcFrame(None)
+	Frame_BingWallPaper = M_BingWallPaper.CalcFrame(None)
+	Frame_Trigonometric = M_Trigonometric.CalcFrame(None)
+	Frame_Draw = M_Draw.CalcFrame(None)
+	Frame_SSC = M_SSC.CalcFrame(None)
+
+	Frame_User = User.CalcFrame(None)
+	Frame_Setting = Setting.CalcFrame(None)
+	Frame_Plug_in = Plug_in.CalcFrame(None)
+	Frame_Probe = Probe.CalcFrame(None)
 
 	app.MainLoop()
 
+
+def Pre_main():
+	global Frame_Roll,Frame_Element,Frame_Pinyin,Frame_Roster,Frame_Gene,Frame_About,Frame_Pi,Frame_Capslook
+	global Frame_Base_conversion,Frame_Traditional_Chinese,Frame_BMI,Frame_PPTNG,Frame_Timer,Frame_Idion,Frame_DDT,Frame_Music
+	global Frame_WALP,Frame_Version,Frame_History,Frame_Date,Frame_File,Frame_QRcode,Frame_BingWallPaper,Frame_Trigonometric
+	global Frame_Draw,Frame_SSC
+
+	global Frame_User,Frame_Setting,Frame_Plug_in,Frame_Probe
+
+	# GUI循环及前置设置
+	frame = CalcFrame(None)
+
+	Frame_Roll = M_Roll.CalcFrame(None)
+	Frame_Element = M_Element.CalcFrame(None)
+	Frame_Pinyin = M_Pinyin.CalcFrame(None)
+	Frame_Roster = M_Roster.CalcFrame(None)
+	Frame_Gene = M_Gene.CalcFrame(None)
+	Frame_About = M_About.CalcFrame(None)
+	Frame_Pi = M_Pi.CalcFrame(None)
+	Frame_Capslook = M_Capslook.CalcFrame(None)
+	Frame_Base_conversion = M_Base_conversion.CalcFrame(None)
+	Frame_Traditional_Chinese = M_Traditional_Chinese.CalcFrame(None)
+	Frame_BMI = M_BMI.CalcFrame(None)
+	Frame_PPTNG = M_PPTNG.CalcFrame(None)
+	Frame_Timer = M_Timer.CalcFrame(None)
+	Frame_Idion = M_Idion.CalcFrame(None)
+	Frame_DDT = M_DDT.CalcFrame(None)
+	Frame_Music = M_Music.CalcFrame(None)
+	Frame_WALP = M_WALP.CalcFrame(None)
+	Frame_Version = M_Version.CalcFrame(None)
+	Frame_History = M_History.CalcFrame(None)
+	Frame_Date = M_Date.CalcFrame(None)
+	Frame_File = M_File.CalcFrame(None)
+	Frame_QRcode = M_QRcode.CalcFrame(None)
+	Frame_BingWallPaper = M_BingWallPaper.CalcFrame(None)
+	Frame_Trigonometric = M_Trigonometric.CalcFrame(None)
+	Frame_Draw = M_Draw.CalcFrame(None)
+	Frame_SSC = M_SSC.CalcFrame(None)
+
+	Frame_User = User.CalcFrame(None)
+	Frame_Setting = Setting.CalcFrame(None)
+	Frame_Plug_in = Plug_in.CalcFrame(None)
+	Frame_Probe = Probe.CalcFrame(None)
+
+	return frame
 
 def Colour_clean(self):
 	''' 用于清空全部按钮的颜色设置(GUI) '''
@@ -1574,8 +1696,8 @@ def Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL):
 def Log():
 	''' Log日志输出 '''
 	cfg = configparser.ConfigParser()  # 读取设置文件
-	cfg.read('./cfg/main.cfg')
-	log_place = cfg.get('main', 'LOG')
+	cfg.read('./cfg/setting.cfg')
+	log_place = cfg.get('log', 'path')
 
 	output_dir = log_place  # 定义文件夹位置(不区分大小写)
 	log_name = '{}.log'.format(

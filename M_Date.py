@@ -22,7 +22,11 @@ class CalcFrame(GUI_Date.Main):
 
 	def Close(self, event):
 		self.Timer_Time.Stop()
-		self.Destroy()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 ##############################
 # 主函数
@@ -30,6 +34,7 @@ class CalcFrame(GUI_Date.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

@@ -12,17 +12,24 @@ import GUI_About
 
 
 class CalcFrame(GUI_About.Main):
-    def __init__(self, parent):
-        # 定义主函数
-        GUI_About.Main.__init__(self, parent)
+	def __init__(self, parent):
+		# 定义主函数
+		GUI_About.Main.__init__(self, parent)
 
-        # 读取cfg配置文件
-        cfg = configparser.ConfigParser()
-        cfg.read('./cfg/main.cfg')
+		# 读取cfg配置文件
+		cfg = configparser.ConfigParser()
+		cfg.read('./cfg/main.cfg')
 
-        version = cfg.get('main', 'VERSION')
+		version = cfg.get('main', 'VERSION')
 
-        self.version.SetLabel('CC2021 #' + version)
+		self.version.SetLabel('CC2021 #' + version)
+
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 
 ##############################
@@ -31,11 +38,12 @@ class CalcFrame(GUI_About.Main):
 
 
 def main():
-    app = wx.App(False)
-    frame = CalcFrame(None)
-    frame.Show(True)
-    app.MainLoop()
+	global app
+	app = wx.App(False)
+	frame = CalcFrame(None)
+	frame.Show(True)
+	app.MainLoop()
 
 
 if __name__ == "__main__":
-    main()
+	main()

@@ -2,28 +2,30 @@
 # import
 ##############################
 import wx
-import requests
-import PIL.Image
 
-import GUI_BingWallPaper
+import GUI_Draw
 
 ##############################
 # GUI的函数桥接
 ##############################
 
 
-class CalcFrame(GUI_BingWallPaper.Main):
+class CalcFrame(GUI_Draw.Main):
 	def __init__(self, parent):
 		# 定义主函数
-		GUI_BingWallPaper.Main.__init__(self, parent)
+		GUI_Draw.Main.__init__(self, parent)
 
-		for i in range(0,4):
-			print((i))
-		picture_url_1 = "https://bing.ioliu.cn/v1/rand"
-		res = requests.get(picture_url_1, timeout=3600)
-		network = res.status_code
-		with open("./Cache/BingWallPaper_1.jpg", "wb") as f:
-			f.write(res.content)	
+	def EVT_PAINT(self,event):
+		dc = wx.PaintDC(self)
+
+		dc.SetPen(wx.Pen('#d4d4d4'))    #设置画笔颜色
+		dc.SetBrush(wx.Brush('#c56c00'))
+
+		dc.CrossHair(300,200)
+
+	def OnMove(self,event):
+		pos = event.GetPosition()
+		print(pos)
 
 	def Close(self, event):
 		try:
@@ -31,9 +33,12 @@ class CalcFrame(GUI_BingWallPaper.Main):
 				self.Destroy()
 		except:
 			self.Hide()
+
 ##############################
 # 主函数
 ##############################
+
+
 def main():
 	global app
 	app = wx.App(False)

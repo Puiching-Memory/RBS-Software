@@ -91,9 +91,13 @@ class CalcFrame(GUI_Timer.Main):
 			self.timer.Start(1000)
 			self.Pause.SetLabel('暂停')
 
-	def close(self, event):
+	def Close(self, event):
 		self.timer.Stop()
-		self.Destroy()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 
 ##############################
@@ -102,6 +106,7 @@ class CalcFrame(GUI_Timer.Main):
 
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

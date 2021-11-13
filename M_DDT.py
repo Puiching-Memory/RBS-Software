@@ -59,50 +59,57 @@ class CalcFrame(GUI_DDT.Main):
 	def Attack(self, event):
 		attack(number = int(self.frequency.GetValue()), t = int(self.wait.GetValue()))
 
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 ##############################
 # 主函数
 ##############################
 
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
 
 def send_new(text):
-    """用来发送消息的函数, 参数text为发送的消息的内容"""
+	"""用来发送消息的函数, 参数text为发送的消息的内容"""
 
-    # 模拟鼠标点击输入框
-    mouse = mouse_cl()
-    mouse.press(Button.left)
-    mouse.release(Button.left)
+	# 模拟鼠标点击输入框
+	mouse = mouse_cl()
+	mouse.press(Button.left)
+	mouse.release(Button.left)
 
-    # 模拟键盘输入文字
-    keyboard = key_cl()
-    keyboard.type(text)
+	# 模拟键盘输入文字
+	keyboard = key_cl()
+	keyboard.type(text)
 
-    # 模拟键盘按回车发送消息
-    keyboard.press(Key.enter)
-    keyboard.release(Key.enter)
+	# 模拟键盘按回车发送消息
+	keyboard.press(Key.enter)
+	keyboard.release(Key.enter)
 
 
 def attack(number, t):
-    time.sleep(t)  # 暂停3秒
-    for num in range(number):
+	time.sleep(t)  # 暂停3秒
+	for num in range(number):
 
-        # 请求网址, 并获取发送的消usb
-        # 息
-        response = requests.get(
-            "https://nmsl.shadiao.app/api.php?level=min&lang=zh_cn")
-        response.encoding = 'utf-8'
-        text = response.text
+		# 请求网址, 并获取发送的消usb
+		# 息
+		response = requests.get(
+			"https://nmsl.shadiao.app/api.php?level=min&lang=zh_cn")
+		response.encoding = 'utf-8'
+		text = response.text
 
-        # 调用发送消息的函数发送消息
-        # api接口获取出的文本可能会包含图片, 使用type函数输入, 会莫名其妙地出现问题, 所以这个有一个try-except语句
-        try:
-            send_new(text)
-        except:
-            send_new("error")
+		# 调用发送消息的函数发送消息
+		# api接口获取出的文本可能会包含图片, 使用type函数输入, 会莫名其妙地出现问题, 所以这个有一个try-except语句
+		try:
+			send_new(text)
+		except:
+			send_new("error")
 
 if __name__ == "__main__":
 	main()

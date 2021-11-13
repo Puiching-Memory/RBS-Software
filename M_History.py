@@ -23,11 +23,17 @@ class CalcFrame(GUI_History.Main):
 		file = open('./Cache/History.txt', 'r', encoding='utf-8')
 		self.Info.SetValue(file.read())
 				
-
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 ##############################
 # 主函数
 ##############################
 def main():
+	global app
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)
