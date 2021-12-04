@@ -92,8 +92,13 @@ class CalcFrame(GUI_Preparation.Main):
 	def Timer_Normal(self, event):
 			self.Text.SetLabel("加载主程序库")
 
-			import Main			
-			Frame_main = Main.Pre_main()
+			import Main	
+
+			try:		
+				Frame_main = Main.Pre_main()
+			except:
+				self.Text.SetLabel("加载错误:正在重试")
+				Frame_main = Main.Pre_main()
 
 			self.Text.SetLabel("生成压缩文件")
 
@@ -158,6 +163,7 @@ class CalcFrame(GUI_Preparation.Main):
 			Frame_main.Show()
 			wx.CallAfter(self.Hide)
 			wx.CallAfter(self.Colour_timer.Stop)
+			print('Pre_Finish')
 
 
 	def Colour(self, event):

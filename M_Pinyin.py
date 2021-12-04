@@ -28,7 +28,6 @@ class CalcFrame(GUI_Pinyin.Main):
 		except:
 			self.Hide()
 
-
 ##############################
 # 主函数
 ##############################

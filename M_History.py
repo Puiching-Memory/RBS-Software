@@ -15,13 +15,16 @@ class CalcFrame(GUI_History.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_History.Main.__init__(self, parent)
-		url = "https://www.ipip5.com/today/api.php?type=txt"
-		res = requests.get(url, timeout=3600)
-		with open("./Cache/History.txt", "wb") as f:
-			f.write(res.content)
+		try:
+			url = "https://www.ipip5.com/today/api.php?type=txt"
+			res = requests.get(url, timeout=3600)
+			with open("./Cache/History.txt", "wb") as f:
+				f.write(res.content)
 
-		file = open('./Cache/History.txt', 'r', encoding='utf-8')
-		self.Info.SetValue(file.read())
+			file = open('./Cache/History.txt', 'r', encoding='utf-8')
+			self.Info.SetValue(file.read())
+		except:
+			self.Info.SetValue('Net ERROR')
 				
 	def Close(self, event):
 		try:

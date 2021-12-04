@@ -27,7 +27,7 @@ class Main ( wx.Frame ):
 
 		wSizer4 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.B_Title = wx.Button( self, wx.ID_ANY, u"RBS_SSC #021.10.30 条形码登记系统", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.B_Title = wx.Button( self, wx.ID_ANY, u"RBS_SSC #021.11.14 条形码登记系统", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
 		self.B_Title.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer4.Add( self.B_Title, 0, wx.ALL, 5 )
@@ -85,13 +85,20 @@ class Main ( wx.Frame ):
 		self.B_Replace = wx.Button( self, wx.ID_ANY, u"复位", wx.DefaultPosition, wx.DefaultSize, 0 )
 		wSizer6.Add( self.B_Replace, 0, wx.ALL, 5 )
 
-		Kind_choiceChoices = [ u"A", u"B", u"C" ]
+		Kind_choiceChoices = [ u"A", u"B", u"C", u"D", u"E", u"F" ]
 		self.Kind_choice = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, Kind_choiceChoices, 0 )
 		self.Kind_choice.SetSelection( 0 )
 		wSizer6.Add( self.Kind_choice, 0, wx.ALL, 5 )
 
 		self.B_Export = wx.Button( self, wx.ID_ANY, u"导出", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_Export.Enable( False )
+
 		wSizer6.Add( self.B_Export, 0, wx.ALL, 5 )
+
+		ClassChoices = [ u"Class8", u"Class5" ]
+		self.Class = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, ClassChoices, 0 )
+		self.Class.SetSelection( 0 )
+		wSizer6.Add( self.Class, 0, wx.ALL, 5 )
 
 
 		bSizer2.Add( wSizer6, 0, 0, 5 )
@@ -105,8 +112,14 @@ class Main ( wx.Frame ):
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.B_Title.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.GRID.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.T_key_list.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.B_Replace.Bind( wx.EVT_BUTTON, self.Replace )
+		self.B_Replace.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.B_Export.Bind( wx.EVT_BUTTON, self.Export )
+		self.Class.Bind( wx.EVT_CHOICE, self.Change_Class )
+		self.Class.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 
 	def __del__( self ):
 		pass
@@ -119,10 +132,18 @@ class Main ( wx.Frame ):
 	def Hot_Key_Down( self, event ):
 		event.Skip()
 
+
+
+
 	def Replace( self, event ):
 		event.Skip()
 
+
 	def Export( self, event ):
 		event.Skip()
+
+	def Change_Class( self, event ):
+		event.Skip()
+
 
 

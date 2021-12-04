@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -90,6 +90,7 @@ class Main ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.BOX.Bind( wx.EVT_LISTBOX, self.Choise )
 		self.BOX.Bind( wx.EVT_LISTBOX_DCLICK, self.Choise )
 
@@ -97,7 +98,10 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
+	# Virtual event handlers, override them in your derived class
+	def Close( self, event ):
+		event.Skip()
+
 	def Choise( self, event ):
 		event.Skip()
 

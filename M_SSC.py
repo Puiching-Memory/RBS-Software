@@ -88,6 +88,19 @@ class CalcFrame(GUI_SSC.Main):
 		workbook.save(get_desktop() + '\Export.xls')
 		print('save finish')
 
+
+	def Change_Class(self, event):
+		if self.Class.GetSelection() == 0:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 801 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 1:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 501 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+
 	def Close(self, event):
 		try:
 			if app.GetAppName() != '_core.cp38-win_amd64':

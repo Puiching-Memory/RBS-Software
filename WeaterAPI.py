@@ -50,7 +50,7 @@ def Now_weather():
         return now_weater
     except BaseException:
         print('请检查网络链接')
-        return 'No network'
+        return 'W:N/A'
 
 
 def Day3_Weather():

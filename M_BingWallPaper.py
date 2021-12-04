@@ -17,13 +17,17 @@ class CalcFrame(GUI_BingWallPaper.Main):
 		# 定义主函数
 		GUI_BingWallPaper.Main.__init__(self, parent)
 
-		for i in range(0,4):
-			print((i))
-		picture_url_1 = "https://bing.ioliu.cn/v1/rand"
-		res = requests.get(picture_url_1, timeout=3600)
-		network = res.status_code
-		with open("./Cache/BingWallPaper_1.jpg", "wb") as f:
-			f.write(res.content)	
+		try:
+			for i in range(0,4):
+				print((i))
+			picture_url_1 = "https://bing.ioliu.cn/v1/rand"
+			res = requests.get(picture_url_1, timeout=3600)
+			network = res.status_code
+			with open("./Cache/BingWallPaper_1.jpg", "wb") as f:
+				f.write(res.content)
+		except:
+			print('Net ERROR')
+			
 
 	def Close(self, event):
 		try:
