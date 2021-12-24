@@ -2,8 +2,9 @@
 # import
 ##############################
 import wx
-import xlwt
+import xlwt,xlrd
 import win32api,win32con
+import time
 
 import GUI_SSC
 
@@ -20,11 +21,29 @@ class CalcFrame(GUI_SSC.Main):
 		global key_list
 		key_list = []
 
-		self.GRID.AutoSize()
-
 		for i in range(0,50):
 			i_a = 801 + i
 			self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+
+		data_class = xlrd.open_workbook('./DATA/SSC/CLASS.xls')
+		data_class = data_class.sheet_by_index(0)
+		
+		for i in range(0, 47):
+			data = data_class.row_values(rowx=i, start_colx=0)
+			self.GIRD2.SetRowLabelValue(i, data[0])
+
+
+	def LCK(self, event):
+		event.Skip()
+		print(self.GIRD2.GetGridCursorCol())
+		print(self.GIRD2.GetGridCursorRow())
+
+	def PUT(self, event):
+		self.GIRD2.SetCellValue(self.GIRD2.GetGridCursorRow(),self.GIRD2.GetGridCursorCol(), '0')
+
+	def CLN(self, event):
+		self.GIRD2.SetCellValue(self.GIRD2.GetGridCursorRow(),self.GIRD2.GetGridCursorCol(), '')
+		
 
 	def Hot_Key_Down(self, event):
 		print('检测到快捷键:' + str(event.GetKeyCode()))
@@ -73,19 +92,60 @@ class CalcFrame(GUI_SSC.Main):
 	def Replace(self, event):
 		self.T_key_list.SetLabel('[]')
 		key_list.clear()
-		
+	
+	def Export2(self, event):
+		workbook = xlwt.Workbook(encoding="utf-8")
+		worksheet = workbook.add_sheet("Sheet1")
+
+		for i in range(0,50):
+			worksheet.write(i,0, self.GIRD2.GetRowLabelValue(i))
+
+		for i in range(0,50):
+			for i_2 in range(0,5):
+				worksheet.write(i,i_2 + 1, self.GIRD2.GetCellValue(i,i_2))
+				print(i,i_2)
+
+		workbook.save(get_desktop() + '\Export_' + str(time.time()) + '.xls')
+		print('save finish')
+
 	def Export(self, event):
 		workbook = xlwt.Workbook(encoding="utf-8")
 		worksheet = workbook.add_sheet("Sheet1")
 
 		for i in range(0,50):
-			for i_2 in range(1,4):
-				worksheet.write(i,i_2, self.GRID.GetCellValue(i,i_2))
+			for i_2 in range(0,7):
+				worksheet.write(i,i_2 + 1, self.GRID.GetCellValue(i,i_2))
+				print(i,i_2)
 
-		for i in range(0,50):
-			worksheet.write(i,0, '0' + str(800 + i))
-
-		workbook.save(get_desktop() + '\Export.xls')
+		if self.Class.GetSelection() == 0:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(101 + i))
+		elif self.Class.GetSelection() == 1:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(201 + i))
+		elif self.Class.GetSelection() == 2:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(301 + i))
+		elif self.Class.GetSelection() == 3:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(401 + i))
+		elif self.Class.GetSelection() == 4:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(501 + i))
+		elif self.Class.GetSelection() == 5:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(601 + i))
+		elif self.Class.GetSelection() == 6:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(701 + i))
+		elif self.Class.GetSelection() == 7:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(801 + i))
+		elif self.Class.GetSelection() == 8:
+			for i in range(0,50):
+				worksheet.write(i,0, '0' + str(901 + i))
+		
+		workbook.save(get_desktop() + '\Export_' + str(time.time()) + '.xls')
 		print('save finish')
 
 
@@ -93,13 +153,52 @@ class CalcFrame(GUI_SSC.Main):
 		if self.Class.GetSelection() == 0:
 			self.GRID.ClearGrid()
 			for i in range(0,50):
-				i_a = 801 + i
+				i_a = 101 + i
 				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 1:
 			self.GRID.ClearGrid()
 			for i in range(0,50):
+				i_a = 201 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 2:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 301 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 3:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 401 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 4:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
 				i_a = 501 + i
 				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 5:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 601 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 6:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 701 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 7:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 801 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+		elif self.Class.GetSelection() == 8:
+			self.GRID.ClearGrid()
+			for i in range(0,50):
+				i_a = 901 + i
+				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+
+
+	def Clean(self, event):
+		self.GRID.ClearGrid()
 
 	def Close(self, event):
 		try:

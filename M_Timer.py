@@ -92,13 +92,7 @@ class CalcFrame(GUI_Timer.Main):
 			self.Pause.SetLabel('暂停')
 
 	def Close(self, event):
-		self.timer.Stop()
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
-
+		self.Destroy()
 
 ##############################
 # 主函数

@@ -39,11 +39,8 @@ class CalcFrame(GUI_Setting.Main):
 
 	def Close(self, event):
 		self.Save_Timer.Stop()
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
+		
 ##############################
 # 主函数
 ##############################

@@ -21,12 +21,8 @@ class CalcFrame(GUI_Date.Main):
 		self.T_Time.SetLabel('Time:' + time.strftime('%H:%M:%S'))
 
 	def Close(self, event):
-		self.Timer_Time.Stop()
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		##self.Timer_Time.Stop()
+		self.Destroy()
 
 ##############################
 # 主函数
