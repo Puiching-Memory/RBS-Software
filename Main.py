@@ -51,17 +51,18 @@ import M_Draw # 画板
 import M_SSC # 作业扫码登记系统
 import M_College # 大学评分数据库
 
-import WeaterAPI # 天气API
-
 import User # 用户界面
 import Setting # 设置界面
 import Plug_in # 插件
 import Probe # 探针
 
-import P_PPT # PPT小工具
+##import P_PPT # PPT小工具
 
 # 临时库
 ##import YOLO
+
+# API
+import WeaterAPI # 天气API
 
 # 辅助功能库
 import sys
@@ -70,14 +71,13 @@ import win32com.client
 import win32api
 import psutil
 import time
-import ping3
+##import ping3
 import random
-import subprocess
+##import subprocess
 ##import gc # 内存库
 
 # 核心库
-import wx
-import wx.adv
+import wx, wx.adv, wx.svg
 ##from wxgl.scene import WxGLScene
 import GUI
 import configparser # 设置文件(.cfg)库
@@ -96,6 +96,7 @@ class CalcFrame(GUI.Main):
 	MENU_SHOW = wx.NewIdRef()
 	MENU_SET = wx.NewIdRef()
 	MENU_ABOUT = wx.NewIdRef()
+	
 
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent) # 初始化GUI
@@ -139,9 +140,11 @@ class CalcFrame(GUI.Main):
 
 		self.version.SetLabel('#V' + version) # 设置版本号
 
-		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath()
-		path.AddRoundedRectangle(0,0,750,410,10)
+		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath() # 设置圆角边框
+		path.AddRoundedRectangle(0,0,750,410,15)
 		self.SetShape(path)
+
+		SVG_ICO(self) # 设置SVG图标
 
 		self.Weather.SetLabel(WeaterAPI.Now_weather()) # 获取and显示天气信息
 
@@ -209,6 +212,7 @@ class CalcFrame(GUI.Main):
 	def Close(self, event):
 		'''
 		windows_关闭程序
+		!!!注意!!!此类方法已弃用
 		'''
 		while self.threads: # 移除其他线程
 			thread = self.threads[0]
@@ -234,10 +238,13 @@ class CalcFrame(GUI.Main):
 		'''
 		self_关闭程序
 		'''
+
+		'''
 		while self.threads: # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
+		'''
 
 		if self.taskBar.IsAvailable == True: # 移除托盘图标
 			self.taskBar.RemoveIcon()
@@ -376,19 +383,17 @@ class CalcFrame(GUI.Main):
 			CMD(self, self.CMD_IN.GetValue())
 			self.CMD_IN.SetValue('')
 
-	def move_start(self, frame_pos):
-		##print(random.random())
-		self.SetPosition(frame_pos)
-
 	def OnLeftDown(self, event):
-		thread = WorkerThread(self)
-		self.threads.append(thread)
-		thread.start()
+		print(1)
+		#print(self.ClientToScreen())
+		#self.Move(self.ClientToScreen())
 
 	def OnLeftUp(self, event):
-		if self.threads:
-			self.threads[0].timeToQuit.set()
-			self.threads.remove(self.threads[0])
+		pass
+
+	def Change_Size(self, event):
+		print(self.GetSize())
+		event.Skip()
 
 	def Plug_in_refresh(self, event):
 		self.Plug_in_box.Clear()
@@ -455,7 +460,7 @@ class CalcFrame(GUI.Main):
 			self.G_9(self)
 		elif key == 48: # 0
 			self.G_10(self)
-		
+
 		elif key == 340: # F1
 			self.File(self)
 		elif key == 341: # F2
@@ -477,10 +482,10 @@ class CalcFrame(GUI.Main):
 		pos = event.GetPosition()
 
 	def Fast_on(self, event):
-		check_name = ['拼音转换', '简繁转换', '成语接龙', '', 
-					'圆周率', '3DMA', '三角函数', '', 
-					'大小转换', '', '', '', 
-					'Py检查', 'PPNG', 'BMI', 'DDT', 
+		check_name = ['拼音转换', '简繁转换', '成语接龙', '',
+					'圆周率', '3DMA', '三角函数', '',
+					'大小转换', '', '', '',
+					'Py检查', 'PPNG', 'BMI', 'DDT',
 					'历史今天','Bing', '', '',
 					'WALP', '', '', '',
 					'音频分析', '大学评分', 'QR码', '',
@@ -976,7 +981,7 @@ class CalcFrame(GUI.Main):
 				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
-				
+
 		elif Main_State == 3:
 			Frame_Capslook.Bind(wx.EVT_CLOSE, self.Function_13)
 
@@ -1382,7 +1387,7 @@ class CalcFrame(GUI.Main):
 			self.B_F1.SetForegroundColour('black')
 		else:
 			Frame_Music.Hide()
-			
+
 	def Function_18(self, event):
 		if Main_State == 8:
 			Frame_Element.Hide()
@@ -1391,7 +1396,7 @@ class CalcFrame(GUI.Main):
 			self.B_F1.SetForegroundColour('black')
 		else:
 			Frame_Element.Hide()
-			
+
 	def Function_19(self, event):
 		if Main_State == 9:
 			Frame_Gene.Hide()
@@ -2117,7 +2122,7 @@ class CalcFrame(GUI.Main):
 		self.TIP4.SetLabel('')
 
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
-		
+
 		BUT_CLFN(self, 8)
 
 		self.Refresh()
@@ -2207,7 +2212,7 @@ class CalcFrame(GUI.Main):
 		self.Tip2.SetLabel('2进制/8进制/10进制/16进制转换')
 		self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
 		self.Tip4.SetLabel('简单的计时器,真的只是计时')
-		
+
 		self.TIP1.SetLabel('')
 		self.TIP2.SetLabel('')
 		self.TIP3.SetLabel('状态:测试中')
@@ -2260,6 +2265,7 @@ class FileDrop(wx.FileDropTarget):
 ###########################################################################
 # 窗口拖动处理Class
 # Window Move Class
+# !!!注意!!!此类方法已弃用
 ###########################################################################
 class WorkerThread(threading.Thread):
 	def __init__(self, frame):
@@ -2779,6 +2785,8 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 	'''
 	功能图标的设置
 	'''
+
+	'''适用于PNG格式的图标设置(已弃用)
 	Internet_ON = wx.Image("./pictures/网络-开启20.png",
 						   wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 	Internet_OFF = wx.Image("./pictures/网络-关闭20.png",
@@ -2787,6 +2795,18 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 					   wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 	File_OFF = wx.Image("./pictures/文件-关闭20.png",
 						wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+	'''
+
+	Internet_ON = wx.svg.SVGimage.CreateFromFile('./pictures/icon_NetY.svg')
+	Internet_OFF = wx.svg.SVGimage.CreateFromFile('./pictures/icon_NetN.svg')
+	File_ON = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveY.svg')
+	File_OFF = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveN.svg')
+
+	Internet_ON = Internet_ON.ConvertToScaledBitmap(wx.Size(20,20), self)
+	Internet_OFF = Internet_OFF.ConvertToScaledBitmap(wx.Size(20,20), self)
+	File_ON = File_ON.ConvertToScaledBitmap(wx.Size(20,20), self)
+	File_OFF = File_OFF.ConvertToScaledBitmap(wx.Size(20,20), self)
+
 	if Internet1 == 1:
 		self.Net1.SetBitmap(Internet_ON)
 	else:
@@ -2874,7 +2894,7 @@ def BUT_CLFN(self, num):
 			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
-	
+
 		if Frame_Trigonometric.IsShown() == True:
 			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
 			self.B_F3.SetForegroundColour('white')
@@ -3208,7 +3228,6 @@ def Self_CMD(self, info):
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
 
-
 def CMD(self, info):
 	'''
 	控制台指令处理
@@ -3334,6 +3353,56 @@ def last_list(X,Y):
 			name = '计时器'
 
 	return name
-	
+
+def SVG_ICO(self):
+	'''
+	设置SVG格式的图标
+	'''
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_close.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_Quit.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Update.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_Update.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Cmd.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_Cmd.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_About.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_About.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Setting.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_Setting.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Log.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_Log.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_File.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	self.B_File.SetBitmap(Bitmap)
+
+	#------------------------------------------------------------------
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Help.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20,20), self)
+	self.Help1.SetBitmap(Bitmap)
+	self.Help2.SetBitmap(Bitmap)
+	self.Help3.SetBitmap(Bitmap)
+	self.Help4.SetBitmap(Bitmap)
+
+	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_StarN.svg')
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20,20), self)
+	self.Star1.SetBitmap(Bitmap)
+	self.Star2.SetBitmap(Bitmap)
+	self.Star3.SetBitmap(Bitmap)
+	self.Star4.SetBitmap(Bitmap)
+
+	Bitmap = None
+
 if __name__ == "__main__":
 	main()

@@ -95,7 +95,7 @@ class Main ( wx.Frame ):
 		self.m_panel1.SetSizer( bSizer1 )
 		self.m_panel1.Layout()
 		bSizer1.Fit( self.m_panel1 )
-		self.m_notebook1.AddPage( self.m_panel1, u"界面", False )
+		self.m_notebook1.AddPage( self.m_panel1, u"界面", True )
 		self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
@@ -155,13 +155,25 @@ class Main ( wx.Frame ):
 		self.m_panel3.SetSizer( bSizer5 )
 		self.m_panel3.Layout()
 		bSizer5.Fit( self.m_panel3 )
-		self.m_notebook1.AddPage( self.m_panel3, u"性能", True )
+		self.m_notebook1.AddPage( self.m_panel3, u"性能", False )
 
 		self.Save_Timer = wx.Timer()
 		self.Save_Timer.SetOwner( self, Save_Timer )
-		self.Save_Timer.Start( 5000 )
-
 		self.Bar = self.CreateStatusBar( 3, wx.STB_SIZEGRIP, wx.ID_ANY )
+		self.m_panel4 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 600,40 ), wx.TAB_TRAVERSAL )
+		self.m_mgr.AddPane( self.m_panel4, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).CloseButton( False ).PaneBorder( False ).Movable( False ).Dock().Fixed().Layer( 1 ) )
+
+		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.M_Save = wx.Button( self.m_panel4, wx.ID_ANY, u"保存", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer5.Add( self.M_Save, 0, wx.ALL, 5 )
+
+		self.M_Cancel = wx.Button( self.m_panel4, wx.ID_ANY, u"取消", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer5.Add( self.M_Cancel, 0, wx.ALL, 5 )
+
+
+		self.m_panel4.SetSizer( wSizer5 )
+		self.m_panel4.Layout()
 
 		self.m_mgr.Update()
 		self.Centre( wx.BOTH )
@@ -171,6 +183,8 @@ class Main ( wx.Frame ):
 		self.TREY_slider.Bind( wx.EVT_SCROLL, self.TREY )
 		self.Log_File_picker.Bind( wx.EVT_DIRPICKER_CHANGED, self.Log_path )
 		self.Bind( wx.EVT_TIMER, self.Auto_Save, id=Save_Timer )
+		self.M_Save.Bind( wx.EVT_BUTTON, self.Save )
+		self.M_Cancel.Bind( wx.EVT_BUTTON, self.Cancel )
 
 	def __del__( self ):
 		self.m_mgr.UnInit()
@@ -188,6 +202,12 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Auto_Save( self, event ):
+		event.Skip()
+
+	def Save( self, event ):
+		event.Skip()
+
+	def Cancel( self, event ):
 		event.Skip()
 
 

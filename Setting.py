@@ -38,6 +38,15 @@ class CalcFrame(GUI_Setting.Main):
 		save(self)
 
 	def Close(self, event):
+		save(self)
+		self.Save_Timer.Stop()
+		self.Destroy()
+
+	def Save(self, event):
+		save(self)
+		print('save')
+	
+	def Cancel(self, event):
 		self.Save_Timer.Stop()
 		self.Destroy()
 		
