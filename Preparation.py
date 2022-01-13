@@ -195,7 +195,7 @@ def main():
 
 
 def proc_exist(process_name):
-	''' 程序运行检查 '''
+	""" 程序运行检查 """
 	is_exist = False
 	wmi = win32com.client.GetObject('winmgmts:')
 	processCodeCov = wmi.ExecQuery(

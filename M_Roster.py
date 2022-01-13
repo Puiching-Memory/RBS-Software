@@ -28,7 +28,7 @@ class CalcFrame(GUI_Roster.Main):
 		Y = self.PlaceY.GetValue()
 		S = self.Space.GetValue()
 
-		if os.path.exists('./Cache/BackGround_img.jpg') == True:
+		if os.path.exists('./Cache/BackGround_img.jpg'):
 			self.B_Catch.Enable(False)
 			self.IMG.SetBitmap(wx.Bitmap('./Cache/BackGround_img.jpg'))
 

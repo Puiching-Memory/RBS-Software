@@ -116,7 +116,7 @@ class CalcFrame(GUI_Update.Main):
 		print('End')
 		self.B_Update.Enable(True)
 
-		if Is_finish == True:
+		if Is_finish:
 			print('下载成功')
 			try:
 				os.system('%s%s' % ("taskkill /F /IM ",'RBS_Software2021.exe'))

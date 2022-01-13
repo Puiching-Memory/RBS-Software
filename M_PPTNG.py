@@ -66,11 +66,11 @@ def main():
 
 
 def ppt_to_jpg(ppt_file_name,output_dir_name):
-	'''将PPT另存为JPG格式
+	"""将PPT另存为JPG格式
 	arguments:
 		ppt_file_name: 要转换的ppt文件的完整路径文件名，eg:F:\\test\\ppt_name.ppt
 		output_dir_name：转换后的存放JPG文件的目录,以PPT的名字新建的目录，eg:F:\\test\\ppt_name
-	'''
+	"""
 	# 启动PPT
 	ppt_app = win32com.client.Dispatch('PowerPoint.Application')
 	# 设置为0表示后台运行，不显示，1则显示

@@ -18,9 +18,9 @@ class CalcFrame(GUI_Base_conversion.Main):
 		GUI_Base_conversion.Main.__init__(self,parent)
 
 	def run(self, event):
-	    self.M_2.SetValue(str(bin(int(self.M_10.GetValue()))))
-	    self.M_8.SetValue(str(oct(int(self.M_10.GetValue()))))
-	    self.M_16.SetValue(str(hex(int(self.M_10.GetValue()))))
+		self.M_2.SetValue(str(bin(int(self.M_10.GetValue()))))
+		self.M_8.SetValue(str(oct(int(self.M_10.GetValue()))))
+		self.M_16.SetValue(str(hex(int(self.M_10.GetValue()))))
 
 	def Close(self, event):
 		try:

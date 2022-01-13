@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-# Power by ZK2021
+# Power by ZK2022
 # @Puiching Memory™
 # python version: 3.8.10
 #  ____  ____ ____       ____         __ _
@@ -22,39 +22,39 @@
 # ↓↓↓↓↓ import ↓↓↓↓↓
 
 # 功能库
-import M_Roll # 随机数生成器
-import M_Element # 元素周期表
-import M_Pinyin # 中文转拼音
-import M_Roster # 值日表
-import M_Gene # 基因数据库
-import M_About # 关于信息
-import M_Pi # 圆周率计算器
-import M_Capslook # 大小写转换
-import M_Base_conversion # 十进制转换器
-import M_Traditional_Chinese # 中文繁体简体互转
-import M_BMI # BMI计算器
-import M_PPTNG # PPT导出图片
-import M_Timer # 计时器
-import M_Idion # 成语接龙
-import M_DDT # '外挂'集合
-import M_Music # 音乐分析器
-import M_WALP # WALP地理信息系统
-import M_Version # 版本查看器
-import M_History # 历史上的今天
-import M_Date # 日期查看器
-import M_File # 文件管理器
-import M_QRcode # 二维码生成器
-import M_BingWallPaper # 必应壁纸
+import M_Roll  # 随机数生成器
+import M_Element  # 元素周期表
+import M_Pinyin  # 中文转拼音
+import M_Roster  # 值日表
+import M_Gene  # 基因数据库
+import M_About  # 关于信息
+import M_Pi  # 圆周率计算器
+import M_Capslook  # 大小写转换
+import M_Base_conversion  # 十进制转换器
+import M_Traditional_Chinese  # 中文繁体简体互转
+import M_BMI  # BMI计算器
+import M_PPTNG  # PPT导出图片
+import M_Timer  # 计时器
+import M_Idion  # 成语接龙
+import M_DDT  # '外挂'集合
+import M_Music  # 音乐分析器
+import M_WALP  # WALP地理信息系统
+import M_Version  # 版本查看器
+import M_History  # 历史上的今天
+import M_Date  # 日期查看器
+import M_File  # 文件管理器
+import M_QRcode  # 二维码生成器
+import M_BingWallPaper  # 必应壁纸
 ##import M_WxGL # 3D模块OpenGL
-import M_Trigonometric # 三角函数
-import M_Draw # 画板
-import M_SSC # 作业扫码登记系统
-import M_College # 大学评分数据库
+import M_Trigonometric  # 三角函数
+import M_Draw  # 画板
+import M_SSC  # 作业扫码登记系统
+import M_College  # 大学评分数据库
 
-import User # 用户界面
-import Setting # 设置界面
-import Plug_in # 插件
-import Probe # 探针
+import User  # 用户界面
+import Setting  # 设置界面
+import Plug_in  # 插件
+import Probe  # 探针
 
 ##import P_PPT # PPT小工具
 
@@ -62,7 +62,7 @@ import Probe # 探针
 ##import YOLO
 
 # API
-import WeaterAPI # 天气API
+import WeaterAPI  # 天气API
 
 # 辅助功能库
 import sys
@@ -80,9 +80,10 @@ import random
 import wx, wx.adv, wx.svg
 ##from wxgl.scene import WxGLScene
 import GUI
-import configparser # 设置文件(.cfg)库
-import logging.handlers # 日志库
-import threading # 多线程
+import configparser  # 设置文件(.cfg)库
+import logging.handlers  # 日志库
+import threading  # 多线程
+
 
 ###########################################################################
 # Class Main
@@ -90,20 +91,18 @@ import threading # 多线程
 
 
 class CalcFrame(GUI.Main):
-
 	# ↓↓↓↓↓ 定义wx.ID ↓↓↓↓↓
 	MENU_EXIT = wx.NewIdRef()
 	MENU_SHOW = wx.NewIdRef()
 	MENU_SET = wx.NewIdRef()
 	MENU_ABOUT = wx.NewIdRef()
-	
 
 	def __init__(self, parent):
-		GUI.Main.__init__(self, parent) # 初始化GUI
+		GUI.Main.__init__(self, parent)  # 初始化GUI
 		self.threads = []
 
-		#↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
-		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x,screen_size_y
+		# ↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
+		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x, screen_size_y
 		cfg = configparser.ConfigParser()  # 读取设置文件
 
 		cfg.read('./cfg/setting.cfg')
@@ -122,41 +121,41 @@ class CalcFrame(GUI.Main):
 		Log()  # 初始化LOG设置
 		logging.debug('Document integrity check文件完整性检查:' + Is_complete)
 
-		Self_CMD(self, '载入设置完成') # 向自定义控制台发送消息
+		Self_CMD(self, '载入设置完成')  # 向自定义控制台发送消息
 		Self_CMD(self, '文件完整性检查:' + Is_complete)
 
-		#载入插件-----------------------
+		# 载入插件-----------------------
 		Plug_in_list = open('./DATA/main/plug_in/List.txt')
 		Plug_in_list = Plug_in_list.readlines()
 		for i in range(0, len(Plug_in_list)):
 			self.Plug_in_box.Append(str(Plug_in_list[i]).replace('\n', ''))
 			print(str(Plug_in_list[i]).replace('\n', ''))
-		#------------------------------
+		# ------------------------------
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = -1
 		Hover = 0  # 检测当前Hover的按钮是哪个
 		colour_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
 		Colour_G = '#cccccc'  # 分区按钮Hover时呈现的颜色
 
-		#------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
+		# ------------------------------ 主界面初始化操作，设置文本常量,颜色值,按钮呈现等
 
-		self.version.SetLabel('#V' + version) # 设置版本号
+		self.version.SetLabel('#V' + version)  # 设置版本号
 
-		if eval(is_round) == True:
-			path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath() # 设置圆角边框
-			path.AddRoundedRectangle(0,0,750,410,15)
+		if eval(is_round):
+			path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath()  # 设置圆角边框
+			path.AddRoundedRectangle(0, 0, 750, 410, 15)
 			self.SetShape(path)
 		else:
 			pass
 
-		SVG_ICO(self) # 设置SVG图标
+		SVG_ICO(self)  # 设置SVG图标
 
-		self.Weather.SetLabel(WeaterAPI.Now_weather()) # 获取and显示天气信息
+		self.Weather.SetLabel(WeaterAPI.Now_weather())  # 获取and显示天气信息
 
-		self.taskBar = wx.adv.TaskBarIcon() # 声明:启用系统托盘
-		self.SetDoubleBuffered(True) # 声明:启用双缓冲
-		self.SetDropTarget(FileDrop(self)) # 声明:接受文件拖放
-		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO)) # 设置GUI图标(左上角)
+		self.taskBar = wx.adv.TaskBarIcon()  # 声明:启用系统托盘
+		self.SetDoubleBuffered(True)  # 声明:启用双缓冲
+		self.SetDropTarget(FileDrop(self))  # 声明:接受文件拖放
+		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))  # 设置GUI图标(左上角)
 
 		''' 系统状态栏(弃用方案)
 		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
@@ -171,16 +170,16 @@ class CalcFrame(GUI.Main):
 		start(self)  # 初始化界面布局函数(纯操作,无计算)
 
 		if last != '-1':
-			self.Fast.SetLabel(last_list(int(Main_State),int(last)))
+			self.Fast.SetLabel(last_list(int(Main_State), int(last)))
 
 		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
 			self.Fast.SetBackgroundColour(
 				wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
-		self.SetTransparent(int(transparent)) # 设置窗口透明度
+		self.SetTransparent(int(transparent))  # 设置窗口透明度
 		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
-		
-		#------------------------------------------------------
+
+		# ------------------------------------------------------
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
 						  time.strftime('%Y/%m/%d*%H:%M:%S')))
@@ -188,47 +187,47 @@ class CalcFrame(GUI.Main):
 
 		Self_CMD(self, '初始化完成,日志已保存')
 
-		if eval(is_push_info) == True:
+		if eval(is_push_info):
 			windows_info_window = wx.adv.NotificationMessage('RBS_Software Info')
 			windows_info_window.SetMessage(wx.GetOsDescription()
-											+'\n屏幕分辨率:' + str(wx.ClientDisplayRect())
-											+'\nversion:' + wx.version())
+										   + '\n屏幕分辨率:' + str(wx.ClientDisplayRect())
+										   + '\nversion:' + wx.version())
 			windows_info_window.Show()
 		else:
 			pass
 
-		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(self.Size))
-		##wx.Bell() # 系统铃声
+		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(
+			self.Size))
 
-		##wx.Shell() # Shell
+	##wx.Bell() # 系统铃声
 
-		
+	##wx.Shell() # Shell
+
 	def Sacc(self, event):
-		'''
+		"""
 		主界面背景图片绘制
-		'''
+		"""
 		if setup == 1:
 			dc = event.GetDC()
 			dc.Clear()
 			##dc.DrawColor('white')
 			dc.DrawBitmap(wx.Bitmap("./pictures/alena-aenami-out-of-time-1080p.jpg"), 0, 50)
-			##print(1)
+		##print(1)
 		else:
 			dc = event.GetDC()
 			dc.Clear()
 
-
 	def Close(self, event):
-		'''
+		"""
 		windows_关闭程序
 		!!!注意!!!此类方法已弃用
-		'''
-		while self.threads: # 移除其他线程
+		"""
+		while self.threads:  # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
 
-		if self.taskBar.IsAvailable == True: # 移除托盘图标
+		if self.taskBar.IsAvailable:  # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
 		cfg.read('./cfg/main.cfg')
@@ -244,16 +243,16 @@ class CalcFrame(GUI.Main):
 		wx.CallAfter(sys.exit, 0)
 
 	def Quit(self, event):
-		'''
+		"""
 		self_关闭程序
-		'''
+		"""
 		'''
 		while self.threads: # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
 		'''
-		if self.taskBar.IsAvailable == True: # 移除托盘图标
+		if self.taskBar.IsAvailable:  # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
 		cfg.read('./cfg/main.cfg')
@@ -272,17 +271,17 @@ class CalcFrame(GUI.Main):
 		self.PRO_Timer.Stop()
 		self.Time_Timer.Stop()
 
-		#销毁GUI
+		# 销毁GUI
 		##self.Destroy()
 		##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
 		wx.CallAfter(sys.exit, 0)
 
 	def Ico(self, event):
-		'''
+		"""
 		窗口最小化-事件触发
-		'''
+		"""
 		print('窗口最小化:' + str(self.IsShown()))
-		if self.IsShown() == True:
+		if self.IsShown():
 			##self.SetShape(wx.Region())
 			##self.Enable(False)
 			##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
@@ -298,15 +297,16 @@ class CalcFrame(GUI.Main):
 			self.PRO_Timer.Stop()
 			self.Time_Timer.Stop()
 
-			self.taskBar.SetIcon(wx.Icon(os.path.join("./ICOV4.ico"), wx.BITMAP_TYPE_ICO), "RBS_Software2021") # 设置系统托盘图标
+			self.taskBar.SetIcon(wx.Icon(os.path.join("./ICOV4.ico"), wx.BITMAP_TYPE_ICO),
+								 "RBS_Software2021")  # 设置系统托盘图标
 
-			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBar) # 右键单击托盘图标
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBar)  # 右键单击托盘图标
 			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
-			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick) # 左键双击托盘图标
-			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT) # 退出
-			self.taskBar.Bind(wx.EVT_MENU, self.Ico, id=self.MENU_SHOW) # 显示窗口
-			self.taskBar.Bind(wx.EVT_MENU, self.Setting, id=self.MENU_SET) # 设置
-			self.taskBar.Bind(wx.EVT_MENU, self.About, id=self.MENU_ABOUT) # 关于
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick)  # 左键双击托盘图标
+			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT)  # 退出
+			self.taskBar.Bind(wx.EVT_MENU, self.Ico, id=self.MENU_SHOW)  # 显示窗口
+			self.taskBar.Bind(wx.EVT_MENU, self.Setting, id=self.MENU_SET)  # 设置
+			self.taskBar.Bind(wx.EVT_MENU, self.About, id=self.MENU_ABOUT)  # 关于
 
 
 		else:
@@ -322,9 +322,9 @@ class CalcFrame(GUI.Main):
 			self.taskBar.RemoveIcon()
 
 	def OnTaskBar(self, event):
-		'''
+		"""
 		系统托盘图标_对应操作
-		'''
+		"""
 		menu = wx.Menu()
 		menu.Append(self.MENU_SHOW, "显示窗口")
 		menu.Append(self.MENU_SET, "设置")
@@ -332,8 +332,8 @@ class CalcFrame(GUI.Main):
 		menu.AppendSeparator()
 		menu.Append(self.MENU_EXIT, "退出")
 
-		self.taskBar.PopupMenu(menu) # 显示托盘菜单
-		menu.Destroy() # 销毁托盘菜单
+		self.taskBar.PopupMenu(menu)  # 显示托盘菜单
+		menu.Destroy()  # 销毁托盘菜单
 
 	def OnTaskBarLeftDClick(self, event):
 		if self.IsIconized():  # 判断窗口是否是系统托盘
@@ -346,7 +346,7 @@ class CalcFrame(GUI.Main):
 		# 向控制台发送命令
 		##os.system("C:\WINDOWS\system32\cmd.exe")
 		##wx.Shell('C:\WINDOWS\system32\cmd.exe')
-		win32api.ShellExecute(0, 'open', 'C:\WINDOWS\system32\cmd.exe', '','',1)
+		win32api.ShellExecute(0, 'open', 'C:\WINDOWS\system32\cmd.exe', '', '', 1)
 
 	def About(self, event):
 		# 打开<关于>界面
@@ -374,7 +374,7 @@ class CalcFrame(GUI.Main):
 		Frame_File.Show()
 
 	def HOME(self, event):
-		''' 返回主界面 '''
+		""" 返回主界面 """
 		Home(self)
 
 	def Plug_in(self, event):
@@ -398,7 +398,7 @@ class CalcFrame(GUI.Main):
 			self.CMD_IN.SetValue('')
 
 	def move_start(self, frame_pos):
-		print(frame_pos)
+		##print(frame_pos)
 		self.SetPosition(frame_pos)
 
 	def OnLeftDown(self, event):
@@ -410,8 +410,8 @@ class CalcFrame(GUI.Main):
 		if self.threads:
 			self.threads[0].timeToQuit.set()
 			self.threads.remove(self.threads[0])
-		
-		print('退出线程')
+
+		##print('退出线程')
 
 	def Change_Size(self, event):
 		print(self.GetSize())
@@ -433,7 +433,7 @@ class CalcFrame(GUI.Main):
 		entrance = entrance.readlines()[0]
 
 		path = os.path.abspath(path + '/' + entrance)
-		#----------------------------------------------------------------
+		# ----------------------------------------------------------------
 		'''可读取数据的调用方式
 		bat = subprocess.Popen("cmd.exe /c" + path,
 								stdout=subprocess.PIPE,
@@ -452,7 +452,7 @@ class CalcFrame(GUI.Main):
 		if bat.returncode == 0:
 			print('bat -> Python:运行成功')
 		'''
-		#-----------------------------------------------------------------
+		# -----------------------------------------------------------------
 
 		os.system('start ' + path)
 
@@ -460,42 +460,42 @@ class CalcFrame(GUI.Main):
 		print('检测到快捷键:' + str(event.GetKeyCode()))
 		key = int(event.GetKeyCode())
 
-		if key == 27: # ESC
+		if key == 27:  # ESC
 			self.Close(self)
-		elif key == 49: # 1
+		elif key == 49:  # 1
 			self.G_1(self)
-		elif key == 50: # 2
+		elif key == 50:  # 2
 			self.G_2(self)
-		elif key == 51: # 3
+		elif key == 51:  # 3
 			self.G_3(self)
-		elif key == 52: # 4
+		elif key == 52:  # 4
 			self.G_4(self)
-		elif key == 53: # 5
+		elif key == 53:  # 5
 			self.G_5(self)
-		elif key == 54: # 6
+		elif key == 54:  # 6
 			self.G_6(self)
-		elif key == 55: # 7
+		elif key == 55:  # 7
 			self.G_7(self)
-		elif key == 56: # 8
+		elif key == 56:  # 8
 			self.G_8(self)
-		elif key == 57: # 9
+		elif key == 57:  # 9
 			self.G_9(self)
-		elif key == 48: # 0
+		elif key == 48:  # 0
 			self.G_10(self)
 
-		elif key == 340: # F1
+		elif key == 340:  # F1
 			self.File(self)
-		elif key == 341: # F2
+		elif key == 341:  # F2
 			self.Log(self)
-		elif key == 342: # F3
+		elif key == 342:  # F3
 			self.Setting(self)
-		elif key == 343: # F4
+		elif key == 343:  # F4
 			self.About(self)
 
 	def BT2(self, event):
 		Frame_Date.Bind(wx.EVT_CLOSE, self.BT2)
 
-		if Frame_Date.IsShown() == True:
+		if Frame_Date.IsShown():
 			Frame_Date.Show(False)
 		else:
 			Frame_Date.Show()
@@ -505,21 +505,21 @@ class CalcFrame(GUI.Main):
 
 	def Fast_on(self, event):
 		check_name = ['拼音转换', '简繁转换', '成语接龙', '',
-					'圆周率', '3DMA', '三角函数', '',
-					'大小转换', '', '', '',
-					'Py检查', 'PPNG', 'BMI', 'DDT',
-					'历史今天','Bing', '', '',
-					'WALP', '', '', '',
-					'音频分析', '大学评分', 'QR码', '',
-					'元素周期', '', '', '',
-					'基因库', '', '', '',
-					'随机数', '进制转换', '值日表', '计时器']
+					  '圆周率', '3DMA', '三角函数', '',
+					  '大小转换', '', '', '',
+					  'Py检查', 'PPNG', 'BMI', 'DDT',
+					  '历史今天', 'Bing', '', '',
+					  'WALP', '', '', '',
+					  '音频分析', '大学评分', 'QR码', '',
+					  '元素周期', '', '', '',
+					  '基因库', '', '', '',
+					  '随机数', '进制转换', '值日表', '计时器']
 
 		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None,
 						M_Pi, None, M_Trigonometric, None,
 						M_Capslook, None, None, None,
 						None, M_PPTNG, M_BMI, M_DDT,
-						M_History, M_BingWallPaper,None, None,
+						M_History, M_BingWallPaper, None, None,
 						M_WALP, None, None, None,
 						M_Music, M_College, M_QRcode, None,
 						M_Element, None, None, None,
@@ -533,8 +533,8 @@ class CalcFrame(GUI.Main):
 	# ---------------------------------------------------------------------
 
 	def PFM_Tick(self, event):
-		''' 计时器-性能监视器 '''
-		global CPU_text, RAM_text # 定义全局变量
+		""" 计时器-性能监视器 """
+		global CPU_text, RAM_text  # 定义全局变量
 		Line1 = psutil.swap_memory()
 		Line2 = psutil.cpu_times_percent()
 
@@ -544,9 +544,9 @@ class CalcFrame(GUI.Main):
 		self.Bottom_Bar3.SetLabel('CPU:' + CPU_text + '  RAM:' + RAM_text)
 
 	def PRAM_Tick(self, event):
-		'''
+		"""
 		计时器-内存监视器
-		'''
+		"""
 		process_lst = []
 		mem = 0
 		try:
@@ -564,9 +564,9 @@ class CalcFrame(GUI.Main):
 			self.Bottom_Bar4.SetLabel('--MB')
 
 	def PRO_Tick(self, event):
-		'''
+		"""
 		计时器-后台探针
-		'''
+		"""
 		'''
 		if proc_exist('POWERPNT.EXE'):
 			##print('PPT is running')
@@ -578,9 +578,9 @@ class CalcFrame(GUI.Main):
 		'''
 
 	def Net_Tick(self, event):
-		'''
+		"""
 		计时器-网络监视器
-		'''
+		"""
 		'''
 		try:
 			ping = str(int(ping3.ping('www.baidu.com') * 1000))[0:3]
@@ -596,16 +596,15 @@ class CalcFrame(GUI.Main):
 		'''
 
 	def Time_Tick(self, event):
-		'''
+		"""
 		计时器-时间显示
-		'''
+		"""
 		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
-
 
 	# ------------------------------------------------------------------------
 
 	def Hover1(self, event):
-		''' 光标经过，接触到按钮时（功能按钮），改变提示标签文本 '''
+		""" 光标经过，接触到按钮时（功能按钮），改变提示标签文本 """
 		self.Bottom_Bar1.SetLabel('Function1')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
@@ -658,7 +657,7 @@ class CalcFrame(GUI.Main):
 		Hover = 44
 
 	def H_LOG(self, event):
-		''' 顶部功能按钮提示 '''
+		""" 顶部功能按钮提示 """
 		self.Bottom_Bar1.SetLabel('update log')
 		self.SetCursor(wx.Cursor(6))
 		global Hover
@@ -715,7 +714,7 @@ class CalcFrame(GUI.Main):
 		self.B_File.SetBackgroundColour(colour_Hover)
 
 	def Class1(self, event):
-		''' 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 '''
+		""" 光标经过，接触到按钮（分区按钮）时，改变提示标签文本 """
 		self.Bottom_Bar1.SetLabel(str('功能分区1--' + self.G1.GetLabel()))
 		self.SetCursor(wx.Cursor(6))
 		if Main_State == 1:
@@ -818,12 +817,12 @@ class CalcFrame(GUI.Main):
 	# ---------------------------------------------------------------------
 
 	def Leave(self, event):
-		''' 通用,离开事件 '''
+		""" 通用,离开事件 """
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 
 	def Leave1(self, event):
-		''' 光标离开，不接触按钮时，改变提示标签文本 '''
+		""" 光标离开，不接触按钮时，改变提示标签文本 """
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		if Main_State == 1:
@@ -930,7 +929,7 @@ class CalcFrame(GUI.Main):
 		self.SetCursor(wx.Cursor(1))
 
 	def L_LOG(self, event):
-		''' 顶部功能按钮提示 '''
+		""" 顶部功能按钮提示 """
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_Log.SetBackgroundColour(self.version.GetBackgroundColour())
@@ -972,199 +971,199 @@ class CalcFrame(GUI.Main):
 	# -----------------------------------------------------------------------
 
 	def Function1(self, event):
-		''' 点击事件_按钮1 '''
+		""" 点击事件_按钮1 """
 		global FUN_State
 		FUN_State = 1
 
 		if Main_State == 1:
 			Frame_Pinyin.Bind(wx.EVT_CLOSE, self.Function_11)
 
-			if Frame_Pinyin.IsShown() == True:
+			if Frame_Pinyin.IsShown():
 				Frame_Pinyin.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Pinyin.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 2:
 			Frame_Pi.Bind(wx.EVT_CLOSE, self.Function_12)
 
-			if Frame_Pi.IsShown() == True:
+			if Frame_Pi.IsShown():
 				Frame_Pi.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Pi.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 3:
 			Frame_Capslook.Bind(wx.EVT_CLOSE, self.Function_13)
 
-			if Frame_Capslook.IsShown() == True:
+			if Frame_Capslook.IsShown():
 				Frame_Capslook.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Capslook.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 4:
 			Frame_SSC.Bind(wx.EVT_CLOSE, self.Function_14)
 
-			if Frame_SSC.IsShown() == True:
+			if Frame_SSC.IsShown():
 				Frame_SSC.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_SSC.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 5:
 			Frame_History.Bind(wx.EVT_CLOSE, self.Function_15)
 
-			if Frame_History.IsShown() == True:
+			if Frame_History.IsShown():
 				Frame_History.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_History.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 6:
 			Frame_WALP.Bind(wx.EVT_CLOSE, self.Function_16)
 
-			if Frame_WALP.IsShown() == True:
+			if Frame_WALP.IsShown():
 				Frame_WALP.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_WALP.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 7:
 			Frame_Music.Bind(wx.EVT_CLOSE, self.Function_17)
 
-			if Frame_Music.IsShown() == True:
+			if Frame_Music.IsShown():
 				Frame_Music.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Music.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 8:
 			Frame_Element.Bind(wx.EVT_CLOSE, self.Function_18)
 
-			if Frame_Element.IsShown() == True:
+			if Frame_Element.IsShown():
 				Frame_Element.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Element.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 9:
 			Frame_Gene.Bind(wx.EVT_CLOSE, self.Function_19)
 
-			if Frame_Gene.IsShown() == True:
+			if Frame_Gene.IsShown():
 				Frame_Gene.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Gene.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 		elif Main_State == 10:
 			Frame_Roll.Bind(wx.EVT_CLOSE, self.Function_110)
 
-			if Frame_Roll.IsShown() == True:
+			if Frame_Roll.IsShown():
 				Frame_Roll.Hide()
-				self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F1.SetForegroundColour('black')
 			else:
 				Frame_Roll.Show()
-				self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F1.SetLabel('正在运行中~')
 				self.B_F1.SetForegroundColour('white')
 
 	def Function2(self, event):
-		''' 点击事件_按钮2 '''
+		""" 点击事件_按钮2 """
 		global FUN_State
 		FUN_State = 2
 
 		if Main_State == 1:
 			Frame_Traditional_Chinese.Bind(wx.EVT_CLOSE, self.Function_21)
 
-			if Frame_Traditional_Chinese.IsShown() == True:
+			if Frame_Traditional_Chinese.IsShown():
 				Frame_Traditional_Chinese.Hide()
-				self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
 				Frame_Traditional_Chinese.Show()
-				self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
 
 		elif Main_State == 2:
-			wx.MessageBox('未启用,敬请期待!','提示',wx.OK)
+			wx.MessageBox('未启用,敬请期待!', '提示', wx.OK)
 			return
 		elif Main_State == 3:
 			return
 		elif Main_State == 4:
 			Frame_PPTNG.Bind(wx.EVT_CLOSE, self.Function_24)
 
-			if Frame_PPTNG.IsShown() == True:
+			if Frame_PPTNG.IsShown():
 				Frame_PPTNG.Hide()
-				self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
 				Frame_PPTNG.Show()
-				self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
 
 		elif Main_State == 5:
 			Frame_BingWallPaper.Bind(wx.EVT_CLOSE, self.Function_25)
 
-			if Frame_BingWallPaper.IsShown() == True:
+			if Frame_BingWallPaper.IsShown():
 				Frame_BingWallPaper.Hide()
-				self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
 				Frame_BingWallPaper.Show()
-				self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
 
@@ -1173,14 +1172,14 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 7:
 			Frame_College.Bind(wx.EVT_CLOSE, self.Function_27)
 
-			if Frame_College.IsShown() == True:
+			if Frame_College.IsShown():
 				Frame_College.Hide()
-				self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
 				Frame_College.Show()
-				self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
 
@@ -1191,47 +1190,47 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 10:
 			Frame_Base_conversion.Bind(wx.EVT_CLOSE, self.Function_210)
 
-			if Frame_Base_conversion.IsShown() == True:
+			if Frame_Base_conversion.IsShown():
 				Frame_Base_conversion.Hide()
-				self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
 				Frame_Base_conversion.Show()
-				self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
 
 	def Function3(self, event):
-		''' 点击事件_按钮3 '''
+		""" 点击事件_按钮3 """
 		global FUN_State
 		FUN_State = 3
 
 		if Main_State == 1:
 			Frame_Idion.Bind(wx.EVT_CLOSE, self.Function_31)
 
-			if Frame_Idion.IsShown() == True:
+			if Frame_Idion.IsShown():
 				Frame_Idion.Hide()
-				self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F3.SetForegroundColour('black')
 			else:
 				Frame_Idion.Show()
-				self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F3.SetLabel('正在运行中~')
 				self.B_F3.SetForegroundColour('white')
 
 		elif Main_State == 2:
 			Frame_Trigonometric.Bind(wx.EVT_CLOSE, self.Function_32)
 
-			if Frame_Trigonometric.IsShown() == True:
+			if Frame_Trigonometric.IsShown():
 				Frame_Trigonometric.Hide()
-				self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F3.SetForegroundColour('black')
 			else:
 				Frame_Trigonometric.Show()
-				self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F3.SetLabel('正在运行中~')
 				self.B_F3.SetForegroundColour('white')
 
@@ -1240,14 +1239,14 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 4:
 			Frame_BMI.Bind(wx.EVT_CLOSE, self.Function_34)
 
-			if Frame_BMI.IsShown() == True:
+			if Frame_BMI.IsShown():
 				Frame_BMI.Hide()
-				self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F3.SetForegroundColour('black')
 			else:
 				Frame_BMI.Show()
-				self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F3.SetLabel('正在运行中~')
 				self.B_F3.SetForegroundColour('white')
 
@@ -1258,14 +1257,14 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 7:
 			Frame_QRcode.Bind(wx.EVT_CLOSE, self.Function_37)
 
-			if Frame_QRcode.IsShown() == True:
+			if Frame_QRcode.IsShown():
 				Frame_QRcode.Hide()
-				self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F3.SetForegroundColour('black')
 			else:
 				Frame_QRcode.Show()
-				self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F3.SetLabel('正在运行中~')
 				self.B_F3.SetForegroundColour('white')
 
@@ -1276,19 +1275,19 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 10:
 			Frame_Roster.Bind(wx.EVT_CLOSE, self.Function_310)
 
-			if Frame_Roster.IsShown() == True:
+			if Frame_Roster.IsShown():
 				Frame_Roster.Hide()
-				self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F3.SetForegroundColour('black')
 			else:
 				Frame_Roster.Show()
-				self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F3.SetLabel('正在运行中~')
 				self.B_F3.SetForegroundColour('white')
 
 	def Function4(self, event):
-		''' 点击事件_按钮4 '''
+		""" 点击事件_按钮4 """
 		global FUN_State
 		FUN_State = 4
 		if Main_State == 1:
@@ -1296,14 +1295,14 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 2:
 			Frame_Draw.Bind(wx.EVT_CLOSE, self.Function_41)
 
-			if Frame_Draw.IsShown() == True:
+			if Frame_Draw.IsShown():
 				Frame_Draw.Hide()
-				self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F4.SetForegroundColour('black')
 			else:
 				Frame_Draw.Show()
-				self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F4.SetLabel('正在运行中~')
 				self.B_F4.SetForegroundColour('white')
 
@@ -1312,14 +1311,14 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 4:
 			Frame_DDT.Bind(wx.EVT_CLOSE, self.Function_44)
 
-			if Frame_DDT.IsShown() == True:
+			if Frame_DDT.IsShown():
 				Frame_DDT.Hide()
-				self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F4.SetForegroundColour('black')
 			else:
 				Frame_DDT.Show()
-				self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F4.SetLabel('正在运行中~')
 				self.B_F4.SetForegroundColour('white')
 
@@ -1336,21 +1335,21 @@ class CalcFrame(GUI.Main):
 		elif Main_State == 10:
 			Frame_Timer.Bind(wx.EVT_CLOSE, self.Function_410)
 
-			if Frame_Timer.IsShown() == True:
+			if Frame_Timer.IsShown():
 				Frame_Timer.Hide()
-				self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+				self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 				self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F4.SetForegroundColour('black')
 			else:
 				Frame_Timer.Show()
-				self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+				self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F4.SetLabel('正在运行中~')
 				self.B_F4.SetForegroundColour('white')
 
 	def Function_11(self, event):
 		if Main_State == 1:
 			Frame_Pinyin.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1359,7 +1358,7 @@ class CalcFrame(GUI.Main):
 	def Function_12(self, event):
 		if Main_State == 2:
 			Frame_Pi.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1368,7 +1367,7 @@ class CalcFrame(GUI.Main):
 	def Function_13(self, event):
 		if Main_State == 3:
 			Frame_Capslook.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1377,7 +1376,7 @@ class CalcFrame(GUI.Main):
 	def Function_14(self, event):
 		if Main_State == 4:
 			Frame_SSC.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1386,7 +1385,7 @@ class CalcFrame(GUI.Main):
 	def Function_15(self, event):
 		if Main_State == 5:
 			Frame_History.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1395,7 +1394,7 @@ class CalcFrame(GUI.Main):
 	def Function_16(self, event):
 		if Main_State == 6:
 			Frame_WALP.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1404,7 +1403,7 @@ class CalcFrame(GUI.Main):
 	def Function_17(self, event):
 		if Main_State == 7:
 			Frame_Music.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1413,7 +1412,7 @@ class CalcFrame(GUI.Main):
 	def Function_18(self, event):
 		if Main_State == 8:
 			Frame_Element.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1422,7 +1421,7 @@ class CalcFrame(GUI.Main):
 	def Function_19(self, event):
 		if Main_State == 9:
 			Frame_Gene.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1431,7 +1430,7 @@ class CalcFrame(GUI.Main):
 	def Function_110(self, event):
 		if Main_State == 10:
 			Frame_Roll.Hide()
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F1.SetForegroundColour('black')
 		else:
@@ -1440,7 +1439,7 @@ class CalcFrame(GUI.Main):
 	def Function_21(self, event):
 		if Main_State == 1:
 			Frame_Traditional_Chinese.Hide()
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F2.SetForegroundColour('black')
 		else:
@@ -1473,7 +1472,7 @@ class CalcFrame(GUI.Main):
 	def Function_24(self, event):
 		if Main_State == 4:
 			Frame_PPTNG.Hide()
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F2.SetForegroundColour('black')
 		else:
@@ -1482,7 +1481,7 @@ class CalcFrame(GUI.Main):
 	def Function_25(self, event):
 		if Main_State == 5:
 			Frame_BingWallPaper.Hide()
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F2.SetForegroundColour('black')
 		else:
@@ -1503,7 +1502,7 @@ class CalcFrame(GUI.Main):
 	def Function_27(self, event):
 		if Main_State == 7:
 			Frame_College.Hide()
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F2.SetForegroundColour('black')
 		else:
@@ -1536,7 +1535,7 @@ class CalcFrame(GUI.Main):
 	def Function_210(self, event):
 		if Main_State == 10:
 			Frame_Base_conversion.Hide()
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F2.SetForegroundColour('black')
 		else:
@@ -1545,7 +1544,7 @@ class CalcFrame(GUI.Main):
 	def Function_31(self, event):
 		if Main_State == 1:
 			Frame_Idion.Hide()
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F3.SetForegroundColour('black')
 		else:
@@ -1554,7 +1553,7 @@ class CalcFrame(GUI.Main):
 	def Function_32(self, event):
 		if Main_State == 2:
 			Frame_Trigonometric.Hide()
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F3.SetForegroundColour('black')
 		else:
@@ -1575,7 +1574,7 @@ class CalcFrame(GUI.Main):
 	def Function_34(self, event):
 		if Main_State == 4:
 			Frame_BMI.Hide()
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F3.SetForegroundColour('black')
 		else:
@@ -1608,7 +1607,7 @@ class CalcFrame(GUI.Main):
 	def Function_37(self, event):
 		if Main_State == 7:
 			Frame_QRcode.Hide()
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F3.SetForegroundColour('black')
 		else:
@@ -1641,7 +1640,7 @@ class CalcFrame(GUI.Main):
 	def Function_310(self, event):
 		if Main_State == 10:
 			Frame_Roster.Hide()
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F3.SetForegroundColour('black')
 		else:
@@ -1662,7 +1661,7 @@ class CalcFrame(GUI.Main):
 	def Function_42(self, event):
 		if Main_State == 2:
 			Frame_Draw.Hide()
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F4.SetForegroundColour('black')
 		else:
@@ -1683,7 +1682,7 @@ class CalcFrame(GUI.Main):
 	def Function_44(self, event):
 		if Main_State == 4:
 			Frame_DDT.Hide()
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F4.SetForegroundColour('black')
 		else:
@@ -1752,7 +1751,7 @@ class CalcFrame(GUI.Main):
 	def Function_410(self, event):
 		if Main_State == 10:
 			Frame_Timer.Hide()
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 			self.B_F4.SetForegroundColour('black')
 		else:
@@ -1761,7 +1760,7 @@ class CalcFrame(GUI.Main):
 	# --------------------------------------------------------------------
 
 	def G_1(self, event):
-		''' 1号功能分区-语文 '''
+		""" 1号功能分区-语文 """
 
 		global Main_State, colour_Hover, colour_SideL  # 定义(全局)状态变量
 		Main_State = 1
@@ -1770,16 +1769,16 @@ class CalcFrame(GUI.Main):
 
 		start(self)
 
-		colour_cfg = configparser.ConfigParser() # 主界面颜色定义
+		colour_cfg = configparser.ConfigParser()  # 主界面颜色定义
 		colour_cfg.read('./DATA/Main/Theme/colourful/Page1.cfg')
 		colour_Main = colour_cfg.get('colour', 'colour_Main')
 		colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note1.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note1.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
-		roll = random.randint(0, len(note) - 1) # 随机抽取一条
+		roll = random.randint(0, len(note) - 1)  # 随机抽取一条
 		note = note[roll]
 		note = note.replace('\n', '')
 
@@ -1806,12 +1805,12 @@ class CalcFrame(GUI.Main):
 		# 功能主标题下方的四个按钮的设置(每四个一组,网络,文件)
 		Function_icon(self, 0, 0, 0, 0, 1, 1, 1, 0)
 
-		BUT_CLFN(self, 1) # 检查该功能分区下的四个功能是否正在运行
+		BUT_CLFN(self, 1)  # 检查该功能分区下的四个功能是否正在运行
 
 		self.Refresh()  # 刷新屏幕
 
 	def G_2(self, event):
-		''' 2号功能分区-数学 '''
+		""" 2号功能分区-数学 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 2
 
@@ -1826,7 +1825,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note2.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note2.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -1859,7 +1858,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_3(self, event):
-		''' 3号功能分区-英语 '''
+		""" 3号功能分区-英语 """
 
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 3
@@ -1875,7 +1874,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note3.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note3.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -1908,7 +1907,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_4(self, event):
-		''' 4号功能分区-信息 '''
+		""" 4号功能分区-信息 """
 
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 4
@@ -1924,7 +1923,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note4.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note4.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -1957,7 +1956,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_5(self, event):
-		''' 5号功能分区-历史 '''
+		""" 5号功能分区-历史 """
 
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 5
@@ -1973,7 +1972,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note5.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note5.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2006,7 +2005,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_6(self, event):
-		''' 6号功能分区-地理 '''
+		""" 6号功能分区-地理 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 6
 
@@ -2021,7 +2020,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note6.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note6.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2054,7 +2053,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_7(self, event):
-		''' 7号功能分区-物理 '''
+		""" 7号功能分区-物理 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 7
 
@@ -2069,7 +2068,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note7.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note7.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2102,7 +2101,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_8(self, event):
-		''' 8号功能分区-化学 '''
+		""" 8号功能分区-化学 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 8
 
@@ -2117,7 +2116,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note8.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note8.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2150,7 +2149,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_9(self, event):
-		''' 9号功能分区-生物 '''
+		""" 9号功能分区-生物 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 9
 
@@ -2165,7 +2164,7 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note9.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note9.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2198,7 +2197,7 @@ class CalcFrame(GUI.Main):
 		self.Refresh()
 
 	def G_10(self, event):
-		''' 10号功能分区-通用 '''
+		""" 10号功能分区-通用 """
 		global Main_State, colour_Hover, colour_SideL
 		Main_State = 10
 
@@ -2213,12 +2212,11 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note10.txt', 'r', encoding='utf-8') # 主界面留言定义
+		note = open('./DATA/Main/Note/Note10.txt', 'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
 		note = note.replace('\n', '')
-
 
 		Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL)
 
@@ -2245,6 +2243,7 @@ class CalcFrame(GUI.Main):
 		BUT_CLFN(self, 10)
 
 		self.Refresh()
+
 
 ###########################################################################
 # 文件拖入处理Class
@@ -2278,11 +2277,12 @@ class FileDrop(wx.FileDropTarget):
 		File_cfg.set('File', 'type', str(file_type))
 		File_cfg.write(open('./cfg/File.cfg', 'w'))
 
-		wx.CallAfter(wx.MessageBox, '检测到文件:' +  file_type) # 延期呼叫事件--wx自带的一种多线程方法
+		wx.CallAfter(wx.MessageBox, '检测到文件:' + file_type)  # 延期呼叫事件--wx自带的一种多线程方法
 
 		##M_File.main() # 如果直接这样打开会阻塞线程,windows资源管理器也会卡住
 
 		return True
+
 
 ###########################################################################
 # 窗口拖动处理Class
@@ -2305,7 +2305,7 @@ class WorkerThread(threading.Thread):
 				break
 			##print(wx.GetMouseState())
 			##print(wx.MouseState.LeftIsDown(wx.GetMouseState()))
-			if wx.MouseState.LeftIsDown(wx.GetMouseState()) == False:
+			if not wx.MouseState.LeftIsDown(wx.GetMouseState()):
 				print('检测到鼠标拖动事件异步释放->删除线程')
 				wx.CallAfter(self.frame.OnLeftUp, None)
 
@@ -2319,6 +2319,7 @@ class WorkerThread(threading.Thread):
 		else:
 			wx.CallAfter(self.frame.move_stop, self)
 
+
 ###########################################################################
 # 主函数
 # def main
@@ -2326,21 +2327,21 @@ class WorkerThread(threading.Thread):
 
 
 def main():
-	'''
+	"""
 	主函数
-	'''
+	"""
 	global app
-	global Frame_Roll,Frame_Element,Frame_Pinyin,Frame_Roster,Frame_Gene,Frame_About,Frame_Pi,Frame_Capslook
-	global Frame_Base_conversion,Frame_Traditional_Chinese,Frame_BMI,Frame_PPTNG,Frame_Timer,Frame_Idion,Frame_DDT,Frame_Music
-	global Frame_WALP,Frame_Version,Frame_History,Frame_Date,Frame_File,Frame_QRcode,Frame_BingWallPaper,Frame_Trigonometric
-	global Frame_Draw,Frame_SSC,Frame_College
+	global Frame_Roll, Frame_Element, Frame_Pinyin, Frame_Roster, Frame_Gene, Frame_About, Frame_Pi, Frame_Capslook
+	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
+	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
+	global Frame_Draw, Frame_SSC, Frame_College
 
-	global Frame_User,Frame_Setting,Frame_Plug_in,Frame_Probe
-	
+	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
+
 	cfg = configparser.ConfigParser()
 	cfg.read('./cfg/setting.cfg')
-	
-	app = wx.App(eval(cfg.get('window', 'sys_test')))# GUI循环及前置设置
+
+	app = wx.App(eval(cfg.get('window', 'sys_test')))  # GUI循环及前置设置
 	frame = CalcFrame(None)
 
 	frame.Show(True)
@@ -2381,13 +2382,14 @@ def main():
 
 	app.MainLoop()
 
-def Pre_main():
-	global Frame_Roll,Frame_Element,Frame_Pinyin,Frame_Roster,Frame_Gene,Frame_About,Frame_Pi,Frame_Capslook
-	global Frame_Base_conversion,Frame_Traditional_Chinese,Frame_BMI,Frame_PPTNG,Frame_Timer,Frame_Idion,Frame_DDT,Frame_Music
-	global Frame_WALP,Frame_Version,Frame_History,Frame_Date,Frame_File,Frame_QRcode,Frame_BingWallPaper,Frame_Trigonometric
-	global Frame_Draw,Frame_SSC,Frame_College
 
-	global Frame_User,Frame_Setting,Frame_Plug_in,Frame_Probe
+def Pre_main():
+	global Frame_Roll, Frame_Element, Frame_Pinyin, Frame_Roster, Frame_Gene, Frame_About, Frame_Pi, Frame_Capslook
+	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
+	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
+	global Frame_Draw, Frame_SSC, Frame_College
+
+	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
 	# GUI循环及前置设置
 	frame = CalcFrame(None)
@@ -2427,8 +2429,9 @@ def Pre_main():
 
 	return frame
 
+
 def Colour_clean(self):
-	''' 用于清空全部按钮的颜色设置(GUI) '''
+	""" 用于清空全部按钮的颜色设置(GUI) """
 	# 设置按钮背景颜色和字体颜色
 	BackGround_Colour = "White"
 	Foreground_Colour = "Black"
@@ -2458,11 +2461,12 @@ def Colour_clean(self):
 	BackGround_Colour = None
 	Foreground_Colour = None
 
+
 def Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL):
-	''' 用于设置主界面的颜色(GUI) '''
+	""" 用于设置主界面的颜色(GUI) """
 	self.Note.SetLabel(note)  # 主界面留言设置
 
-	self.version.SetBackgroundColour(colour_Main) # 按钮背景颜色设置
+	self.version.SetBackgroundColour(colour_Main)  # 按钮背景颜色设置
 	self.Network.SetBackgroundColour(colour_Main)
 	self.Note.SetBackgroundColour(colour_Main)
 	self.B_Quit.SetBackgroundColour(colour_Main)
@@ -2488,8 +2492,9 @@ def Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL):
 	self.Side3.SetBackgroundColour(colour_SideL)
 	self.Side4.SetBackgroundColour(colour_SideL)
 
+
 def Log():
-	''' Log日志输出 '''
+	""" Log日志输出 """
 	cfg = configparser.ConfigParser()  # 读取设置文件
 	cfg.read('./cfg/setting.cfg')
 	log_place = cfg.get('log', 'path')
@@ -2505,8 +2510,9 @@ def Log():
 		# format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s' # 命名规则
 	)
 
+
 def proc_exist(process_name):
-	''' 程序运行检查 '''
+	""" 程序运行检查 """
 	is_exist = False
 	wmi = win32com.client.GetObject('winmgmts:')
 	processCodeCov = wmi.ExecQuery(
@@ -2515,10 +2521,11 @@ def proc_exist(process_name):
 		is_exist = True
 	return is_exist
 
+
 def start(self):
-	'''
+	"""
 	程序初始化界面
-	'''
+	"""
 	global setup
 	if setup == 1:
 		setup = 2
@@ -2673,10 +2680,11 @@ def start(self):
 	elif setup == 2:
 		return
 
+
 def Home(self):
-	'''
+	"""
 	返回初始界面
-	'''
+	"""
 	global setup, Main_State, colour_Hover
 	colour_Hover = '#A65F00'
 
@@ -2792,7 +2800,7 @@ def Home(self):
 	Colour_clean(self)
 
 	if FUN_State != -1:
-		self.Fast.SetLabel(last_list(Main_State,FUN_State))
+		self.Fast.SetLabel(last_list(Main_State, FUN_State))
 	else:
 		self.Fast.SetLabel('NONE')
 
@@ -2805,18 +2813,20 @@ def Home(self):
 
 	self.Refresh()
 
+
 def resize(self):
-	'''
+	"""
 	通过更改窗口大小触发-->界面刷新
 	(这种刷新有别于一般的Refresh,可以让错位的子项复位)
-	'''
+	"""
 	self.SetSize(screen_size_x + 1, screen_size_y)
 	self.SetSize(screen_size_x, screen_size_y)
 
+
 def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, LocalFile2, LocalFile3, LocalFile4):
-	'''
+	"""
 	功能图标的设置
-	'''
+	"""
 
 	'''适用于PNG格式的图标设置(已弃用)
 	Internet_ON = wx.Image("./pictures/网络-开启20.png",
@@ -2834,10 +2844,10 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 	File_ON = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveY.svg')
 	File_OFF = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveN.svg')
 
-	Internet_ON = Internet_ON.ConvertToScaledBitmap(wx.Size(20,20), self)
-	Internet_OFF = Internet_OFF.ConvertToScaledBitmap(wx.Size(20,20), self)
-	File_ON = File_ON.ConvertToScaledBitmap(wx.Size(20,20), self)
-	File_OFF = File_OFF.ConvertToScaledBitmap(wx.Size(20,20), self)
+	Internet_ON = Internet_ON.ConvertToScaledBitmap(wx.Size(20, 20), self)
+	Internet_OFF = Internet_OFF.ConvertToScaledBitmap(wx.Size(20, 20), self)
+	File_ON = File_ON.ConvertToScaledBitmap(wx.Size(20, 20), self)
+	File_OFF = File_OFF.ConvertToScaledBitmap(wx.Size(20, 20), self)
 
 	if Internet1 == 1:
 		self.Net1.SetBitmap(Internet_ON)
@@ -2879,391 +2889,394 @@ def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, 
 	else:
 		self.File4.SetBitmap(File_OFF)
 
+
 def BUT_CLFN(self, num):
 	if num == 1:
-		if Frame_Pinyin.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Pinyin.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Traditional_Chinese.IsShown() == True:
-			self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Traditional_Chinese.IsShown():
+			self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F2.SetForegroundColour('white')
 			self.B_F2.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Idion.IsShown() == True:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Idion.IsShown():
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 2:
-		if Frame_Pi.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Pi.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Trigonometric.IsShown() == True:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Trigonometric.IsShown():
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Draw.IsShown() == True:
-			self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Draw.IsShown():
+			self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F4.SetForegroundColour('white')
 			self.B_F4.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 3:
-		if Frame_Capslook.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Capslook.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 4:
-		if Frame_SSC.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_SSC.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_PPTNG.IsShown() == True:
-			self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_PPTNG.IsShown():
+			self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F2.SetForegroundColour('white')
 			self.B_F2.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_BMI.IsShown() == True:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_BMI.IsShown():
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_DDT.IsShown() == True:
-			self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_DDT.IsShown():
+			self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F4.SetForegroundColour('white')
 			self.B_F4.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 5:
-		if Frame_History.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_History.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_BingWallPaper.IsShown() == True:
-			self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_BingWallPaper.IsShown():
+			self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F2.SetForegroundColour('white')
 			self.B_F2.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 6:
-		if Frame_WALP.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_WALP.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 7:
-		if Frame_Music.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Music.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_College.IsShown() == True:
-			self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_College.IsShown():
+			self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F2.SetForegroundColour('white')
 			self.B_F2.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_QRcode.IsShown() == True:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_QRcode.IsShown():
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 8:
-		if Frame_Element.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Element.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 9:
-		if Frame_Gene.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Gene.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
 		if False:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
 	elif num == 10:
-		if Frame_Roll.IsShown() == True:
-			self.B_F1.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Roll.IsShown():
+			self.B_F1.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F1.SetForegroundColour('white')
 			self.B_F1.SetLabel('正在运行中~')
 		else:
-			self.B_F1.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F1.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F1.SetForegroundColour('black')
 			self.B_F1.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Base_conversion.IsShown() == True:
-			self.B_F2.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Base_conversion.IsShown():
+			self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F2.SetForegroundColour('white')
 			self.B_F2.SetLabel('正在运行中~')
 		else:
-			self.B_F2.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F2.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F2.SetForegroundColour('black')
 			self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Roster.IsShown() == True:
-			self.B_F3.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Roster.IsShown():
+			self.B_F3.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F3.SetForegroundColour('white')
 			self.B_F3.SetLabel('正在运行中~')
 		else:
-			self.B_F3.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F3.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F3.SetForegroundColour('black')
 			self.B_F3.SetLabel('<(￣︶￣)↗[GO!]')
 
-		if Frame_Timer.IsShown() == True:
-			self.B_F4.SetBackgroundColour(wx.Colour(252,135,5))
+		if Frame_Timer.IsShown():
+			self.B_F4.SetBackgroundColour(wx.Colour(252, 135, 5))
 			self.B_F4.SetForegroundColour('white')
 			self.B_F4.SetLabel('正在运行中~')
 		else:
-			self.B_F4.SetBackgroundColour(wx.Colour(192,192,192))
+			self.B_F4.SetBackgroundColour(wx.Colour(192, 192, 192))
 			self.B_F4.SetForegroundColour('black')
 			self.B_F4.SetLabel('<(￣︶￣)↗[GO!]')
 
+
 def Self_CMD(self, info):
-	'''
+	"""
 	向程序自带控制台输入信息
 	info输入要求:str
-	'''
+	"""
 	if self.CMD_OUT.GetValue() == '':
 		self.CMD_OUT.SetValue('>>>' + time.strftime('%H:%M:%S') + ':' + info)
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
 
+
 def CMD(self, info):
-	'''
+	"""
 	控制台指令处理
-	'''
+	"""
 	if info == 'clear' or info == 'clean' or info == 'cls':
 		self.CMD_OUT.SetValue('')
 	elif info == 'time':
@@ -3273,22 +3286,25 @@ def CMD(self, info):
 	elif info == 'close' or info == 'quit' or info == 'kill':
 		self.Destroy()
 	elif info == 'Net_Check':
-		os.system('ping localhost && ping www.baidu.com && ipconfig -all && msdt.exe /id NetworkDiagnosticsNetworkAdapter')
+		os.system(
+			'ping localhost && ping www.baidu.com && ipconfig -all && msdt.exe /id NetworkDiagnosticsNetworkAdapter')
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Net_Check:网络检查已执行')
 	elif info == 'Sound_Check':
 		os.system('msdt.exe /id AudioPlaybackDiagnostic')
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Sound_Check:声音检查已执行')
 	elif info == 'help' or info == '?':
-		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Help:内置CMD程序版本:021.09.04\n可使用的命令:\nhelp\nquit\ntime\nrandom\nNet_Check\nSound_Check')
+		self.CMD_OUT.SetValue(
+			self.CMD_OUT.GetValue() + '\n' + '>>>Help:内置CMD程序版本:021.09.04\n可使用的命令:\nhelp\nquit\ntime\nrandom\nNet_Check\nSound_Check')
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
-	self.CMD_OUT.SetInsertionPointEnd() # 设置光标到末尾
+	self.CMD_OUT.SetInsertionPointEnd()  # 设置光标到末尾
 
-def last_list(X,Y):
-	'''
+
+def last_list(X, Y):
+	"""
 	使用给定的XY坐标返回功能模块的名字
-	'''
+	"""
 	name = 'NONE'
 
 	if X == 0:
@@ -3386,55 +3402,57 @@ def last_list(X,Y):
 
 	return name
 
+
 def SVG_ICO(self):
-	'''
+	"""
 	设置SVG格式的图标
-	'''
+	"""
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_close.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_Quit.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Update.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_Update.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Cmd.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_Cmd.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_About.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_About.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Setting.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_Setting.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Log.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_Log.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_File.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25,25), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(25, 25), self)
 	self.B_File.SetBitmap(Bitmap)
 
-	#------------------------------------------------------------------
+	# ------------------------------------------------------------------
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_Help.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20,20), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20, 20), self)
 	self.Help1.SetBitmap(Bitmap)
 	self.Help2.SetBitmap(Bitmap)
 	self.Help3.SetBitmap(Bitmap)
 	self.Help4.SetBitmap(Bitmap)
 
 	Bitmap = wx.svg.SVGimage.CreateFromFile('./pictures/icon_StarN.svg')
-	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20,20), self)
+	Bitmap = Bitmap.ConvertToScaledBitmap(wx.Size(20, 20), self)
 	self.Star1.SetBitmap(Bitmap)
 	self.Star2.SetBitmap(Bitmap)
 	self.Star3.SetBitmap(Bitmap)
 	self.Star4.SetBitmap(Bitmap)
 
 	Bitmap = None
+
 
 if __name__ == "__main__":
 	main()

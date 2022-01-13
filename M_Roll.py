@@ -25,10 +25,10 @@ class CalcFrame(GUI_Roll.Main):
 		if max < min:
 			self.MIN.SetValue(self.MAX.GetValue())
 
-		if self.Retry.IsChecked() == True:
+		if self.Retry.IsChecked():
 			for i in range(0, self.NUM.GetValue()):
 				text = random.randint(min, max)
-				if self.Enter.IsChecked() == True:
+				if self.Enter.IsChecked():
 					self.Out.SetValue(str(str(text) + '\n' + self.Out.GetValue()))
 				else:
 					self.Out.SetValue(str(str(text) + ' ' + self.Out.GetValue()))
@@ -37,10 +37,10 @@ class CalcFrame(GUI_Roll.Main):
 				self.NUM.SetValue(str(int(max - min)))
 			for i in range(0, self.NUM.GetValue()):
 				text = random.randint(min, max)
-				while (text in num_list) == True:
+				while (text in num_list):
 					text = random.randint(min, max)
 				num_list.append(text)
-			if self.Enter.IsChecked() == True:
+			if self.Enter.IsChecked():
 				num_list = [str(i) for i in num_list]
 				num_list = '\n'.join(num_list)
 				self.Out.SetValue(num_list)
