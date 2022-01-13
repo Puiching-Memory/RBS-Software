@@ -115,7 +115,7 @@ def main():
 def proc_exist(process_name):
 	is_exist = False
 	wmi = win32com.client.GetObject('winmgmts:')
-	processCodeCov = wmi.ExecQuery('select * from Win32_Process where name=\"%s\"' %(process_name))
+	processCodeCov = wmi.ExecQuery('select * from Win32_Process where name=\"%s\"' % process_name)
 	if len(processCodeCov) > 0:
 		is_exist = True
 	return is_exist

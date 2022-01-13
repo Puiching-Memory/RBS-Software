@@ -17,7 +17,7 @@ import wx.xrc
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Draw", pos = wx.DefaultPosition, size = wx.Size( 600,400 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Draw", pos = wx.DefaultPosition, size = wx.Size( 600,500 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -32,6 +32,8 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.Bind( wx.EVT_LEFT_DOWN, self.MainOnLeftDown )
+		self.Bind( wx.EVT_LEFT_UP, self.MainOnLeftUp )
 		self.Bind( wx.EVT_MOVE, self.OnMove )
 		self.Bind( wx.EVT_PAINT, self.EVT_PAINT )
 
@@ -41,6 +43,12 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def MainOnLeftDown( self, event ):
+		event.Skip()
+
+	def MainOnLeftUp( self, event ):
 		event.Skip()
 
 	def OnMove( self, event ):

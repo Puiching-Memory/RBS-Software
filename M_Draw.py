@@ -16,12 +16,19 @@ class CalcFrame(GUI_Draw.Main):
 		GUI_Draw.Main.__init__(self, parent)
 
 	def EVT_PAINT(self,event):
+		global dc
 		dc = wx.PaintDC(self)
 
 		dc.SetPen(wx.Pen('#d4d4d4'))    #设置画笔颜色
 		dc.SetBrush(wx.Brush('#c56c00'))
 
-		dc.CrossHair(300,200)
+		dc.DrawCircle(0,0,10)
+
+		dc.CrossHair(300,250)
+
+	def MainOnLeftDown(self, event):
+		global dc 
+		##dc.DrawCircle(event.)
 
 	def OnMove(self,event):
 		pos = event.GetPosition()

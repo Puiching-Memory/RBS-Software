@@ -108,6 +108,8 @@ class CalcFrame(GUI.Main):
 
 		cfg.read('./cfg/setting.cfg')
 		transparent = cfg.get('window', 'transparency')
+		is_push_info = cfg.get('window', 'is_push_info')
+		is_round = cfg.get('window', 'is_round')
 
 		cfg.read('./cfg/main.cfg')
 		last = cfg.get('History', 'LAST')
@@ -140,9 +142,12 @@ class CalcFrame(GUI.Main):
 
 		self.version.SetLabel('#V' + version) # 设置版本号
 
-		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath() # 设置圆角边框
-		path.AddRoundedRectangle(0,0,750,410,15)
-		self.SetShape(path)
+		if eval(is_round) == True:
+			path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath() # 设置圆角边框
+			path.AddRoundedRectangle(0,0,750,410,15)
+			self.SetShape(path)
+		else:
+			pass
 
 		SVG_ICO(self) # 设置SVG图标
 
@@ -174,7 +179,8 @@ class CalcFrame(GUI.Main):
 
 		self.SetTransparent(int(transparent)) # 设置窗口透明度
 		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
-
+		
+		#------------------------------------------------------
 		# 初始化完成后日志输出
 		logging.debug(str('Initialization complete初始化完成:' +
 						  time.strftime('%Y/%m/%d*%H:%M:%S')))
@@ -182,27 +188,30 @@ class CalcFrame(GUI.Main):
 
 		Self_CMD(self, '初始化完成,日志已保存')
 
-
-		windows_info_window = wx.adv.NotificationMessage('RBS_Software Info')
-		windows_info_window.SetMessage(wx.GetOsDescription()
-										+'\n屏幕分辨率:' + str(wx.ClientDisplayRect())
-										+'\nversion:' + wx.version())
-		windows_info_window.Show()
+		if eval(is_push_info) == True:
+			windows_info_window = wx.adv.NotificationMessage('RBS_Software Info')
+			windows_info_window.SetMessage(wx.GetOsDescription()
+											+'\n屏幕分辨率:' + str(wx.ClientDisplayRect())
+											+'\nversion:' + wx.version())
+			windows_info_window.Show()
+		else:
+			pass
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(self.Size))
 		##wx.Bell() # 系统铃声
 
 		##wx.Shell() # Shell
 
-
-
+		
 	def Sacc(self, event):
 		'''
 		主界面背景图片绘制
 		'''
 		if setup == 1:
 			dc = event.GetDC()
-			dc.DrawBitmap(wx.Bitmap("./pictures/Background_winter.jpg"), 0, 25)
+			dc.Clear()
+			##dc.DrawColor('white')
+			dc.DrawBitmap(wx.Bitmap("./pictures/alena-aenami-out-of-time-1080p.jpg"), 0, 50)
 			##print(1)
 		else:
 			dc = event.GetDC()
@@ -238,14 +247,12 @@ class CalcFrame(GUI.Main):
 		'''
 		self_关闭程序
 		'''
-
 		'''
 		while self.threads: # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
 		'''
-
 		if self.taskBar.IsAvailable == True: # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
@@ -267,15 +274,19 @@ class CalcFrame(GUI.Main):
 
 		#销毁GUI
 		##self.Destroy()
+		##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
 		wx.CallAfter(sys.exit, 0)
 
 	def Ico(self, event):
 		'''
 		窗口最小化-事件触发
 		'''
-		print('窗口最小化:' + str(self.IsIconized()))
-		if self.IsIconized() == True:
-			self.Enable(False)
+		print('窗口最小化:' + str(self.IsShown()))
+		if self.IsShown() == True:
+			##self.SetShape(wx.Region())
+			##self.Enable(False)
+			##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
+			self.Hide()
 			'''
 			# 释放内存的一种方法,在这里不适用
 			del self # 删除变量
@@ -293,13 +304,15 @@ class CalcFrame(GUI.Main):
 			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
 			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick) # 左键双击托盘图标
 			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT) # 退出
-			self.taskBar.Bind(wx.EVT_MENU, self.OnTaskBarLeftDClick, id=self.MENU_SHOW) # 显示窗口
+			self.taskBar.Bind(wx.EVT_MENU, self.Ico, id=self.MENU_SHOW) # 显示窗口
 			self.taskBar.Bind(wx.EVT_MENU, self.Setting, id=self.MENU_SET) # 设置
 			self.taskBar.Bind(wx.EVT_MENU, self.About, id=self.MENU_ABOUT) # 关于
 
 
 		else:
-			self.Enable(True)
+			##self.Enable(True)
+			##self.ShowWithEffect(wx.SHOW_EFFECT_BLEND)
+			self.Show()
 			self.Net_Timer.Start(10000)
 			self.PFM_Timer.Start(3000)
 			self.PRAM_Timer.Start(60000)
@@ -332,7 +345,8 @@ class CalcFrame(GUI.Main):
 	def Cmd(self, event):
 		# 向控制台发送命令
 		##os.system("C:\WINDOWS\system32\cmd.exe")
-		wx.Shell('help')
+		##wx.Shell('C:\WINDOWS\system32\cmd.exe')
+		win32api.ShellExecute(0, 'open', 'C:\WINDOWS\system32\cmd.exe', '','',1)
 
 	def About(self, event):
 		# 打开<关于>界面
@@ -383,13 +397,21 @@ class CalcFrame(GUI.Main):
 			CMD(self, self.CMD_IN.GetValue())
 			self.CMD_IN.SetValue('')
 
+	def move_start(self, frame_pos):
+		print(frame_pos)
+		self.SetPosition(frame_pos)
+
 	def OnLeftDown(self, event):
-		print(1)
-		#print(self.ClientToScreen())
-		#self.Move(self.ClientToScreen())
+		thread = WorkerThread(self)
+		self.threads.append(thread)
+		thread.start()
 
 	def OnLeftUp(self, event):
-		pass
+		if self.threads:
+			self.threads[0].timeToQuit.set()
+			self.threads.remove(self.threads[0])
+		
+		print('退出线程')
 
 	def Change_Size(self, event):
 		print(self.GetSize())
@@ -530,7 +552,7 @@ class CalcFrame(GUI.Main):
 		try:
 			for pid in psutil.pids():
 				p = psutil.Process(pid)
-				if (p.name() == 'RBS_Software2021.exe'):
+				if p.name() == 'RBS_Software2021.exe':
 					process_lst.append(p)
 
 			for i in process_lst:
@@ -2265,7 +2287,6 @@ class FileDrop(wx.FileDropTarget):
 ###########################################################################
 # 窗口拖动处理Class
 # Window Move Class
-# !!!注意!!!此类方法已弃用
 ###########################################################################
 class WorkerThread(threading.Thread):
 	def __init__(self, frame):
@@ -2279,9 +2300,17 @@ class WorkerThread(threading.Thread):
 		x = self.system_mouse_pos[0] - self.frame.GetPosition()[0]
 		y = self.system_mouse_pos[1] - self.frame.GetPosition()[1]
 		while 1:
-			self.timeToQuit.wait(0.001)
+			self.timeToQuit.wait(0.01)
 			if self.timeToQuit.isSet():
 				break
+			##print(wx.GetMouseState())
+			##print(wx.MouseState.LeftIsDown(wx.GetMouseState()))
+			if wx.MouseState.LeftIsDown(wx.GetMouseState()) == False:
+				print('检测到鼠标拖动事件异步释放->删除线程')
+				wx.CallAfter(self.frame.OnLeftUp, None)
+
+				break
+
 			self.system_mouse_pos = win32api.GetCursorPos()
 			frame_pos_x = self.system_mouse_pos[0] - x
 			frame_pos_y = self.system_mouse_pos[1] - y
@@ -2307,8 +2336,11 @@ def main():
 	global Frame_Draw,Frame_SSC,Frame_College
 
 	global Frame_User,Frame_Setting,Frame_Plug_in,Frame_Probe
-
-	app = wx.App(False)  # GUI循环及前置设置
+	
+	cfg = configparser.ConfigParser()
+	cfg.read('./cfg/setting.cfg')
+	
+	app = wx.App(eval(cfg.get('window', 'sys_test')))# GUI循环及前置设置
 	frame = CalcFrame(None)
 
 	frame.Show(True)
@@ -2478,7 +2510,7 @@ def proc_exist(process_name):
 	is_exist = False
 	wmi = win32com.client.GetObject('winmgmts:')
 	processCodeCov = wmi.ExecQuery(
-		'select * from Win32_Process where name=\"%s\"' % (process_name))
+		'select * from Win32_Process where name=\"%s\"' % process_name)
 	if len(processCodeCov) > 0:
 		is_exist = True
 	return is_exist

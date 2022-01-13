@@ -18,7 +18,7 @@ def video_demo():
 	# 读入待检测的图像
 	# 0是代表摄像头编号，只有一个的话默认为0
 	capture = VideoCapture(0)
-	while (True):
+	while True:
 		ref, image = capture.read()
 		(H, W) = image.shape[:2]
 		# 得到 YOLO需要的输出层

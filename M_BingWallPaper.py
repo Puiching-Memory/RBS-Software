@@ -19,7 +19,7 @@ class CalcFrame(GUI_BingWallPaper.Main):
 
 		try:
 			for i in range(0,4):
-				print((i))
+				print(i)
 			picture_url_1 = "https://bing.ioliu.cn/v1/rand"
 			res = requests.get(picture_url_1, timeout=3600)
 			network = res.status_code

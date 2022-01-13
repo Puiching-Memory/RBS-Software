@@ -21,8 +21,6 @@ import win32com.client
 import win32gui
 import zipfile
 
-from wx.core import Frame
-
 import GUI_Preparation
 
 ##############################
@@ -34,6 +32,7 @@ class CalcFrame(GUI_Preparation.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_Preparation.Main.__init__(self, parent)
+		self.ShowWithEffect(wx.SHOW_EFFECT_SLIDE_TO_TOP)
 
 		size = self.GetSize()
 		path = wx.GraphicsRenderer.GetDefaultRenderer().CreatePath()
@@ -41,11 +40,11 @@ class CalcFrame(GUI_Preparation.Main):
 
 		self.SetShape(path)
 
-		if proc_exist('RBS_Software2021.exe') == 2:
+		if proc_exist('RBS_Software.exe') == 2:
 			print('PreParation:程序已启动-->退出')
 			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
 			self.Destroy()
-		elif proc_exist('RBS_Software2021.exe') == 1:
+		elif proc_exist('RBS_Software.exe') == 1:
 			print('PreParation:程序无冲突-->启动')
 		else:
 			print('PreParation:程序无冲突-->启动')
@@ -160,8 +159,8 @@ class CalcFrame(GUI_Preparation.Main):
 
 			wx.Sleep(1)
 
-			Frame_main.Show()
-			wx.CallAfter(self.Hide)
+			Frame_main.ShowWithEffect(wx.SHOW_EFFECT_BLEND)
+			wx.CallAfter(self.HideWithEffect, wx.SHOW_EFFECT_BLEND)
 			wx.CallAfter(self.Colour_timer.Stop)
 			print('Pre_Finish')
 
@@ -186,7 +185,10 @@ class CalcFrame(GUI_Preparation.Main):
 
 
 def main():
-	app = wx.App(False)
+	cfg = configparser.ConfigParser()
+	cfg.read('./cfg/setting.cfg')
+	
+	app = wx.App(eval(cfg.get('window', 'sys_test')))# GUI循环及前置设置
 	frame_Pre = CalcFrame(None)
 	frame_Pre.Show(True)
 	app.MainLoop()
@@ -197,7 +199,7 @@ def proc_exist(process_name):
 	is_exist = False
 	wmi = win32com.client.GetObject('winmgmts:')
 	processCodeCov = wmi.ExecQuery(
-		'select * from Win32_Process where name=\"%s\"' % (process_name))
+		'select * from Win32_Process where name=\"%s\"' % process_name)
 	Program_num = len(processCodeCov)
 
 	return Program_num

@@ -11,8 +11,6 @@ import wx
 import wx.xrc
 import wx.aui
 
-Save_Timer = 1000
-
 ###########################################################################
 ## Class Main
 ###########################################################################
@@ -39,18 +37,13 @@ class Main ( wx.Frame ):
 
 		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.m_staticText1 = wx.StaticText( self.m_panel1, wx.ID_ANY, u"主界面透明度:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText1 = wx.StaticText( self.m_panel1, wx.ID_ANY, u"主界面-透明度:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText1.Wrap( -1 )
 
 		wSizer1.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.TREY_slider = wx.Slider( self.m_panel1, wx.ID_ANY, 255, 10, 255, wx.DefaultPosition, wx.Size( 200,-1 ), wx.SL_BOTH|wx.SL_HORIZONTAL )
+		self.TREY_slider = wx.Slider( self.m_panel1, wx.ID_ANY, 255, 10, 255, wx.DefaultPosition, wx.Size( 200,-1 ), wx.SL_BOTH|wx.SL_LABELS )
 		wSizer1.Add( self.TREY_slider, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.TREY_text = wx.StaticText( self.m_panel1, wx.ID_ANY, u"255", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.TREY_text.Wrap( -1 )
-
-		wSizer1.Add( self.TREY_text, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_checkBox4 = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"失去焦点后半透明", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_checkBox4.Enable( False )
@@ -79,11 +72,16 @@ class Main ( wx.Frame ):
 
 		wSizer4.Add( self.m_choice1, 0, wx.ALL, 5 )
 
-		self.m_checkBox3 = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"启动后推送系统通知", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_checkBox3.SetValue(True)
-		self.m_checkBox3.Enable( False )
+		self.SYS_PUSHINFO = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"系统-推送系统通知", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.SYS_PUSHINFO.SetValue(True)
+		wSizer4.Add( self.SYS_PUSHINFO, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		wSizer4.Add( self.m_checkBox3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.FRAM_ROUND = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"主界面-圆角边框", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.FRAM_ROUND.SetValue(True)
+		wSizer4.Add( self.FRAM_ROUND, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.SYS_TEST = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"系统-调试模式", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer4.Add( self.SYS_TEST, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer4, 0, 0, 5 )
@@ -107,9 +105,13 @@ class Main ( wx.Frame ):
 		self.m_staticText4 = wx.StaticText( self.m_panel2, wx.ID_ANY, u"日志保存位置:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText4.Wrap( -1 )
 
+		self.m_staticText4.Enable( False )
+
 		wSizer2.Add( self.m_staticText4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.Log_File_picker = wx.DirPickerCtrl( self.m_panel2, wx.ID_ANY, u"./log/", u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		self.Log_File_picker.Enable( False )
+
 		wSizer2.Add( self.Log_File_picker, 0, wx.ALL, 5 )
 
 
@@ -131,16 +133,16 @@ class Main ( wx.Frame ):
 
 		wSizer3 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Fast_on_Box = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"跳过启动检查", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Fast_on_Box = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"启动-跳过文件检查", wx.DefaultPosition, wx.DefaultSize, 0 )
 		wSizer3.Add( self.Fast_on_Box, 0, wx.ALL, 5 )
 
-		self.m_checkBox2 = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"最小化后休眠", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox2 = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"系统-最小化后休眠", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_checkBox2.SetValue(True)
 		self.m_checkBox2.Enable( False )
 
 		wSizer3.Add( self.m_checkBox2, 0, wx.ALL, 5 )
 
-		self.m_checkBox5 = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"延长后台任务时钟刻", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox5 = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"系统-延长后台任务时钟刻", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_checkBox5.Enable( False )
 
 		wSizer3.Add( self.m_checkBox5, 0, wx.ALL, 5 )
@@ -157,9 +159,6 @@ class Main ( wx.Frame ):
 		bSizer5.Fit( self.m_panel3 )
 		self.m_notebook1.AddPage( self.m_panel3, u"性能", False )
 
-		self.Save_Timer = wx.Timer()
-		self.Save_Timer.SetOwner( self, Save_Timer )
-		self.Bar = self.CreateStatusBar( 3, wx.STB_SIZEGRIP, wx.ID_ANY )
 		self.m_panel4 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 600,40 ), wx.TAB_TRAVERSAL )
 		self.m_mgr.AddPane( self.m_panel4, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).CloseButton( False ).PaneBorder( False ).Movable( False ).Dock().Fixed().Layer( 1 ) )
 
@@ -182,7 +181,6 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.TREY_slider.Bind( wx.EVT_SCROLL, self.TREY )
 		self.Log_File_picker.Bind( wx.EVT_DIRPICKER_CHANGED, self.Log_path )
-		self.Bind( wx.EVT_TIMER, self.Auto_Save, id=Save_Timer )
 		self.M_Save.Bind( wx.EVT_BUTTON, self.Save )
 		self.M_Cancel.Bind( wx.EVT_BUTTON, self.Cancel )
 
@@ -199,9 +197,6 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Log_path( self, event ):
-		event.Skip()
-
-	def Auto_Save( self, event ):
 		event.Skip()
 
 	def Save( self, event ):

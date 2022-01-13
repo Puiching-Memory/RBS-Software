@@ -3,10 +3,8 @@
 ##############################
 import wx
 import configparser
-import time
 
 import GUI_Setting
-
 
 ##############################
 # GUI的函数桥接
@@ -18,29 +16,31 @@ class CalcFrame(GUI_Setting.Main):
 		# 定义主函数
 		GUI_Setting.Main.__init__(self, parent)
 
-		global cfg, TREY, log_path, fast_on
+		global cfg
 		cfg = configparser.ConfigParser()
-		cfg.read('./cfg/setting.cfg')
+		cfg.read('./cfg/setting.cfg', encoding='UTF-8')
 		TREY = cfg.get('window', 'transparency')
-		log_path = cfg.get('log', 'path')
+		SYS_PUSHINFO = cfg.get('window', 'is_push_info')
+		FRAM_ROUND = cfg.get('window', 'is_round')
+		SYS_TEST = cfg.get('window', 'sys_test')
 		fast_on = cfg.get('performance', 'fast_on')
 
-		start(self)
+		#print(eval(SYS_TEST))
 
+		#--------------------------------------------------
 
-		self.Bar.SetStatusWidths([200,1,1]) #Bar区域宽度-像素
-
-	def TREY(self, event):
-		self.TREY_text.SetLabel(str(self.TREY_slider.GetValue()))
-
-	def Auto_Save(self, event):
-		self.Bar.SetStatusText('自动保存时间:' + str(time.time()), 0)
-		save(self)
+		self.TREY_slider.SetValue(int(TREY))
+		self.SYS_PUSHINFO.SetValue(eval(SYS_PUSHINFO))
+		self.FRAM_ROUND.SetValue(eval(FRAM_ROUND))
+		self.SYS_TEST.SetValue(eval(SYS_TEST))
+		self.Fast_on_Box.SetValue(eval(fast_on))
 
 	def Close(self, event):
-		save(self)
-		self.Save_Timer.Stop()
-		self.Destroy()
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
 	def Save(self, event):
 		save(self)
@@ -62,20 +62,12 @@ def main():
 	frame.Show(True)
 	app.MainLoop()
 
-def start(self):
-	self.TREY_slider.SetValue(int(TREY))
-	self.TREY_text.SetLabel(TREY)
-	self.Log_File_picker.SetPath(log_path)
-
-	if fast_on == 'False':
-		self.Fast_on_Box.SetValue(False)
-	else:
-		self.Fast_on_Box.SetValue(True)
-
 def save(self):
 	cfg.set('window', 'transparency', str(self.TREY_slider.GetValue()))
-	cfg.set('log', 'path', self.Log_File_picker.GetPath())
 	cfg.set('performance', 'fast_on', str(self.Fast_on_Box.IsChecked()))
+	cfg.set('window', 'is_push_info', str(self.SYS_PUSHINFO.IsChecked()))
+	cfg.set('window', 'is_round', str(self.FRAM_ROUND.IsChecked()))
+	cfg.set('window', 'sys_test', str(self.SYS_TEST.IsChecked()))
 	cfg.write(open('./cfg/setting.cfg', 'w'))
 
 if __name__ == "__main__":

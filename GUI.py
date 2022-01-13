@@ -23,7 +23,7 @@ Time_Timer = 1004
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software CC2021", pos = wx.DefaultPosition, size = wx.Size( 750,410 ), style = wx.FRAME_SHAPED|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software", pos = wx.DefaultPosition, size = wx.Size( 750,410 ), style = wx.FRAME_SHAPED|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
@@ -746,6 +746,7 @@ class Main ( wx.Frame ):
 		self.B_Quit.Bind( wx.EVT_BUTTON, self.Quit )
 		self.B_Quit.Bind( wx.EVT_ENTER_WINDOW, self.H_QUT )
 		self.B_Quit.Bind( wx.EVT_LEAVE_WINDOW, self.L_QUT )
+		self.B_Quit.Bind( wx.EVT_RIGHT_DOWN, self.Ico )
 		self.G1.Bind( wx.EVT_BUTTON, self.G_1 )
 		self.G1.Bind( wx.EVT_ENTER_WINDOW, self.Class1 )
 		self.G1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave1 )
@@ -936,6 +937,7 @@ class Main ( wx.Frame ):
 
 	def L_QUT( self, event ):
 		event.Skip()
+
 
 	def G_1( self, event ):
 		event.Skip()
