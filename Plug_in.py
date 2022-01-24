@@ -99,11 +99,11 @@ class CalcFrame(GUI_Plug_in.Main):
 
 	def Change(self, event):
 		if self.B_Change.GetLabel() == '加载':
-			 name = self.T_Name.GetLabel()[3:]
-			 ##print(name)
-			 self.B_Change.SetLabel('卸载')
-			 list_main = open('./DATA/main/plug_in/List.txt', 'a')
-			 list_main.write(name + '\n')
+			name = self.T_Name.GetLabel()[3:]
+			##print(name)
+			self.B_Change.SetLabel('卸载')
+			list_main = open('./DATA/main/plug_in/List.txt', 'a')
+			list_main.write(name + '\n')
 		else:
 			name = self.T_Name.GetLabel()[3:]
 			self.B_Change.SetLabel('加载')

@@ -1,12 +1,11 @@
-#!/usr/bin/env python
-# --*--coding=utf-8--*--
-# pip install pybluez
+a = 'Success'
 
-import time
-import bluetooth
+try:
+    a = exec('print(1)')
 
-#列表，用于存放已搜索过的蓝牙名称
-alreadyFound = []
+except:
 
-devices = bluetooth.discover_devices(lookup_names=True)
-print(devices)
+    a = 'Error'
+
+finally:
+    print(a)

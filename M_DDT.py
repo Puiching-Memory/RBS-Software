@@ -25,11 +25,25 @@ class CalcFrame(GUI_DDT.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_DDT.Main.__init__(self, parent)
+
+		HOTKEY = wx.NewIdRef()
+
 		global keyboard, mouse, Click_times, wait
 		keyboard = Controller1()
 		mouse = Controller2()
 		Click_times = 0
 		wait = 3
+
+		self.RegisterHotKey(HOTKEY, wx.MOD_SHIFT, wx.WXK_DOWN)  # 注册热键
+		
+		self.Bind(wx.EVT_HOTKEY, self.hot_key, id=HOTKEY)  # 绑定热键事件（按alt+down键响应）
+
+	def hot_key(self, event):
+		print('检测到快捷键:' + str(event.GetKeyCode()))
+		key = int(event.GetKeyCode())
+
+		if key == 317: # ESC
+			self.Click(event)
 
 	def Hover(self, event):
 		with keyboard.pressed(Key.alt):
@@ -37,14 +51,16 @@ class CalcFrame(GUI_DDT.Main):
 			keyboard.release('p')
 
 	def Click(self, event):
-		if self.B_Click.GetLabel() == 'Click':
+		if self.B_Click.GetLabel() == '开始':
 			speed = self.speed.GetValue()
 			self.timer.Start(int(speed))
 			self.B_Click.SetLabel('Stop')
 		else:
 			self.timer.Stop()
-			self.B_Click.SetLabel('Click')
-	
+			self.B_Click.SetLabel('开始')
+			global wait
+			wait = 0
+
 	def tick(self, event):
 		global Click_times,wait
 		if wait <= (1000/self.speed.GetValue()) * self.wait.GetValue():
@@ -53,8 +69,15 @@ class CalcFrame(GUI_DDT.Main):
 			print(Click_times)
 			Click_times = Click_times + 1
 
-			mouse.press(Button.left)
-			mouse.release(Button.left)
+			if self.M_INPUT.GetValue() == 'self.left':
+				mouse.press(Button.left)
+				mouse.release(Button.left)
+			elif self.M_INPUT.GetValue() == 'self.right':
+				mouse.press(Button.right)
+				mouse.release(Button.right)
+			else:
+				keyboard.press(self.M_INPUT.GetValue())
+				keyboard.release(self.M_INPUT.GetValue())
 
 	def Attack(self, event):
 		attack(number = int(self.frequency.GetValue()), t = int(self.wait.GetValue()))

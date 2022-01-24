@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -37,12 +37,12 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.Plug_in_version, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		Version_choiseChoices = [ u"#100" ]
-		self.Version_choise = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,25 ), Version_choiseChoices, 0 )
-		self.Version_choise.SetSelection( 0 )
-		wSizer1.Add( self.Version_choise, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.T_Version = wx.StaticText( self, wx.ID_ANY, u"V200", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_Version.Wrap( -1 )
 
-		self.B_Change = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
+		wSizer1.Add( self.T_Version, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_Change = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 100,-1 ), 0 )
 		self.B_Change.Enable( False )
 
 		wSizer1.Add( self.B_Change, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -96,7 +96,7 @@ class Main ( wx.Frame ):
 		pass
 
 
-	# Virtual event handlers, overide them in your derived class
+	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
 		event.Skip()
 

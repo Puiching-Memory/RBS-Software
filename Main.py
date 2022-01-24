@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-# Power by ZK2022
-# @Puiching Memory™
+# writer: China_ZhangKai
+# @Puiching Memory (github)
 # python version: 3.8.10
+# IDLE : VSCode
 #  ____  ____ ____       ____         __ _
 # |  _ \| __ ) ___|     / ___|  ___  / _| |___      ____ _ _ __ ___
 # | |_) |  _ \___ \ ____\___ \ / _ \| |_| __\ \ /\ / / _` | '__/ _ \
@@ -12,14 +13,12 @@
 #
 ###########################################################################
 #
-#	↓↓↓↓↓格式声明↓↓↓↓↓
-#	1.开头使用两个##注释掉的代码可以正常运行,但因特别原因不再使用
-#	2.使用一个#注释掉的为正常注释
-#	3.少量注释中使用箭头↓等特殊字符,这可能指的是所指方向的一行或一个段落的代码
+#	↓↓↓↓↓ 格式声明 ↓↓↓↓↓ || ↓↓↓↓↓ format statement ↓↓↓↓
+#	1.使用两个##注释掉的为代码,但因特别原因不再使用
+#	2.使用一个#注释掉的为注释
+#	3.def()的下一行使用三引号'''的为注释
 #
 ###########################################################################
-
-# ↓↓↓↓↓ import ↓↓↓↓↓
 
 # 功能库
 import M_Roll  # 随机数生成器
@@ -64,7 +63,16 @@ import Probe  # 探针
 # API
 import WeaterAPI  # 天气API
 
-# 辅助功能库
+# RBS_Code
+import RBS_PLC
+
+# 核心库
+import wx, wx.adv, wx.svg
+##from wxgl.scene import WxGLScene
+import GUI
+import configparser  # 设置文件(.cfg)库
+import logging.handlers  # 日志库
+import threading  # 多线程
 import sys
 import os
 import win32com.client
@@ -76,19 +84,9 @@ import random
 ##import subprocess
 ##import gc # 内存库
 
-# 核心库
-import wx, wx.adv, wx.svg
-##from wxgl.scene import WxGLScene
-import GUI
-import configparser  # 设置文件(.cfg)库
-import logging.handlers  # 日志库
-import threading  # 多线程
-
-
 ###########################################################################
 # Class Main
 ###########################################################################
-
 
 class CalcFrame(GUI.Main):
 	# ↓↓↓↓↓ 定义wx.ID ↓↓↓↓↓
@@ -157,16 +155,6 @@ class CalcFrame(GUI.Main):
 		self.SetDropTarget(FileDrop(self))  # 声明:接受文件拖放
 		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))  # 设置GUI图标(左上角)
 
-		''' 系统状态栏(弃用方案)
-		self.Bar.SetStatusWidths([-5,-295,-5,-250,-5,-170]) #区域宽度比列
-		self.Bar.SetStatusText(self.Space1.GetLabel(), 0)
-		self.Bar.SetStatusText(self.Bottom_Bar1.GetLabel(), 1)
-		self.Bar.SetStatusText(self.Space2.GetLabel(), 2)
-		self.Bar.SetStatusText(self.Bottom_Bar2.GetLabel(), 3)
-		self.Bar.SetStatusText(self.Space3.GetLabel(), 4)
-		self.Bar.SetStatusText(self.Bottom_Bar3.GetLabel(), 5)
-		##self.Bar.SetStatusStyles(self, 1)
-		'''
 		start(self)  # 初始化界面布局函数(纯操作,无计算)
 
 		if last != '-1':
@@ -198,10 +186,6 @@ class CalcFrame(GUI.Main):
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(
 			self.Size))
-
-	##wx.Bell() # 系统铃声
-
-	##wx.Shell() # Shell
 
 	def Sacc(self, event):
 		"""
@@ -246,12 +230,11 @@ class CalcFrame(GUI.Main):
 		"""
 		self_关闭程序
 		"""
-		'''
 		while self.threads: # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
-		'''
+
 		if self.taskBar.IsAvailable:  # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
@@ -426,35 +409,21 @@ class CalcFrame(GUI.Main):
 			print(str(Plug_in_list[i]).replace('\n', ''))
 
 	def Plug_in_run(self, event):
-		pass
 		path = './plug-in/' + self.Plug_in_box.GetString(self.Plug_in_box.GetSelection())
 		print(path)
 		entrance = open(path + '/entrance.txt')
 		entrance = entrance.readlines()[0]
 
 		path = os.path.abspath(path + '/' + entrance)
-		# ----------------------------------------------------------------
-		'''可读取数据的调用方式
-		bat = subprocess.Popen("cmd.exe /c" + path,
-								stdout=subprocess.PIPE,
-								stderr=subprocess.STDOUT,
-								encoding=None,
-								shell=False)
-		curline = bat.stdout.readline()
-		while (curline != b''):
-			return_data = curline
-			print(curline)
-			curline = bat.stdout.readline()
 
-		bat.wait()
+		print('尝试执行插件:' + path)
+		Self_CMD(self,'尝试执行插件:' + path)
 
-		print(bat.returncode)
-		if bat.returncode == 0:
-			print('bat -> Python:运行成功')
-		'''
-		# -----------------------------------------------------------------
-
-		os.system('start ' + path)
+		for line in open(path,"r",encoding='utf-8'):
+			line = line.replace('\n', '')
+			print(line)
+			
+			exec(line)
 
 	def Hot_Key_Down(self, event):
 		print('检测到快捷键:' + str(event.GetKeyCode()))
@@ -3265,12 +3234,12 @@ def BUT_CLFN(self, num):
 def Self_CMD(self, info):
 	"""
 	向程序自带控制台输入信息
-	info输入要求:str
+	info输入要求:str类型
 	"""
 	if self.CMD_OUT.GetValue() == '':
-		self.CMD_OUT.SetValue('>>>' + time.strftime('%H:%M:%S') + ':' + info)
+		self.CMD_OUT.write('>>>' + time.strftime('%H:%M:%S') + ':' + info)
 	else:
-		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
+		self.CMD_OUT.write('\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
 
 
 def CMD(self, info):
@@ -3295,6 +3264,8 @@ def CMD(self, info):
 	elif info == 'help' or info == '?':
 		self.CMD_OUT.SetValue(
 			self.CMD_OUT.GetValue() + '\n' + '>>>Help:内置CMD程序版本:021.09.04\n可使用的命令:\nhelp\nquit\ntime\nrandom\nNet_Check\nSound_Check')
+	elif info == 'RBS_PLC_1' or info == 'rbsplc1':
+		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>RBS_PLC:' + str(RBS_PLC.get_desktop()))
 	else:
 		self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
