@@ -20,7 +20,6 @@ class CalcFrame(GUI_Plug_in.Main):
 		plug_in_list = []
 		plug_in_list.append(os.listdir('./plug-in'))
 		plug_in_list = plug_in_list[0]
-		print(plug_in_list)
 
 		check_list = []
 		check_list.extend(plug_in_list)
@@ -28,7 +27,7 @@ class CalcFrame(GUI_Plug_in.Main):
 		for i in range(0, len(plug_in_list)):
 			sigle_str = str(plug_in_list[i])
 			if sigle_str.find('.') != -1:
-				print('不合规范的文件:' + str(plug_in_list[i]))
+				print('不合规范的插件文件:' + str(plug_in_list[i]))
 				del check_list[i]
 
 		plug_in_list = []

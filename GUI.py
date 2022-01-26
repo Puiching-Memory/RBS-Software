@@ -582,60 +582,12 @@ class Main ( wx.Frame ):
 
 		bSizer_main.Add( wSizer_C, 0, 0, 5 )
 
-		bSizer_ST = wx.BoxSizer( wx.VERTICAL )
+		self.Spacer_M = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,330 ), 0 )
+		self.Spacer_M.Wrap( -1 )
 
-		self.Space_topic = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,80 ), 0 )
-		self.Space_topic.Wrap( -1 )
+		self.Spacer_M.Hide()
 
-		bSizer_ST.Add( self.Space_topic, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.Topic = wx.StaticText( self, wx.ID_ANY, u"< RBS Software >", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.Topic.Wrap( -1 )
-
-		self.Topic.SetFont( wx.Font( 20, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
-		self.Topic.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-
-		bSizer_ST.Add( self.Topic, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.Sub1 = wx.StaticText( self, wx.ID_ANY, u"Power by ZK2021", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.Sub1.Wrap( -1 )
-
-		self.Sub1.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-
-		bSizer_ST.Add( self.Sub1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		wSizer11 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.Fast = wx.Button( self, wx.ID_ANY, u"NONE", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		self.Fast.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Fast.SetBackgroundColour( wx.Colour( 255, 128, 0 ) )
-
-		wSizer11.Add( self.Fast, 0, wx.ALL, 5 )
-
-		self.Line_Last = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_VERTICAL )
-		wSizer11.Add( self.Line_Last, 0, wx.EXPAND |wx.ALL, 5 )
-
-		self.Fast_Star1 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast_Star1, 0, wx.ALL, 5 )
-
-		self.Fast_Star2 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast_Star2, 0, wx.ALL, 5 )
-
-		self.Fast_Star3 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
-		wSizer11.Add( self.Fast_Star3, 0, wx.ALL, 5 )
-
-
-		bSizer_ST.Add( wSizer11, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.Sub2 = wx.StaticText( self, wx.ID_ANY, u"\n通过快速启动按钮打开工具,或点击顶部分区标签开始", wx.DefaultPosition, wx.Size( -1,20 ), 0 )
-		self.Sub2.Wrap( -1 )
-
-		self.Sub2.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
-
-		bSizer_ST.Add( self.Sub2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-
-		bSizer_main.Add( bSizer_ST, 1, wx.EXPAND, 5 )
+		bSizer_main.Add( self.Spacer_M, 0, wx.ALL, 5 )
 
 		wSizer_BT = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -828,10 +780,6 @@ class Main ( wx.Frame ):
 		self.B_Side_Refresh.Bind( wx.EVT_BUTTON, self.Plug_in_refresh )
 		self.B_Side_Run.Bind( wx.EVT_BUTTON, self.Plug_in_run )
 		self.Push.Bind( wx.EVT_BUTTON, self.CMD_Enter )
-		self.Fast.Bind( wx.EVT_BUTTON, self.Fast_on )
-		self.Fast_Star1.Bind( wx.EVT_BUTTON, self.FStar1 )
-		self.Fast_Star2.Bind( wx.EVT_BUTTON, self.FStar2 )
-		self.Fast_Star3.Bind( wx.EVT_BUTTON, self.FStar3 )
 		self.Space1.Bind( wx.EVT_BUTTON, self.Space1_Change )
 		self.Space2.Bind( wx.EVT_BUTTON, self.Space2_Change )
 		self.Bottom_Bar2.Bind( wx.EVT_BUTTON, self.BT2 )
@@ -1126,18 +1074,6 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def CMD_Enter( self, event ):
-		event.Skip()
-
-	def Fast_on( self, event ):
-		event.Skip()
-
-	def FStar1( self, event ):
-		event.Skip()
-
-	def FStar2( self, event ):
-		event.Skip()
-
-	def FStar3( self, event ):
 		event.Skip()
 
 	def Space1_Change( self, event ):

@@ -165,7 +165,7 @@ def load(self):
 	line5 = excel.row_values(rowx=4, start_colx=1)
 	line6 = excel.row_values(rowx=5, start_colx=1)
 
-	print(line1, line2, line3, line4, line5)
+	##print(line1, line2, line3, line4, line5)
 
 	X = -1
 	Y = 0

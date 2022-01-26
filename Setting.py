@@ -18,7 +18,7 @@ class CalcFrame(GUI_Setting.Main):
 
 		global cfg
 		cfg = configparser.ConfigParser()
-		cfg.read('./cfg/setting.cfg', encoding='UTF-8')
+		cfg.read('./cfg/main.cfg', encoding='UTF-8')
 		TREY = cfg.get('window', 'transparency')
 		SYS_PUSHINFO = cfg.get('window', 'is_push_info')
 		FRAM_ROUND = cfg.get('window', 'is_round')
@@ -47,7 +47,6 @@ class CalcFrame(GUI_Setting.Main):
 		print('save')
 	
 	def Cancel(self, event):
-		self.Save_Timer.Stop()
 		self.Destroy()
 		
 ##############################
@@ -68,7 +67,7 @@ def save(self):
 	cfg.set('window', 'is_push_info', str(self.SYS_PUSHINFO.IsChecked()))
 	cfg.set('window', 'is_round', str(self.FRAM_ROUND.IsChecked()))
 	cfg.set('window', 'sys_test', str(self.SYS_TEST.IsChecked()))
-	cfg.write(open('./cfg/setting.cfg', 'w'))
+	cfg.write(open('./cfg/main.cfg', 'w'))
 
 if __name__ == "__main__":
 	main()

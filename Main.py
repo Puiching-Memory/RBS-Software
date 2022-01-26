@@ -68,7 +68,6 @@ import RBS_PLC
 
 # 核心库
 import wx, wx.adv, wx.svg
-##from wxgl.scene import WxGLScene
 import GUI
 import configparser  # 设置文件(.cfg)库
 import logging.handlers  # 日志库
@@ -97,24 +96,21 @@ class CalcFrame(GUI.Main):
 
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent)  # 初始化GUI
+		
 		self.threads = []
 
 		# ↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
-		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, last, cfg, screen_size_x, screen_size_y
+		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, cfg
 		cfg = configparser.ConfigParser()  # 读取设置文件
 
-		cfg.read('./cfg/setting.cfg')
+		cfg.read('./cfg/main.cfg')
 		transparent = cfg.get('window', 'transparency')
 		is_push_info = cfg.get('window', 'is_push_info')
 		is_round = cfg.get('window', 'is_round')
-
-		cfg.read('./cfg/main.cfg')
-		last = cfg.get('History', 'LAST')
-		Main_State = cfg.get('History', 'MAINSTATE')
 		version = cfg.get('main', 'VERSION')
-		screen_size_x = int(cfg.get('screen', 'size_x'))
-		screen_size_y = int(cfg.get('screen', 'size_y'))
 		Is_complete = cfg.get('Check', 'Is_complete')
+
+		Main_State = 0
 
 		Log()  # 初始化LOG设置
 		logging.debug('Document integrity check文件完整性检查:' + Is_complete)
@@ -127,7 +123,7 @@ class CalcFrame(GUI.Main):
 		Plug_in_list = Plug_in_list.readlines()
 		for i in range(0, len(Plug_in_list)):
 			self.Plug_in_box.Append(str(Plug_in_list[i]).replace('\n', ''))
-			print(str(Plug_in_list[i]).replace('\n', ''))
+			print('载入插件',str(Plug_in_list[i]).replace('\n', ''))
 		# ------------------------------
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = -1
@@ -156,13 +152,6 @@ class CalcFrame(GUI.Main):
 		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))  # 设置GUI图标(左上角)
 
 		start(self)  # 初始化界面布局函数(纯操作,无计算)
-
-		if last != '-1':
-			self.Fast.SetLabel(last_list(int(Main_State), int(last)))
-
-		if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
-			self.Fast.SetBackgroundColour(
-				wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
 		self.SetTransparent(int(transparent))  # 设置窗口透明度
 		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
@@ -194,8 +183,7 @@ class CalcFrame(GUI.Main):
 		if setup == 1:
 			dc = event.GetDC()
 			dc.Clear()
-			##dc.DrawColor('white')
-			dc.DrawBitmap(wx.Bitmap("./pictures/alena-aenami-out-of-time-1080p.jpg"), 0, 50)
+			dc.DrawBitmap(wx.Bitmap("./pictures/alena-aenami-out-of-time-1080p.jpg"), 0, 50, useMask=True)
 		##print(1)
 		else:
 			dc = event.GetDC()
@@ -214,12 +202,6 @@ class CalcFrame(GUI.Main):
 		if self.taskBar.IsAvailable:  # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
-		cfg.read('./cfg/main.cfg')
-		cfg.set('History', 'LAST', str(FUN_State))
-		cfg.set('History', 'MAINSTATE', str(Main_State))
-		cfg.set('History', 'COLOR', str(
-			self.Bottom_Bar1.GetBackgroundColour()))
-		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(
 			str('windows quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
@@ -238,12 +220,6 @@ class CalcFrame(GUI.Main):
 		if self.taskBar.IsAvailable:  # 移除托盘图标
 			self.taskBar.RemoveIcon()
 
-		cfg.read('./cfg/main.cfg')
-		cfg.set('History', 'LAST', str(FUN_State))
-		cfg.set('History', 'MAINSTATE', str(Main_State))
-		cfg.set('History', 'COLOR', str(
-			self.Bottom_Bar1.GetBackgroundColour()))
-		cfg.write(open('./cfg/main.cfg', 'w'))
 		# 日志输出
 		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
 
@@ -2308,7 +2284,7 @@ def main():
 	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
 	cfg = configparser.ConfigParser()
-	cfg.read('./cfg/setting.cfg')
+	cfg.read('./cfg/main.cfg')
 
 	app = wx.App(eval(cfg.get('window', 'sys_test')))  # GUI循环及前置设置
 	frame = CalcFrame(None)
@@ -2466,7 +2442,7 @@ def Log():
 	""" Log日志输出 """
 	cfg = configparser.ConfigParser()  # 读取设置文件
 	cfg.read('./cfg/setting.cfg')
-	log_place = cfg.get('log', 'path')
+	log_place = './log/'
 
 	output_dir = log_place  # 定义文件夹位置(不区分大小写)
 	log_name = '{}.log'.format(
@@ -2562,17 +2538,10 @@ def start(self):
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
 		self.Line3.Show(buer)
-		self.Line_Last.Show(False)
 		self.Space_left.Show(buer)
 
-		self.Space_topic.Show(False)
-		self.Topic.Show(False)
-		self.Sub1.Show(False)
-		self.Sub2.Show(False)
-		self.Fast.Show(False)
-		self.Fast_Star1.Show(False)
-		self.Fast_Star2.Show(False)
-		self.Fast_Star3.Show(False)
+		self.Spacer_M.Show(False)
+
 		resize(self)
 		self.SetBackgroundColour('White')
 
@@ -2641,13 +2610,11 @@ def start(self):
 		self.Line1.Show(buer)
 		self.Line2.Show(buer)
 		self.Line3.Show(buer)
-		self.Line_Last.Show(True)
 		self.Space_left.Show(buer)
 
-		setup = 1
+		self.Spacer_M.Show(True)
 
-	elif setup == 2:
-		return
+		setup = 1
 
 
 def Home(self):
@@ -2656,11 +2623,6 @@ def Home(self):
 	"""
 	global setup, Main_State, colour_Hover
 	colour_Hover = '#A65F00'
-
-	cfg.set('History', 'LAST', str(FUN_State))
-	cfg.set('History', 'MAINSTATE', str(Main_State))
-	cfg.set('History', 'COLOR', str(self.Bottom_Bar1.GetBackgroundColour()))
-	cfg.write(open('./cfg/main.cfg', 'w'))
 
 	buer = False
 	self.T_F1.Show(buer)
@@ -2726,17 +2688,7 @@ def Home(self):
 	self.Line1.Show(buer)
 	self.Line2.Show(buer)
 	self.Line3.Show(buer)
-	self.Line_Last.Show(True)
 	self.Space_left.Show(buer)
-
-	self.Space_topic.Show(True)
-	self.Topic.Show(True)
-	self.Sub1.Show(True)
-	self.Sub2.Show(True)
-	self.Fast.Show(True)
-	self.Fast_Star1.Show(True)
-	self.Fast_Star2.Show(True)
-	self.Fast_Star3.Show(True)
 
 	botm = wx.Colour(255, 201, 60)
 	top = wx.Colour(242, 171, 57)
@@ -2762,20 +2714,9 @@ def Home(self):
 
 	self.Weather.SetBackgroundColour(top)
 
-	self.Fast.SetLabel(str(FUN_State))
-
 	self.Note.SetLabel('Welcome to RBS_Software')
 
 	Colour_clean(self)
-
-	if FUN_State != -1:
-		self.Fast.SetLabel(last_list(Main_State, FUN_State))
-	else:
-		self.Fast.SetLabel('NONE')
-
-	if cfg.get('History', 'COLOR') != 'NONE' and tuple(eval(cfg.get('History', 'COLOR'))) != (255, 255, 255, 255):
-		self.Fast.SetBackgroundColour(
-			wx.Colour(tuple(eval(cfg.get('History', 'COLOR')))))
 
 	Main_State = 0
 	setup = 1
@@ -2788,8 +2729,8 @@ def resize(self):
 	通过更改窗口大小触发-->界面刷新
 	(这种刷新有别于一般的Refresh,可以让错位的子项复位)
 	"""
-	self.SetSize(screen_size_x + 1, screen_size_y)
-	self.SetSize(screen_size_x, screen_size_y)
+	self.SetSize(750 + 1, 410)
+	self.SetSize(750, 410)
 
 
 def Function_icon(self, Internet1, Internet2, Internet3, Internet4, LocalFile1, LocalFile2, LocalFile3, LocalFile4):

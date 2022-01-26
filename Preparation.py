@@ -55,7 +55,7 @@ class CalcFrame(GUI_Preparation.Main):
 		global cfg
 		# 初始化设置
 		cfg = configparser.ConfigParser()# 读取设置文件
-		cfg.read('./cfg/setting.cfg')
+		cfg.read('./cfg/main.cfg')
 		fast_setup = cfg.get('performance', 'fast_on')
 
 		cfg.read('./cfg/main.cfg')
@@ -186,7 +186,7 @@ class CalcFrame(GUI_Preparation.Main):
 
 def main():
 	cfg = configparser.ConfigParser()
-	cfg.read('./cfg/setting.cfg')
+	cfg.read('./cfg/main.cfg')
 	
 	app = wx.App(eval(cfg.get('window', 'sys_test')))# GUI循环及前置设置
 	frame_Pre = CalcFrame(None)
