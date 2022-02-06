@@ -2,8 +2,6 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import socket
-requests.adapters.DEFAULT_RETRIES = 10
-
 
 def get_address():
     ip = socket.gethostbyname(socket.getfqdn(socket.gethostname()))
@@ -96,10 +94,7 @@ def Day3_Weather():
     wind_speed3 = day3['wind_speed']
     wind_scale3 = day3['wind_scale']
     humidity3 = day3['humidity']
-
-    # return low3, high3
-    # print(data)
-    #print(update, day1, high1)
+    
     return date1, date2, date3
 
 if __name__ == "__main__":

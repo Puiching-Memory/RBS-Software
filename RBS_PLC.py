@@ -7,12 +7,15 @@ from time import sleep
 from shutil import copytree, move
 from psutil import disk_partitions
 
-def get_desktop():
+def get_desktop_dir(format:None) -> str:
+	"""
+	获取桌面路径
+	"""
 	key =win32api.RegOpenKey(win32con.HKEY_CURRENT_USER,r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders',0,win32con.KEY_READ)
 	return win32api.RegQueryValueEx(key,'Desktop')[0]
 
 def make_folder():
-	Dpath = get_desktop()
+	Dpath = get_desktop_dir()
 
 	local_time = time.strftime("%Y-%m-%d", time.localtime())
 	print(local_time)
@@ -32,10 +35,10 @@ def make_folder():
 			print('副文件夹已存在:' + Dpath + '/' + i + '/' + local_time)
 
 def Cache_file():
-	path_xml = get_desktop()
+	path_xml = get_desktop_dir()
 	filelist = os.listdir(path_xml)
-	path1 = get_desktop()
-	path2 = get_desktop() + '/数据缓存/'
+	path1 = get_desktop_dir()
+	path2 = get_desktop_dir() + '/数据缓存/'
 
 	for type in ['.xls','.xlsx','.docx','.pptx']:
 		for files in filelist:
@@ -75,29 +78,4 @@ def move_U_to_desk():
 				print('---------')
 
 if __name__ == "__main__":
-	show_str = '''
-	RBS_PLC V2
-	power by ZK2021
-	功能选择:
-	1:返回桌面路径
-	2:创建文件夹
-	3:桌面文件整理
-	4:监听U盘插入并拷贝文件到本地
-	'''
-
-	input_comman = input(show_str)
-
-	if input_comman == '1':
-		Dpath = get_desktop()
-		print(Dpath)
-	elif input_comman == '2':
-		make_folder()
-		print('Finish')
-	elif input_comman == '3':
-		Cache_file()
-	elif input_comman == '4':
-		move_U_to_desk()
-	else:
-		print('未知的输入')
-
-	os.system('pause')
+	print('RBS_PLC // Version = 0.0.1')

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct 26 2018)
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO *NOT* EDIT THIS FILE!
@@ -9,7 +9,6 @@
 
 import wx
 import wx.xrc
-import wx.richtext
 
 ###########################################################################
 ## Class Main
@@ -18,23 +17,32 @@ import wx.richtext
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Update", pos = wx.DefaultPosition, size = wx.Size( 800,450 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Performance monitor", pos = wx.DefaultPosition, size = wx.Size( 500,500 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_richText1 = wx.richtext.RichTextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0|wx.VSCROLL|wx.HSCROLL|wx.NO_BORDER|wx.WANTS_CHARS )
-		bSizer2.Add( self.m_richText1, 1, wx.EXPAND |wx.ALL, 5 )
-
 
 		self.SetSizer( bSizer2 )
 		self.Layout()
+		self.PFM = wx.Timer()
+		self.PFM.SetOwner( self, wx.ID_ANY )
+		self.PFM.Start( 1000 )
+
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.Bind( wx.EVT_TIMER, self.PFM_Tick, id=wx.ID_ANY )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def PFM_Tick( self, event ):
+		event.Skip()
 
 

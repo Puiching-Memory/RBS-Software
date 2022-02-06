@@ -2,7 +2,7 @@
 # import
 ##############################
 import wx
-from zhconv import convert
+import zhconv
 
 import GUI_Traditional_Chinese
 
@@ -15,20 +15,17 @@ class CalcFrame(GUI_Traditional_Chinese.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_Traditional_Chinese.Main.__init__(self, parent)
+		zhconv.loaddict('.\DATA\Traditional_Chinese\zhcdict.json')
 
 	def Simple( self, event ):
-		self.input2.SetValue(convert(self.input1.GetValue(), 'zh-hant'))
+		self.input2.SetValue(zhconv.convert(self.input1.GetValue(), 'zh-hant'))
 		#print(convert(self.input1.GetValue(), 'zh-hant'))
 
 	def Tra( self, event ):
-		self.input1.SetValue(convert(self.input2.GetValue(), 'zh-cn'))
+		self.input1.SetValue(zhconv.convert(self.input2.GetValue(), 'zh-cn'))
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 		
 ##############################
 # 主函数

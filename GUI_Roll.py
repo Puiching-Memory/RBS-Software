@@ -17,106 +17,153 @@ import wx.xrc
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"ROLL V3", pos = wx.DefaultPosition, size = wx.Size( 500,400 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"ROLL V4", pos = wx.DefaultPosition, size = wx.Size( 500,400 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		bSizer1 = wx.BoxSizer( wx.VERTICAL )
+		bSizer2 = wx.BoxSizer( wx.VERTICAL )
 
-		self.T_Top = wx.StaticText( self, wx.ID_ANY, u"随机数生成器", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.T_Top.Wrap( -1 )
+		self.m_notebook1 = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NB_FIXEDWIDTH )
+		self.A = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
-		self.T_Top.SetFont( wx.Font( 15, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		bSizer1.Add( self.T_Top, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.A_T_MIN = wx.StaticText( self.A, wx.ID_ANY, u"最小值", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.A_T_MIN.Wrap( -1 )
 
-		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+		wSizer5.Add( self.A_T_MIN, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.T_1 = wx.StaticText( self, wx.ID_ANY, u"最小值:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.T_1.Wrap( -1 )
+		self.A_MIN = wx.SpinCtrl( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, -999999, 999999, 1 )
+		wSizer5.Add( self.A_MIN, 0, wx.ALL, 5 )
 
-		wSizer1.Add( self.T_1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.A_T_MAX = wx.StaticText( self.A, wx.ID_ANY, u"最大值", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.A_T_MAX.Wrap( -1 )
 
-		self.MIN = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, -999999, 999999, 0 )
-		wSizer1.Add( self.MIN, 0, wx.ALL, 5 )
+		wSizer5.Add( self.A_T_MAX, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.T_2 = wx.StaticText( self, wx.ID_ANY, u"最大值:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.T_2.Wrap( -1 )
-
-		wSizer1.Add( self.T_2, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.MAX = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, -999999, 999999, 10 )
-		wSizer1.Add( self.MAX, 0, wx.ALL, 5 )
-
-		self.T_3 = wx.StaticText( self, wx.ID_ANY, u"个数:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.T_3.Wrap( -1 )
-
-		wSizer1.Add( self.T_3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.NUM = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 100,-1 ), wx.SP_ARROW_KEYS, 1, 999999, 1 )
-		wSizer1.Add( self.NUM, 0, wx.ALL, 5 )
+		self.A_MAX = wx.SpinCtrl( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, -999999, 999999, 10 )
+		wSizer5.Add( self.A_MAX, 0, wx.ALL, 5 )
 
 
-		bSizer1.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		bSizer3.Add( wSizer5, 0, 0, 5 )
 
-		wSizer2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Retry = wx.CheckBox( self, wx.ID_ANY, u"重复", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.Retry.SetValue(True)
-		wSizer2.Add( self.Retry, 0, wx.ALL, 5 )
+		self.A_T_Amount = wx.StaticText( self.A, wx.ID_ANY, u"数量", wx.DefaultPosition, wx.Size( 35,-1 ), 0 )
+		self.A_T_Amount.Wrap( -1 )
 
-		self.Enter = wx.CheckBox( self, wx.ID_ANY, u"换行", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer2.Add( self.Enter, 0, wx.ALL, 5 )
+		wSizer6.Add( self.A_T_Amount, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-
-		bSizer1.Add( wSizer2, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.B_Run = wx.Button( self, wx.ID_ANY, u"生成", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.B_Run.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
-
-		bSizer1.Add( self.B_Run, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.T_GO = wx.StaticText( self, wx.ID_ANY, u"-----", wx.DefaultPosition, wx.Size( 100,150 ), wx.ALIGN_CENTER_HORIZONTAL )
-		self.T_GO.Wrap( -1 )
-
-		self.T_GO.SetFont( wx.Font( 25, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
-		self.T_GO.Hide()
-
-		bSizer1.Add( self.T_GO, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.B_GO = wx.Button( self, wx.ID_ANY, u"GO!", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.B_GO.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
-		self.B_GO.Hide()
-
-		bSizer1.Add( self.B_GO, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		self.Out = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 500,170 ), wx.TE_DONTWRAP|wx.TE_MULTILINE|wx.TE_READONLY )
-		bSizer1.Add( self.Out, 0, wx.ALL, 5 )
-
-		wSizer3 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.B_Single = wx.Button( self, wx.ID_ANY, u"点名模式", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer3.Add( self.B_Single, 0, wx.ALL, 5 )
-
-		self.B_WTF = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer3.Add( self.B_WTF, 0, wx.ALL, 5 )
+		self.A_Amount = wx.SpinCtrl( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 1, 999, 1 )
+		wSizer6.Add( self.A_Amount, 0, wx.ALL, 5 )
 
 
-		bSizer1.Add( wSizer3, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		bSizer3.Add( wSizer6, 0, 0, 5 )
+
+		wSizer7 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.m_checkBox3 = wx.CheckBox( self.A, wx.ID_ANY, u"重复", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_checkBox3.Enable( False )
+
+		wSizer7.Add( self.m_checkBox3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.A_AutoLineFeed = wx.CheckBox( self.A, wx.ID_ANY, u"自动换行", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.A_AutoLineFeed.SetValue(True)
+		wSizer7.Add( self.A_AutoLineFeed, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.A_T_Separator = wx.StaticText( self.A, wx.ID_ANY, u"分隔符：", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.A_T_Separator.Wrap( -1 )
+
+		self.A_T_Separator.Enable( False )
+
+		wSizer7.Add( self.A_T_Separator, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		A_SeparatorChoices = [ u"\\", u"|", u",", u"-", u"_", u" " ]
+		self.A_Separator = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.Size( 50,-1 ), A_SeparatorChoices, 0 )
+		self.A_Separator.SetSelection( 0 )
+		self.A_Separator.Enable( False )
+
+		wSizer7.Add( self.A_Separator, 0, wx.ALL, 5 )
+
+		self.A_B_RUN = wx.Button( self.A, wx.ID_ANY, u"生成", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer7.Add( self.A_B_RUN, 0, wx.ALL, 5 )
 
 
-		self.SetSizer( bSizer1 )
+		bSizer3.Add( wSizer7, 0, 0, 5 )
+
+		self.A_DATA = wx.TextCtrl( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 500,200 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer3.Add( self.A_DATA, 0, wx.ALL, 5 )
+
+
+		self.A.SetSizer( bSizer3 )
+		self.A.Layout()
+		bSizer3.Fit( self.A )
+		self.m_notebook1.AddPage( self.A, u"随机整数", True )
+		self.B = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer4 = wx.BoxSizer( wx.VERTICAL )
+
+		wSizer51 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.B_T_MIN = wx.StaticText( self.B, wx.ID_ANY, u"最小值", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_T_MIN.Wrap( -1 )
+
+		wSizer51.Add( self.B_T_MIN, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_MIN = wx.SpinCtrl( self.B, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 1, 999999, 1 )
+		wSizer51.Add( self.B_MIN, 0, wx.ALL, 5 )
+
+		self.B_T_MAX = wx.StaticText( self.B, wx.ID_ANY, u"最大值", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.B_T_MAX.Wrap( -1 )
+
+		wSizer51.Add( self.B_T_MAX, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.B_MAX = wx.SpinCtrl( self.B, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 1, 1000, 50 )
+		wSizer51.Add( self.B_MAX, 0, wx.ALL, 5 )
+
+
+		bSizer4.Add( wSizer51, 0, 0, 5 )
+
+		wSizer11 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.B_B_RUN = wx.Button( self.B, wx.ID_ANY, u"RUN", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer11.Add( self.B_B_RUN, 0, wx.ALL, 5 )
+
+
+		bSizer4.Add( wSizer11, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		wSizer12 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.B_DATA = wx.StaticText( self.B, wx.ID_ANY, u"00", wx.DefaultPosition, wx.Size( -1,100 ), 0 )
+		self.B_DATA.Wrap( -1 )
+
+		self.B_DATA.SetFont( wx.Font( 45, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
+
+		wSizer12.Add( self.B_DATA, 0, wx.ALL, 5 )
+
+
+		bSizer4.Add( wSizer12, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+
+		self.B.SetSizer( bSizer4 )
+		self.B.Layout()
+		bSizer4.Fit( self.B )
+		self.m_notebook1.AddPage( self.B, u"随机学号", False )
+
+		bSizer2.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+		self.SetSizer( bSizer2 )
 		self.Layout()
 
 		self.Centre( wx.BOTH )
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
-		self.B_Run.Bind( wx.EVT_BUTTON, self.Run )
-		self.B_GO.Bind( wx.EVT_BUTTON, self.GO )
-		self.B_Single.Bind( wx.EVT_BUTTON, self.Single )
-		self.B_WTF.Bind( wx.EVT_BUTTON, self.WTF )
+		self.A_AutoLineFeed.Bind( wx.EVT_CHECKBOX, self.A_AutoLineFeedOnCheckBox )
+		self.A_B_RUN.Bind( wx.EVT_BUTTON, self.A_RUN )
+		self.B_B_RUN.Bind( wx.EVT_BUTTON, self.B_RUN )
 
 	def __del__( self ):
 		pass
@@ -126,16 +173,13 @@ class Main ( wx.Frame ):
 	def Close( self, event ):
 		event.Skip()
 
-	def Run( self, event ):
+	def A_AutoLineFeedOnCheckBox( self, event ):
 		event.Skip()
 
-	def GO( self, event ):
+	def A_RUN( self, event ):
 		event.Skip()
 
-	def Single( self, event ):
-		event.Skip()
-
-	def WTF( self, event ):
+	def B_RUN( self, event ):
 		event.Skip()
 
 

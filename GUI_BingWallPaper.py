@@ -48,13 +48,26 @@ class Main ( wx.Frame ):
 
 		fgSizer1.Add( self.Picture3, 0, wx.ALL, 5 )
 
-		self.Pictur4 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 192,108 ), wx.BORDER_NONE )
-		self.Pictur4.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_SCROLLBAR ) )
+		self.Picture4 = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 192,108 ), wx.BORDER_NONE )
+		self.Picture4.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_SCROLLBAR ) )
 
-		fgSizer1.Add( self.Pictur4, 0, wx.ALL, 5 )
+		fgSizer1.Add( self.Picture4, 0, wx.ALL, 5 )
 
 
 		bSizer2.Add( fgSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		wSizer1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		M_ChoiseChoices = [ u"Day1", u"Day2", u"Day3", u"Day4" ]
+		self.M_Choise = wx.RadioBox( self, wx.ID_ANY, u"选择图片", wx.DefaultPosition, wx.DefaultSize, M_ChoiseChoices, 1, wx.RA_SPECIFY_ROWS )
+		self.M_Choise.SetSelection( 0 )
+		wSizer1.Add( self.M_Choise, 0, wx.ALL, 5 )
+
+		self.B_SET = wx.Button( self, wx.ID_ANY, u"设为桌面壁纸", wx.DefaultPosition, wx.Size( 100,50 ), 0 )
+		wSizer1.Add( self.B_SET, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer2.Add( wSizer1, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
 		self.SetSizer( bSizer2 )
@@ -64,6 +77,8 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.Bind( wx.EVT_SHOW, self.MainOnShow )
+		self.B_SET.Bind( wx.EVT_BUTTON, self.B_SETOnButtonClick )
 
 	def __del__( self ):
 		pass
@@ -71,6 +86,12 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def MainOnShow( self, event ):
+		event.Skip()
+
+	def B_SETOnButtonClick( self, event ):
 		event.Skip()
 
 

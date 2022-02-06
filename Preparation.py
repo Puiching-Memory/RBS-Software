@@ -42,10 +42,8 @@ class CalcFrame(GUI_Preparation.Main):
 
 		if proc_exist('RBS_Software.exe') == 2:
 			print('PreParation:程序已启动-->退出')
-			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software CC2021"))
+			win32gui.SetForegroundWindow(win32gui.FindWindow(None, "RBS_Software"))
 			self.Destroy()
-		elif proc_exist('RBS_Software.exe') == 1:
-			print('PreParation:程序无冲突-->启动')
 		else:
 			print('PreParation:程序无冲突-->启动')
 
@@ -93,7 +91,7 @@ class CalcFrame(GUI_Preparation.Main):
 
 			import Main	
 
-			try:		
+			try:
 				Frame_main = Main.Pre_main()
 			except:
 				self.Text.SetLabel("加载错误:正在重试")
@@ -156,8 +154,6 @@ class CalcFrame(GUI_Preparation.Main):
 			os.remove('DATA_LCK.zip')
 
 			self.Text.SetLabel("加载完成")
-
-			wx.Sleep(1)
 
 			Frame_main.ShowWithEffect(wx.SHOW_EFFECT_BLEND)
 			wx.CallAfter(self.HideWithEffect, wx.SHOW_EFFECT_BLEND)

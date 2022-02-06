@@ -41,6 +41,7 @@ import M_WALP  # WALP地理信息系统
 import M_Version  # 版本查看器
 import M_History  # 历史上的今天
 import M_Date  # 日期查看器
+import M_Performance_monitor # 性能监视器
 import M_File  # 文件管理器
 import M_QRcode  # 二维码生成器
 import M_BingWallPaper  # 必应壁纸
@@ -61,7 +62,7 @@ import Probe  # 探针
 ##import YOLO
 
 # API
-import WeaterAPI  # 天气API
+import WeaterAPI  # 天气API(缺乏通用性)
 
 # RBS_Code
 import RBS_PLC
@@ -78,10 +79,9 @@ import win32com.client
 import win32api
 import psutil
 import time
+import PIL.Image
 ##import ping3
 import random
-##import subprocess
-##import gc # 内存库
 
 ###########################################################################
 # Class Main
@@ -144,6 +144,11 @@ class CalcFrame(GUI.Main):
 
 		SVG_ICO(self)  # 设置SVG图标
 
+		BG_Bitmap = PIL.Image.open('./pictures/BG.jpg') # 对不符合要求的背景图片进行修改
+		if BG_Bitmap.getpixel != (750,350):
+			BG_Bitmap = BG_Bitmap.resize((750,350))
+			BG_Bitmap.save('./pictures/BG.jpg')
+
 		self.Weather.SetLabel(WeaterAPI.Now_weather())  # 获取and显示天气信息
 
 		self.taskBar = wx.adv.TaskBarIcon()  # 声明:启用系统托盘
@@ -183,7 +188,7 @@ class CalcFrame(GUI.Main):
 		if setup == 1:
 			dc = event.GetDC()
 			dc.Clear()
-			dc.DrawBitmap(wx.Bitmap("./pictures/alena-aenami-out-of-time-1080p.jpg"), 0, 50, useMask=True)
+			dc.DrawBitmap(wx.Bitmap('./pictures/BG.jpg'), 0, 50, useMask=True)
 		##print(1)
 		else:
 			dc = event.GetDC()
@@ -445,35 +450,15 @@ class CalcFrame(GUI.Main):
 		else:
 			Frame_Date.Show()
 
+	def BT3(self, event):
+		Frame_Performance_monitor.Bind(wx.EVT_CLOSE, self.BT3)
+		if Frame_Performance_monitor.IsShown():
+			Frame_Performance_monitor.Show(False)
+		else:
+			Frame_Performance_monitor.Show()
+
 	def OnMove(self, event):
 		pos = event.GetPosition()
-
-	def Fast_on(self, event):
-		check_name = ['拼音转换', '简繁转换', '成语接龙', '',
-					  '圆周率', '3DMA', '三角函数', '',
-					  '大小转换', '', '', '',
-					  'Py检查', 'PPNG', 'BMI', 'DDT',
-					  '历史今天', 'Bing', '', '',
-					  'WALP', '', '', '',
-					  '音频分析', '大学评分', 'QR码', '',
-					  '元素周期', '', '', '',
-					  '基因库', '', '', '',
-					  '随机数', '进制转换', '值日表', '计时器']
-
-		into_program = [M_Pinyin, M_Traditional_Chinese, M_Idion, None,
-						M_Pi, None, M_Trigonometric, None,
-						M_Capslook, None, None, None,
-						None, M_PPTNG, M_BMI, M_DDT,
-						M_History, M_BingWallPaper, None, None,
-						M_WALP, None, None, None,
-						M_Music, M_College, M_QRcode, None,
-						M_Element, None, None, None,
-						M_Gene, None, None, None,
-						M_Roll, M_Base_conversion, M_Roster, M_Timer]
-
-		for (name, program) in zip(check_name, into_program):
-			if name == self.Fast.GetLabel():
-				program.main()
 
 	# ---------------------------------------------------------------------
 
@@ -759,6 +744,12 @@ class CalcFrame(GUI.Main):
 		global Hover
 		Hover = 210
 
+	def H_BT2(self, event):
+		self.Bottom_Bar2.SetBackgroundColour(colour_Hover)
+
+	def H_BT3(self, event):
+		self.Bottom_Bar3.SetBackgroundColour(colour_Hover)
+
 	# ---------------------------------------------------------------------
 
 	def Leave(self, event):
@@ -912,6 +903,12 @@ class CalcFrame(GUI.Main):
 		self.Bottom_Bar1.SetLabel('Get focus to show prompts')
 		self.SetCursor(wx.Cursor(1))
 		self.B_File.SetBackgroundColour(self.version.GetBackgroundColour())
+
+	def L_BT2(self, event):
+		self.Bottom_Bar2.SetBackgroundColour(self.Space1.GetBackgroundColour())
+
+	def L_BT3(self, event):
+		self.Bottom_Bar3.SetBackgroundColour(self.Space1.GetBackgroundColour())
 
 	# -----------------------------------------------------------------------
 
@@ -2279,7 +2276,7 @@ def main():
 	global Frame_Roll, Frame_Element, Frame_Pinyin, Frame_Roster, Frame_Gene, Frame_About, Frame_Pi, Frame_Capslook
 	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
 	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
-	global Frame_Draw, Frame_SSC, Frame_College
+	global Frame_Draw, Frame_SSC, Frame_College, Frame_Performance_monitor
 
 	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
@@ -2312,6 +2309,7 @@ def main():
 	Frame_Version = M_Version.CalcFrame(None)
 	Frame_History = M_History.CalcFrame(None)
 	Frame_Date = M_Date.CalcFrame(None)
+	Frame_Performance_monitor = M_Performance_monitor.CalcFrame(None)
 	Frame_File = M_File.CalcFrame(None)
 	Frame_QRcode = M_QRcode.CalcFrame(None)
 	Frame_BingWallPaper = M_BingWallPaper.CalcFrame(None)
@@ -2332,7 +2330,7 @@ def Pre_main():
 	global Frame_Roll, Frame_Element, Frame_Pinyin, Frame_Roster, Frame_Gene, Frame_About, Frame_Pi, Frame_Capslook
 	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
 	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
-	global Frame_Draw, Frame_SSC, Frame_College
+	global Frame_Draw, Frame_SSC, Frame_College, Frame_Performance_monitor
 
 	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
@@ -2359,6 +2357,7 @@ def Pre_main():
 	Frame_Version = M_Version.CalcFrame(None)
 	Frame_History = M_History.CalcFrame(None)
 	Frame_Date = M_Date.CalcFrame(None)
+	Frame_Performance_monitor = M_Performance_monitor.CalcFrame(None)
 	Frame_File = M_File.CalcFrame(None)
 	Frame_QRcode = M_QRcode.CalcFrame(None)
 	Frame_BingWallPaper = M_BingWallPaper.CalcFrame(None)

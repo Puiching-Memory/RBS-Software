@@ -597,18 +597,18 @@ class Main ( wx.Frame ):
 
 		wSizer_BT.Add( self.Space1, 0, 0, 5 )
 
+		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
+		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Space2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
+
+		wSizer_BT.Add( self.Space2, 0, 0, 5 )
+
 		self.Bottom_Bar1 = wx.Button( self, wx.ID_ANY, u"    ------", wx.DefaultPosition, wx.Size( 303,20 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Bottom_Bar1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Bottom_Bar1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		wSizer_BT.Add( self.Bottom_Bar1, 0, 0, 5 )
-
-		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
-		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Space2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
-
-		wSizer_BT.Add( self.Space2, 0, 0, 5 )
 
 		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 200,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar2.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
@@ -783,7 +783,12 @@ class Main ( wx.Frame ):
 		self.Space1.Bind( wx.EVT_BUTTON, self.Space1_Change )
 		self.Space2.Bind( wx.EVT_BUTTON, self.Space2_Change )
 		self.Bottom_Bar2.Bind( wx.EVT_BUTTON, self.BT2 )
+		self.Bottom_Bar2.Bind( wx.EVT_ENTER_WINDOW, self.H_BT2 )
+		self.Bottom_Bar2.Bind( wx.EVT_LEAVE_WINDOW, self.L_BT2 )
 		self.Space3.Bind( wx.EVT_BUTTON, self.Space3_Change )
+		self.Bottom_Bar3.Bind( wx.EVT_BUTTON, self.BT3 )
+		self.Bottom_Bar3.Bind( wx.EVT_ENTER_WINDOW, self.H_BT3 )
+		self.Bottom_Bar3.Bind( wx.EVT_LEAVE_WINDOW, self.L_BT3 )
 		self.Bind( wx.EVT_TIMER, self.Net_Tick, id=Net_Timer )
 		self.Bind( wx.EVT_TIMER, self.PFM_Tick, id=PFM_Timer )
 		self.Bind( wx.EVT_TIMER, self.PRAM_Tick, id=PRAM_Timer )
@@ -1085,7 +1090,22 @@ class Main ( wx.Frame ):
 	def BT2( self, event ):
 		event.Skip()
 
+	def H_BT2( self, event ):
+		event.Skip()
+
+	def L_BT2( self, event ):
+		event.Skip()
+
 	def Space3_Change( self, event ):
+		event.Skip()
+
+	def BT3( self, event ):
+		event.Skip()
+
+	def H_BT3( self, event ):
+		event.Skip()
+
+	def L_BT3( self, event ):
 		event.Skip()
 
 	def Net_Tick( self, event ):
