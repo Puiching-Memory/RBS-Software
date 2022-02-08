@@ -41,9 +41,11 @@ class CalcFrame(GUI_Trigonometric.Main):
 		elif self.m_choice.GetSelection() == 2:
 			num = math.tan(num_in)
 
+		#num_str = Fraction(Decimal(num))
 		self.Out.SetValue(str(num))
+		
 
-		print(num_in)
+		##print(cmath.pi)
 
 	def Close(self, event):
 		try:

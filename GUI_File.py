@@ -99,6 +99,7 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.Bind( wx.EVT_SHOW, self.MainOnShow )
 		self.B_clean.Bind( wx.EVT_BUTTON, self.Clean )
 
 	def __del__( self ):
@@ -107,6 +108,9 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def MainOnShow( self, event ):
 		event.Skip()
 
 	def Clean( self, event ):

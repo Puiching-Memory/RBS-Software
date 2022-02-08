@@ -22,10 +22,10 @@ class Main ( wx.Frame ):
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		bSizer2 = wx.BoxSizer( wx.VERTICAL )
+		Sizer = wx.BoxSizer( wx.VERTICAL )
 
-		self.m_notebook1 = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NB_FIXEDWIDTH )
-		self.A = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.notebook = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.NB_FIXEDWIDTH )
+		self.A = wx.Panel( self.notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
 		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
@@ -100,8 +100,8 @@ class Main ( wx.Frame ):
 		self.A.SetSizer( bSizer3 )
 		self.A.Layout()
 		bSizer3.Fit( self.A )
-		self.m_notebook1.AddPage( self.A, u"随机整数", True )
-		self.B = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.notebook.AddPage( self.A, u"随机整数", False )
+		self.B = wx.Panel( self.notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
 		wSizer51 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
@@ -149,12 +149,41 @@ class Main ( wx.Frame ):
 		self.B.SetSizer( bSizer4 )
 		self.B.Layout()
 		bSizer4.Fit( self.B )
-		self.m_notebook1.AddPage( self.B, u"随机学号", False )
+		self.notebook.AddPage( self.B, u"随机学号", False )
+		self.Panel_Setting = wx.Panel( self.notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer41 = wx.BoxSizer( wx.VERTICAL )
 
-		bSizer2.Add( self.m_notebook1, 1, wx.EXPAND |wx.ALL, 5 )
+		wSizer71 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.Using_TimeSeed = wx.CheckBox( self.Panel_Setting, wx.ID_ANY, u"使用时间刻种子", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Using_TimeSeed.SetValue(True)
+		wSizer71.Add( self.Using_TimeSeed, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.T_SP_Seed = wx.StaticText( self.Panel_Setting, wx.ID_ANY, u"随机数种子：", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.T_SP_Seed.Wrap( -1 )
+
+		self.T_SP_Seed.Enable( False )
+
+		wSizer71.Add( self.T_SP_Seed, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.SP_Seed = wx.SpinCtrl( self.Panel_Setting, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 150,-1 ), wx.ALIGN_CENTER_HORIZONTAL|wx.SP_ARROW_KEYS, 1, 999999, 114514 )
+		self.SP_Seed.Enable( False )
+
+		wSizer71.Add( self.SP_Seed, 0, wx.ALL, 5 )
 
 
-		self.SetSizer( bSizer2 )
+		bSizer41.Add( wSizer71, 0, 0, 5 )
+
+
+		self.Panel_Setting.SetSizer( bSizer41 )
+		self.Panel_Setting.Layout()
+		bSizer41.Fit( self.Panel_Setting )
+		self.notebook.AddPage( self.Panel_Setting, u"设置", True )
+
+		Sizer.Add( self.notebook, 1, wx.EXPAND |wx.ALL, 5 )
+
+
+		self.SetSizer( Sizer )
 		self.Layout()
 
 		self.Centre( wx.BOTH )
@@ -164,6 +193,8 @@ class Main ( wx.Frame ):
 		self.A_AutoLineFeed.Bind( wx.EVT_CHECKBOX, self.A_AutoLineFeedOnCheckBox )
 		self.A_B_RUN.Bind( wx.EVT_BUTTON, self.A_RUN )
 		self.B_B_RUN.Bind( wx.EVT_BUTTON, self.B_RUN )
+		self.Using_TimeSeed.Bind( wx.EVT_CHECKBOX, self.Using_TimeSeedOnCheckBox )
+		self.SP_Seed.Bind( wx.EVT_SPINCTRL, self.SP_SeedOnSpinCtrl )
 
 	def __del__( self ):
 		pass
@@ -180,6 +211,12 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def B_RUN( self, event ):
+		event.Skip()
+
+	def Using_TimeSeedOnCheckBox( self, event ):
+		event.Skip()
+
+	def SP_SeedOnSpinCtrl( self, event ):
 		event.Skip()
 
 

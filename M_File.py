@@ -6,6 +6,7 @@ import wx
 import GUI_File
 import os
 from os.path import join, getsize
+import win32file
 import shutil
 
 ##############################
@@ -22,20 +23,26 @@ class CalcFrame(GUI_File.Main):
 		Refresh_Log(self)
 
 	def Clean(self, event):
-		shutil.rmtree('./Cache/')
-		os.mkdir('./Cache')
-		shutil.rmtree('./Log/')
-		os.mkdir('./Log')
+		try:
+			shutil.rmtree('./Cache/')
+			os.mkdir('./Cache')
+			shutil.rmtree('./Log/')
+			os.mkdir('./Log')
+		except:
+			print('some file can not be deleted!')
 
 		Refresh_File(self)
 		Refresh_Log(self)
 
+	def MainOnShow(self, event):
+		if self.IsShown() == True:
+			Refresh_File(self)
+			Refresh_Log(self)
+			print('File：更新')
+
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
+
 ##############################
 # 主函数
 ##############################
@@ -60,7 +67,7 @@ def Refresh_File(self):
 
 		self.FileNum_ALL.SetLabel('本地文件数:' + str(len(file_list)))
 		self.FileSize_ALL.SetLabel('本地文件大小:' + str(round(size / 1024 / 1024)) + 'MB  |  ' + str(size) + '字节')
-		self.G_Size.SetValue(round(size / 1024 / 1024) / 10)
+		self.G_Size.SetValue(int(round(size / 1024 / 1024) / 10))
 		self.AlreadyUsed.SetLabel('%' + str(round(size / 1024 / 1024) / 10))
 
 		file_list = []
@@ -87,6 +94,19 @@ def Refresh_Log(self):
 
 		self.FileNum_Log.SetLabel('日志文件数:' + str(len(file_list)))
 		self.FileSize_Log.SetLabel('日志占用空间:' + str(round(size / 1024)) + 'KB  |  ' + str(size) + '字节')
+
+def is_used(file_name):
+	'''
+	检测文件占用
+	'''
+	try:
+		v_handle = win32file.CreateFile(file_name, win32file.GENERIC_READ, 0, None, win32file.OPEN_EXISTING, 
+										win32file.FILE_ATTRIBUTE_NORMAL, None)
+		result = bool(int(v_handle) == win32file.INVALID_HANDLE_VALUE)
+		win32file.CloseHandle(v_handle)
+	except Exception:
+		return True
+	return result
 
 if __name__ == "__main__":
 	main()

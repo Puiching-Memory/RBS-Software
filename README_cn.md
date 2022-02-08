@@ -5,17 +5,15 @@ RBS是一个应用于教育行业的工具箱软件
 # >提示
 
 - 作者的母语是中文,所有README都基于中文版翻译得来,一切歧义最终应查看本文解释
-- 中文版本:[README_cn.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README_cn.md)
-- English version:[README.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README.md)
+- 中文:[README_cn.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README_cn.md) 2022/2/7
+- English:[README.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README.md) ----/-/-
 
 # >程序结构
 
-| 入口               | 主程序  | 模块(逻辑部分) | 模块(可视化界面部分) |
-| ------------------ | ------- | -------------- | -------------------- |
-| Preparation.py     | Main.py | M_QRcode.py    | GUI_QRcode.py        |
-| GUI_Preparation.py | GUI.py  | M_Timer.py     | GUI_Timer.py         |
-|                    |         | M_Roll.py      | GUI_Roll.py          |
-|                    |         | M_***.py       | GUI_***.py           |
+|            | 入口               | 主程序  | 模块     |
+| ---------- | ------------------ | ------- | -------- |
+| 逻辑       | Preparation.py     | Main.py | M_*.py   |
+| 可视化界面 | GUI_Preparation.py | GUI.py  | GUI_*.py |
 
 *每个模块都有其相对应的GUI程序(所有名字中带有'GUI'的文件)
 
@@ -64,8 +62,6 @@ pip install -r requirements.txt
 
 # >打包到.exe文件
 
-##### 跟随以下步骤!
-
 1. 在文件夹根目录下打开控制台
 2. 检测你是否已经能够在Python环境下成功运行
 3. 安装Pyinstaller库
@@ -75,34 +71,25 @@ pip install -r requirements.txt
 ##### 通过pip安装
 
 ```
-pip install pyinstaller==4.5.1
-```
-
-```
-pip install tinyaes==1.0.1
+pip install pyinstaller
 ```
 
 ##### 打包命令
 
-完整版 ↓↓↓
-
 ```
-pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software2021  --key ZKPuichingMemory -w --collect-submodules pynput
-```
-
-轻量版 ↓↓↓
-
-```
-pyinstaller -D Preparation.py -y -n RBS_Software2021 -w --collect-submodules pynput
+pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w
 ```
 
 ##### 提示
 
-1. 打包程序需要使用上ICO文件和图像文件.确保它们在正确的位置 (通常来说默认的位置就是正确的,这里担心有些人把它们移动到其它位置上)
-2. 如果所需文件没有准备好,打包的过程中会发生错误(废话)
+1. 打包程序需要使用上ICO文件和图像文件.确保它们在正确的位置 (通常来说默认的位置就是正确的)
+2. 如果发生错误，请及时反馈问题
 3. 打包需要用到UPX. 请准备好UPX,将其放置在一个文件夹中并命名为'UPX',然后放在根目录上
 4. 下载UPX>>>[https://github.com/upx/upx](https://github.com/upx/upx)
-5. 如果你选择轻量版,你不需要关心以上的任何事.🤣
+
+# >插件
+
+你可以在plug-in文件夹中添加插件,程序的插件功能基于python的函数exec()运行.
 
 # 维护者
 
@@ -112,46 +99,55 @@ pyinstaller -D Preparation.py -y -n RBS_Software2021 -w --collect-submodules pyn
 
 ##### 只显示最近的两次更新(我知道你不关心这个)😛
 
-['2021/07/17', 'Ver021.07.17']
+['2022/02/05', 'Ver022.02.05']
+-----RBS_Software update log(项目更新日志)-----
 +改进:
-1.'BMI'模块现在已经更新至V2
-2.'设置'模块添加对主界面的'透明度'控制
-3.'进制转换'模块已经更新至V2
-4.主界面添加了'网络延迟检测'模块
-5.主界面添加了'天气'模块
-6.Python版本已升级至3.8.10
-7.WALP引擎已整合入'地理'分区
-8.'设置'模块现在可以控制程序日志的保存位置
-9.'更新日志'模块已更新至V2
+1.主界面部分细节改进
+2.添加了'性能监视器'模块
+3.清理了过时文件
+4.模块'简繁转换'数据库已更新
+5.'音频分析器'模块已完善,支持导入MP3、wav、flac、ogg文件，可导出ogg、wav、MP3文件
+6.'随机数'模块已更新至V4
 -问题:
-1.在线更新模块仍不可用
-2.'下载器'模块进行修复,但无法定义文件位置和类型
+1.OpenGL在初始化进程中引发错误导致软件卡在启动界面(IS09191)
+2.由于pi值精度过高导致的浮点数计算BUG(IS09181)
+3.'文件管理器'清理文件时遇到占用冲突[WinError 32](IS12251)
+4.主界面ping模块暂时禁用(IS12312)
+5.'数学画板'关闭按钮不能正常工作(IS01011)
+6.log等文件可能会因为编码格式(utf-8)而导致中文出现乱码(IS01141)
+7.'值日表'模块的实现算法已过时
 ||信息:
-ALL:174MB
-DIST:37.0MB
-ZIP:25.3MB
-NSIS:24.2MB
+ALL:--MB
+DIST:--MB
+ZIP:--MB
+NSIS:--MB
 
 ---
 
-['2021/07/03', 'Ver021.07.03']
+['2022/01/24', 'Ver022.01.24']
+-----RBS_Software update log(项目更新日志)-----
 +改进:
-1.主界面左上角图标现在可以正常显示
-2.主界面现在支持文件拖拽
-3.主界面GUI优化,修复BUG
-4.添加两个临时功能模块,完成度20%(没有明显提示,但你仍可以打开它)
-5.主界面"USER"模块已经完成
-6.'随机数生成器'已经重写
+1.'关于'界面改进
+2.BUG修复:主界面'CMD功能'无法使用(IS12252)
+3.代码规范优化-进度1
+4.'RBS_DDT'项目已作为模块'M_DDT'进行集成
+5.'RBS_PLC'部分功能集成
+6.插件功能已重写,现在使用.py文件接口(#200)
+7.主界面'快速启动'功能长期缺少维护,现已删除(IS12253)
+8.文件结构优化
+9.BUG修复:必应壁纸模块不能正常工作(IS12255)
 -问题:
-1.在线更新模块仍不可用
-2.'下载器'模块完全无法使用
-3.右侧侧边栏优化未完成
-4.部分API接口未完成
-5.'值日表'模块存在一个已知的恶性BUG
+1.OpenGL在初始化进程中引发错误导致软件卡在启动界面(IS09191)
+2.由于pi值精度过高导致的浮点数计算BUG(IS09181)
+3.'文件管理器'清理文件时遇到占用冲突[WinError 32](IS12251)
+4.主界面ping模块暂时禁用(IS12312)
+5.'数学画板'关闭按钮不能正常工作(IS01011)
+6.log等文件可能会因为编码格式(utf-8)而导致中文出现乱码(IS01141)
+7.'值日表'模块的实现算法已过时
 ||信息:
-ALL:129MB
-DIST:37.4MB
-ZIP:26.7MB
-NSIS:25.6MB
+ALL:482MB
+DIST:40.7MB
+ZIP:--MB
+NSIS:--MB
 
 ---

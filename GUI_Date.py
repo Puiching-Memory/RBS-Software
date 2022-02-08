@@ -18,7 +18,7 @@ import wx.adv
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Date", pos = wx.DefaultPosition, size = wx.Size( 250,250 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Date", pos = wx.DefaultPosition, size = wx.Size( 250,300 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
@@ -32,6 +32,16 @@ class Main ( wx.Frame ):
 		self.T_Time.Wrap( -1 )
 
 		bSizer3.Add( self.T_Time, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.T_NL1 = wx.StaticText( self, wx.ID_ANY, u"N/A", wx.DefaultPosition, wx.Size( 200,-1 ), 0 )
+		self.T_NL1.Wrap( -1 )
+
+		bSizer3.Add( self.T_NL1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.T_NL2 = wx.StaticText( self, wx.ID_ANY, u"N/A", wx.DefaultPosition, wx.Size( 200,-1 ), 0 )
+		self.T_NL2.Wrap( -1 )
+
+		bSizer3.Add( self.T_NL2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
 		self.SetSizer( bSizer3 )

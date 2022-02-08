@@ -4,7 +4,8 @@
 import wx
 import xlwt,xlrd
 import win32api,win32con
-import time
+import os
+import time,datetime
 
 import GUI_SSC
 
@@ -23,26 +24,12 @@ class CalcFrame(GUI_SSC.Main):
 
 		for i in range(0,50):
 			i_a = 801 + i
-			self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+			self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 
-		data_class = xlrd.open_workbook('./DATA/SSC/CLASS.xls')
-		data_class = data_class.sheet_by_index(0)
-		
-		for i in range(0, 47):
-			data = data_class.row_values(rowx=i, start_colx=0)
-			self.GIRD2.SetRowLabelValue(i, data[0])
+		self.Save_path.SetPath(get_desktop())
 
-
-	def LCK(self, event):
-		event.Skip()
-		print(self.GIRD2.GetGridCursorCol())
-		print(self.GIRD2.GetGridCursorRow())
-
-	def PUT(self, event):
-		self.GIRD2.SetCellValue(self.GIRD2.GetGridCursorRow(),self.GIRD2.GetGridCursorCol(), '0')
-
-	def CLN(self, event):
-		self.GIRD2.SetCellValue(self.GIRD2.GetGridCursorRow(),self.GIRD2.GetGridCursorCol(), '')
+		self.Edit_State_Colour.SetBackgroundColour((192,192,192))
+		self.Edit_State_Text.SetLabel('静待')
 		
 
 	def Hot_Key_Down(self, event):
@@ -80,41 +67,39 @@ class CalcFrame(GUI_SSC.Main):
 			Y = self.Kind_choice.GetSelection()
 
 			for i in range(0,50):
-				if self.GRID.GetRowLabelValue(i) == string:
-					self.GRID.SetCellValue(i, Y, 'O')
-					self.GRID.MakeCellVisible(i,Y)
-				##print(self.GRID.GetRowLabelValue(i))
+				if self.A_GRID.GetRowLabelValue(i) == string:
+					self.A_GRID.SetCellValue(i, Y, '√')
+					self.A_GRID.MakeCellVisible(i,Y)
 
 			self.T_key_list.SetLabel('[]')
 			key_list.clear()
+
+			# 检测未登记名单
+			self.Report.SetValue('没有任何数据的栏目：')
+			i_weight = 0
+			for i in range(0,50):
+				for i_2 in range(0,5):
+					if self.A_GRID.GetCellValue(i,i_2) != '':
+						i_weight = i_weight + 1
+				
+				if i_weight == 0:
+					self.Report.AppendText(self.A_GRID.GetRowLabelValue(i) + ' / ')
+
+				i_weight = 0
 
 
 	def Replace(self, event):
 		self.T_key_list.SetLabel('[]')
 		key_list.clear()
-	
-	def Export2(self, event):
+
+	def Export(self, event):
+		self.B_Export.Enable(False)
 		workbook = xlwt.Workbook(encoding="utf-8")
 		worksheet = workbook.add_sheet("Sheet1")
-
-		for i in range(0,50):
-			worksheet.write(i,0, self.GIRD2.GetRowLabelValue(i))
 
 		for i in range(0,50):
 			for i_2 in range(0,5):
-				worksheet.write(i,i_2 + 1, self.GIRD2.GetCellValue(i,i_2))
-				print(i,i_2)
-
-		workbook.save(get_desktop() + '\Export_' + str(time.time()) + '.xls')
-		print('save finish')
-
-	def Export(self, event):
-		workbook = xlwt.Workbook(encoding="utf-8")
-		worksheet = workbook.add_sheet("Sheet1")
-
-		for i in range(0,50):
-			for i_2 in range(0,7):
-				worksheet.write(i,i_2 + 1, self.GRID.GetCellValue(i,i_2))
+				worksheet.write(i,i_2 + 1, self.A_GRID.GetCellValue(i,i_2))
 				print(i,i_2)
 
 		if self.Class.GetSelection() == 0:
@@ -143,69 +128,130 @@ class CalcFrame(GUI_SSC.Main):
 				worksheet.write(i,0, '0' + str(801 + i))
 		elif self.Class.GetSelection() == 8:
 			for i in range(0,50):
-				worksheet.write(i,0, '0' + str(901 + i))
-		
-		workbook.save(get_desktop() + '\Export_' + str(time.time()) + '.xls')
+				worksheet.write(i,0, '0' + str(901 + i))	
+
+		if self.Save_path.GetPath()[-1] == '\\':
+			export_name = self.Save_path.GetPath() + 'Export_' + str(datetime.date.today()) + '.xls'
+		else:
+			export_name = self.Save_path.GetPath() + '\Export_' + str(datetime.date.today()) + '.xls'
+
+		workbook.save(export_name)
+		workbook.save('./DATA/SSC/' + str(datetime.date.today()) + '.xls') # 缓存
 		print('save finish')
+
+		if self.Auto_Focus.IsChecked() == True:
+			os.system('explorer.exe' + ' /select,' + export_name) # 打开资源管理器并选中导出文件
+
+		self.B_Export.Enable(True)
 
 
 	def Change_Class(self, event):
 		if self.Class.GetSelection() == 0:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 101 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 1:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 201 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 2:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 301 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 3:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 401 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 4:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 501 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 5:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 601 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 6:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 701 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 7:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 801 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 		elif self.Class.GetSelection() == 8:
-			self.GRID.ClearGrid()
+			self.A_GRID.ClearGrid()
 			for i in range(0,50):
 				i_a = 901 + i
-				self.GRID.SetRowLabelValue(i, '0' + str(i_a))
+				self.A_GRID.SetRowLabelValue(i, '0' + str(i_a))
 
+
+	def A_GRIDOnGridSelectCell(self, event):
+		'''
+		单元格被选中时
+		'''
+		self.A_GRID.SetGridLineColour(wx.Colour(0,128,255))
+		
+		self.Edit_State_Colour.SetBackgroundColour((0,128,255))
+		self.Edit_State_Text.SetLabel('监听')
+
+	def A_GRIDOnKillFocus(self, event):
+		'''
+		失去焦点时
+		'''
+		if self.A_GRID.IsCellEditControlShown() == True:
+			self.A_GRID.SetGridLineColour('red')
+
+			self.Edit_State_Colour.SetBackgroundColour('red')
+			self.Edit_State_Text.SetLabel('编辑')
+		else:
+			self.A_GRID.SetGridLineColour('black')
+
+			self.Edit_State_Colour.SetBackgroundColour((192,192,192))
+			self.Edit_State_Text.SetLabel('静待')
+
+	def A_GRIDOnGridEditorHidden(self, event):
+		'''
+		退出编辑模式时
+		'''
+		if self.A_GRID.IsSelection() == True:
+			self.A_GRID.SetGridLineColour(wx.Colour(0,128,255))
+			
+			self.Edit_State_Colour.SetBackgroundColour((0,128,255))
+			self.Edit_State_Text.SetLabel('监听')
+		else:
+			self.A_GRID.SetGridLineColour('black')
+
+			self.Edit_State_Colour.SetBackgroundColour((192,192,192))
+			self.Edit_State_Text.SetLabel('静待')
+
+	def A_GRIDOnGridEditorShown(self, event):
+		'''
+		进入编辑模式时
+		'''
+		self.A_GRID.SetGridLineColour('red')
+
+	def A_GRIDOnGridLabelLeftDClick(self, event):
+		'''
+		双击顶部标签栏->切换录入行
+		'''
+		##print(self.A_GRID.GetSelectedCols())
+		self.Kind_choice.SetSelection(self.A_GRID.GetSelectedCols()[0])
+		event.Skip()
 
 	def Clean(self, event):
-		self.GRID.ClearGrid()
+		self.A_GRID.ClearGrid()
+		self.Report.SetValue('没有任何数据的栏目：')
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 
 ##############################
 # 主函数

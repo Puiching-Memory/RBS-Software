@@ -25,8 +25,8 @@ class CalcFrame(GUI_Music.Main):
 		data_list = []
 
 		loudness_DBFS = audio_data.dBFS # DBFS响度
-		loudness_RMS = audio_data.rms # RMS响度
-		peak_amplitude = audio_data.max # RMS最高响度
+		loudness_RMS = audio_data.rms # RMS均方根值
+		peak_amplitude = audio_data.max # RMS最高值
 		channel_count = audio_data.channels # 声道_1:单声道/2:立体声
 		bytes_per_sample = audio_data.sample_width # 位宽_1:8位/2:16位
 		frames_per_second = audio_data.frame_rate # 采样率
@@ -35,14 +35,14 @@ class CalcFrame(GUI_Music.Main):
 		raw_audio_data = audio_data.raw_data # 原始音频数据
 
 		##print(raw_audio_data)
-		data_list.append('DBFS响度' + str(loudness_DBFS))
-		data_list.append('RMS响度' + str(loudness_RMS))
-		data_list.append('RMS最高响度' + str(peak_amplitude))
-		data_list.append('声道' + str(channel_count))
-		data_list.append('位宽' + str(bytes_per_sample))
-		data_list.append('采样率' + str(frames_per_second))
-		data_list.append('帧字节' + str(bytes_per_frame))
-		data_list.append('持续时间(秒)' + str(duration_seconds))
+		data_list.append('DBFS响度:' + str(loudness_DBFS))
+		data_list.append('RMS:' + str(loudness_RMS))
+		data_list.append('RMS_MAX:' + str(peak_amplitude))
+		data_list.append('声道:' + str(channel_count))
+		data_list.append('位宽:' + str(bytes_per_sample))
+		data_list.append('采样率:' + str(frames_per_second))
+		data_list.append('帧字节:' + str(bytes_per_frame))
+		data_list.append('持续时间(秒):' + str(duration_seconds))
 
 		self.Info.Clear()
 		self.Info.InsertItems(data_list,0)

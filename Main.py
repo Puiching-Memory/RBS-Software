@@ -71,7 +71,7 @@ import RBS_PLC
 import wx, wx.adv, wx.svg
 import GUI
 import configparser  # 设置文件(.cfg)库
-import logging.handlers  # 日志库
+import logging  # 日志库
 import threading  # 多线程
 import sys
 import os
@@ -81,7 +81,10 @@ import psutil
 import time
 import PIL.Image
 ##import ping3
-import random
+import random # 随机数
+##import re # 正则表达式
+##import subprocess # 管线
+import gc # 内存回收
 
 ###########################################################################
 # Class Main
@@ -113,7 +116,7 @@ class CalcFrame(GUI.Main):
 		Main_State = 0
 
 		Log()  # 初始化LOG设置
-		logging.debug('Document integrity check文件完整性检查:' + Is_complete)
+		logging.info('Document integrity check文件完整性检查:' + Is_complete)
 
 		Self_CMD(self, '载入设置完成')  # 向自定义控制台发送消息
 		Self_CMD(self, '文件完整性检查:' + Is_complete)
@@ -163,9 +166,8 @@ class CalcFrame(GUI.Main):
 
 		# ------------------------------------------------------
 		# 初始化完成后日志输出
-		logging.debug(str('Initialization complete初始化完成:' +
-						  time.strftime('%Y/%m/%d*%H:%M:%S')))
-		logging.debug('Version软件版本:' + version)
+		logging.info(str('Initialization complete初始化完成:'))
+		logging.info('Version软件版本:' + version)
 
 		Self_CMD(self, '初始化完成,日志已保存')
 
@@ -208,8 +210,7 @@ class CalcFrame(GUI.Main):
 			self.taskBar.RemoveIcon()
 
 		# 日志输出
-		logging.debug(
-			str('windows quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
+		logging.info(str('windows quit'))
 		# 关闭程序
 		wx.CallAfter(sys.exit, 0)
 
@@ -226,7 +227,7 @@ class CalcFrame(GUI.Main):
 			self.taskBar.RemoveIcon()
 
 		# 日志输出
-		logging.debug(str('self quit:' + time.strftime('%Y/%m/%d*%H:%M:%S')))
+		logging.info(str('self quit'))
 
 		# 停止计时器
 		self.Net_Timer.Stop()
@@ -250,11 +251,6 @@ class CalcFrame(GUI.Main):
 			##self.Enable(False)
 			##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
 			self.Hide()
-			'''
-			# 释放内存的一种方法,在这里不适用
-			del self # 删除变量
-			gc.collect() # 调用GC库释放内存
-			'''
 			self.Net_Timer.Stop()
 			self.PFM_Timer.Stop()
 			self.PRAM_Timer.Stop()
@@ -314,15 +310,30 @@ class CalcFrame(GUI.Main):
 
 	def About(self, event):
 		# 打开<关于>界面
-		Frame_About.Show()
+		Frame_About.Bind(wx.EVT_CLOSE, self.About)
+
+		if Frame_About.IsShown():
+			Frame_About.Show(False)
+		else:
+			Frame_About.Show()
 
 	def Log(self, event):
 		# 更新日志
-		Frame_Version.Show()
+		Frame_Version.Bind(wx.EVT_CLOSE, self.Log)
+
+		if Frame_Version.IsShown():
+			Frame_Version.Show(False)
+		else:
+			Frame_Version.Show()
 
 	def Setting(self, event):
 		# 打开设置
-		Frame_Setting.Show()
+		Frame_Setting.Bind(wx.EVT_CLOSE, self.Setting)
+
+		if Frame_Setting.IsShown():
+			Frame_Setting.Show(False)
+		else:
+			Frame_Setting.Show()
 
 	def Update(self, event):
 		# 打开<联网更新>界面
@@ -335,20 +346,40 @@ class CalcFrame(GUI.Main):
 		'''
 
 	def File(self, event):
-		Frame_File.Show()
+		Frame_File.Bind(wx.EVT_CLOSE, self.File)
+
+		if Frame_File.IsShown():
+			Frame_File.Show(False)
+		else:
+			Frame_File.Show()
 
 	def HOME(self, event):
 		""" 返回主界面 """
 		Home(self)
 
 	def Plug_in(self, event):
-		Frame_Plug_in.Show()
+		Frame_Plug_in.Bind(wx.EVT_CLOSE, self.Plug_in)
+
+		if Frame_Plug_in.IsShown():
+			Frame_Plug_in.Show(False)
+		else:
+			Frame_Plug_in.Show()
 
 	def User(self, event):
-		Frame_User.Show()
+		Frame_User.Bind(wx.EVT_CLOSE, self.User)
+
+		if Frame_User.IsShown():
+			Frame_User.Show(False)
+		else:
+			Frame_User.Show()
 
 	def Probe(self, event):
-		Frame_Probe.Show()
+		Frame_Probe.Bind(wx.EVT_CLOSE, self.Probe)
+
+		if Frame_Probe.IsShown():
+			Frame_Probe.Show(False)
+		else:
+			Frame_Probe.Show()
 
 	def GetWeather(self, event):
 		self.Weather.Enable(False)
@@ -476,22 +507,12 @@ class CalcFrame(GUI.Main):
 	def PRAM_Tick(self, event):
 		"""
 		计时器-内存监视器
+		调用gc库
 		"""
-		process_lst = []
-		mem = 0
 		try:
-			for pid in psutil.pids():
-				p = psutil.Process(pid)
-				if p.name() == 'RBS_Software2021.exe':
-					process_lst.append(p)
-
-			for i in process_lst:
-				##print(i.memory_info()[1] / 1024 / 1024)
-				mem = mem + i.memory_info()[1] / 1024 / 1024
-
-			self.Bottom_Bar4.SetLabel(str(round(mem)) + 'MB')
+			self.Bottom_Bar4.SetLabel(str(gc.get_count()[0]) + '/' + str(gc.get_count()[1]) + '/' + str(gc.get_count()[2]))
 		except:
-			self.Bottom_Bar4.SetLabel('--MB')
+			self.Bottom_Bar4.SetLabel('--/--/--')
 
 	def PRO_Tick(self, event):
 		"""
@@ -524,6 +545,7 @@ class CalcFrame(GUI.Main):
 		print('net_time')
 
 		'''
+		##print(ping3.ping('www.baidu.com'))
 
 	def Time_Tick(self, event):
 		"""
@@ -1789,9 +1811,9 @@ class CalcFrame(GUI.Main):
 		self.Tip4.SetLabel('简易数学画板')
 
 		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('状态:测试中')
+		self.TIP2.SetLabel('状态:未启用')
 		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('状态:测试中')
+		self.TIP4.SetLabel('状态:FUNT')
 
 		Function_icon(self, 0, 0, 0, 0, 1, 0, 0, 0)
 
@@ -1889,9 +1911,9 @@ class CalcFrame(GUI.Main):
 		self.TIP1.SetLabel('')
 		self.TIP2.SetLabel('')
 		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('状态:测试中')
+		self.TIP4.SetLabel('状态:FUNT')
 
-		Function_icon(self, 1, 0, 0, 1, 1, 1, 0, 0)
+		Function_icon(self, 0, 0, 0, 0, 1, 1, 0, 0)
 
 		BUT_CLFN(self, 4)
 
@@ -1936,11 +1958,11 @@ class CalcFrame(GUI.Main):
 		self.Tip4.SetLabel('什么都没有呢!')
 
 		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('状态:测试中')
+		self.TIP2.SetLabel('状态:FUNT')
 		self.TIP3.SetLabel('')
 		self.TIP4.SetLabel('')
 
-		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+		Function_icon(self, 1, 1, 0, 0, 1, 1, 0, 0)
 
 		BUT_CLFN(self, 5)
 
@@ -1983,12 +2005,12 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
-		self.TIP1.SetLabel('状态:测试中')
+		self.TIP1.SetLabel('状态:GUIF')
 		self.TIP2.SetLabel('')
 		self.TIP3.SetLabel('')
 		self.TIP4.SetLabel('')
 
-		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+		Function_icon(self, 1, 0, 0, 0, 1, 0, 0, 0)
 
 		BUT_CLFN(self, 6)
 
@@ -2031,12 +2053,12 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('二维码生成系统')
 		self.Tip4.SetLabel('')
 
-		self.TIP1.SetLabel('状态:测试中')
-		self.TIP2.SetLabel('状态:测试中')
+		self.TIP1.SetLabel('状态:FUNT')
+		self.TIP2.SetLabel('状态:FUNT')
 		self.TIP3.SetLabel('')
 		self.TIP4.SetLabel('')
 
-		Function_icon(self, 0, 0, 0, 0, 0, 0, 0, 0)
+		Function_icon(self, 0, 0, 0, 0, 1, 1, 1, 0)
 
 		BUT_CLFN(self, 7)
 
@@ -2079,7 +2101,7 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
-		self.TIP1.SetLabel('状态:测试中')
+		self.TIP1.SetLabel('状态:FUNT')
 		self.TIP2.SetLabel('')
 		self.TIP3.SetLabel('')
 		self.TIP4.SetLabel('')
@@ -2127,7 +2149,7 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('什么都没有呢!')
 		self.Tip4.SetLabel('什么都没有呢!')
 
-		self.TIP1.SetLabel('状态:测试中')
+		self.TIP1.SetLabel('状态:过时')
 		self.TIP2.SetLabel('')
 		self.TIP3.SetLabel('')
 		self.TIP4.SetLabel('')
@@ -2175,10 +2197,10 @@ class CalcFrame(GUI.Main):
 		self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
 		self.Tip4.SetLabel('简单的计时器,真的只是计时')
 
-		self.TIP1.SetLabel('')
+		self.TIP1.SetLabel('FUNT')
 		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('状态:测试中')
-		self.TIP4.SetLabel('状态:测试中')
+		self.TIP3.SetLabel('状态:过时')
+		self.TIP4.SetLabel('状态:FUNT')
 
 		Function_icon(self, 0, 0, 0, 0, 0, 0, 1, 0)
 
@@ -2439,19 +2461,19 @@ def Colour_Set(self, note, colour_Main, colour_Bottom, colour_SideL):
 
 def Log():
 	""" Log日志输出 """
-	cfg = configparser.ConfigParser()  # 读取设置文件
-	cfg.read('./cfg/setting.cfg')
+	##cfg = configparser.ConfigParser()  # 读取设置文件
+	##log_place = cfg.read('./cfg/setting.cfg')
 	log_place = './log/'
 
-	output_dir = log_place  # 定义文件夹位置(不区分大小写)
 	log_name = '{}.log'.format(
 		time.strftime('%Y-%m-%d-%H-%M'))  # 定义文件后缀名和命名规则
-	filename = os.path.join(output_dir, log_name)
+	filename = os.path.join(log_place, log_name)
 	logging.basicConfig(  # LOG设置
 		level=logging.DEBUG,  # 输出级别
 		filename=filename,  # 文件名
 		filemode='w',  # 写入模式,w为重新写入,a为递增写入
-		# format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s' # 命名规则
+		format='%(asctime)s %(message)s', # 命名规则
+		datefmt='%m/%d/%Y %I:%M:%S %p' # 时间格式
 	)
 
 
@@ -3212,108 +3234,6 @@ def CMD(self, info):
 	self.CMD_OUT.SetInsertionPointEnd()  # 设置光标到末尾
 
 
-def last_list(X, Y):
-	"""
-	使用给定的XY坐标返回功能模块的名字
-	"""
-	name = 'NONE'
-
-	if X == 0:
-		name = 'NONE'
-	elif X == 1:
-		if Y == 1:
-			name = '拼音转换'
-		elif Y == 2:
-			name = '简繁转换'
-		elif Y == 3:
-			name = '成语接龙'
-		else:
-			name = 'NONE'
-	elif X == 2:
-		if Y == 1:
-			name = '圆周率'
-		elif Y == 2:
-			name = '3DMA'
-		elif Y == 3:
-			name = '三角函数'
-		else:
-			name = 'NONE'
-	elif X == 3:
-		if Y == 1:
-			name = '大小转换'
-		elif Y == 2:
-			name = 'NONE'
-		elif Y == 3:
-			name = 'NONE'
-		else:
-			name = 'NONE'
-	elif X == 4:
-		if Y == 1:
-			name = 'Py检查'
-		elif Y == 2:
-			name = 'PPNG'
-		elif Y == 3:
-			name = 'BMI'
-		else:
-			name = 'DDT'
-	elif X == 5:
-		if Y == 1:
-			name = '历史今天'
-		elif Y == 2:
-			name = 'Bing'
-		elif Y == 3:
-			name = 'NONE'
-		else:
-			name = 'NONE'
-	elif X == 6:
-		if Y == 1:
-			name = 'WALP'
-		elif Y == 2:
-			name = 'NONE'
-		elif Y == 3:
-			name = 'NONE'
-		else:
-			name = 'NONE'
-	elif X == 7:
-		if Y == 1:
-			name = '音频分析'
-		elif Y == 2:
-			name = '大学评分'
-		elif Y == 3:
-			name = 'QR码'
-		else:
-			name = 'NONE'
-	elif X == 8:
-		if Y == 1:
-			name = '元素周期'
-		elif Y == 2:
-			name = 'NONE'
-		elif Y == 3:
-			name = 'NONE'
-		else:
-			name = 'NONE'
-	elif X == 9:
-		if Y == 1:
-			name = '基因库'
-		elif Y == 2:
-			name = 'NONE'
-		elif Y == 3:
-			name = 'NONE'
-		else:
-			name = 'NONE'
-	elif X == 10:
-		if Y == 1:
-			name = '随机数'
-		elif Y == 2:
-			name = '进制转换'
-		elif Y == 3:
-			name = '值日表'
-		else:
-			name = '计时器'
-
-	return name
-
-
 def SVG_ICO(self):
 	"""
 	设置SVG格式的图标
@@ -3363,7 +3283,6 @@ def SVG_ICO(self):
 	self.Star4.SetBitmap(Bitmap)
 
 	Bitmap = None
-
 
 if __name__ == "__main__":
 	main()

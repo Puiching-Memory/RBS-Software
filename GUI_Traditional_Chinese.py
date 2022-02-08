@@ -34,7 +34,7 @@ class Main ( wx.Frame ):
 
 		bSizer2.Add( self.m_staticText4, 0, wx.ALL, 5 )
 
-		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 400,70 ), 0 )
+		self.input1 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 400,70 ), wx.TE_MULTILINE )
 		bSizer2.Add( self.input1, 0, wx.ALL, 5 )
 
 		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"繁体:", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -42,7 +42,7 @@ class Main ( wx.Frame ):
 
 		bSizer2.Add( self.m_staticText5, 0, wx.ALL, 5 )
 
-		self.input2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 400,70 ), 0 )
+		self.input2 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 400,70 ), wx.TE_MULTILINE )
 		bSizer2.Add( self.input2, 0, wx.ALL, 5 )
 
 

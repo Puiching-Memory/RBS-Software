@@ -3,6 +3,7 @@
 ##############################
 import wx
 import random
+import time
 
 import GUI_Roll
 
@@ -17,6 +18,12 @@ class CalcFrame(GUI_Roll.Main):
 		GUI_Roll.Main.__init__(self, parent)
 
 		self.SetDoubleBuffered(True)  # 声明:启用双缓冲
+
+		if self.Using_TimeSeed.IsChecked() == False:
+			random.seed(self.SP_Seed.GetValue())
+		else:
+			##print(time.time())
+			random.seed(time.time())
 
 	def A_RUN(self, event):
 		self.A_DATA.Clear()
@@ -49,8 +56,19 @@ class CalcFrame(GUI_Roll.Main):
 			else:
 				wx.MilliSleep(100)
 				self.B_DATA.SetLabel(str(random.randint(self.B_MIN.GetValue(), self.B_MAX.GetValue())))
-			
-			##Resize(self)
+
+	#--------------------------------------------------------------------------
+	def SP_SeedOnSpinCtrl(self, event):
+		random.seed(self.SP_Seed.GetValue())
+
+	def Using_TimeSeedOnCheckBox(self, event):
+		if self.Using_TimeSeed.IsChecked() == True:
+			self.T_SP_Seed.Enable(False)
+			self.SP_Seed.Enable(False)
+			random.seed(time.time())
+		else:
+			self.T_SP_Seed.Enable(True)
+			self.SP_Seed.Enable(True)
 
 	def Close(self, event):
 		self.Destroy()

@@ -597,18 +597,18 @@ class Main ( wx.Frame ):
 
 		wSizer_BT.Add( self.Space1, 0, 0, 5 )
 
-		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
-		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
-		self.Space2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
-
-		wSizer_BT.Add( self.Space2, 0, 0, 5 )
-
 		self.Bottom_Bar1 = wx.Button( self, wx.ID_ANY, u"    ------", wx.DefaultPosition, wx.Size( 303,20 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Bottom_Bar1.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Bottom_Bar1.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Bottom_Bar1.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
 
 		wSizer_BT.Add( self.Bottom_Bar1, 0, 0, 5 )
+
+		self.Space2 = wx.Button( self, wx.ID_ANY, u"||", wx.DefaultPosition, wx.Size( 5,20 ), wx.BORDER_NONE )
+		self.Space2.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
+		self.Space2.SetBackgroundColour( wx.Colour( 255, 128, 64 ) )
+
+		wSizer_BT.Add( self.Space2, 0, 0, 5 )
 
 		self.Bottom_Bar2 = wx.Button( self, wx.ID_ANY, u"------", wx.DefaultPosition, wx.Size( 200,20 ), wx.BORDER_NONE )
 		self.Bottom_Bar2.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "@Microsoft YaHei UI" ) )
@@ -645,7 +645,7 @@ class Main ( wx.Frame ):
 		self.Layout()
 		self.Net_Timer = wx.Timer()
 		self.Net_Timer.SetOwner( self, Net_Timer )
-		self.Net_Timer.Start( 10000 )
+		self.Net_Timer.Start( 1000 )
 
 		self.PFM_Timer = wx.Timer()
 		self.PFM_Timer.SetOwner( self, PFM_Timer )
@@ -653,7 +653,7 @@ class Main ( wx.Frame ):
 
 		self.PRAM_Timer = wx.Timer()
 		self.PRAM_Timer.SetOwner( self, PRAM_Timer )
-		self.PRAM_Timer.Start( 60000 )
+		self.PRAM_Timer.Start( 1000 )
 
 		self.PRO_Timer = wx.Timer()
 		self.PRO_Timer.SetOwner( self, PRO_Timer )
