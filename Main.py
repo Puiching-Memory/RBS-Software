@@ -551,7 +551,7 @@ class CalcFrame(GUI.Main):
 		"""
 		计时器-时间显示
 		"""
-		self.Bottom_Bar2.SetLabel(time.strftime('%Y/%m/%d*%H:%M:%S'))
+		self.Bottom_Bar2.SetLabel(wx.Now())
 
 	# ------------------------------------------------------------------------
 
@@ -1126,7 +1126,7 @@ class CalcFrame(GUI.Main):
 				self.B_F2.SetLabel('<(￣︶￣)↗[GO!]')
 				self.B_F2.SetForegroundColour('black')
 			else:
-				Frame_BingWallPaper.Show()
+				wx.CallAfter(Frame_BingWallPaper.Show)
 				self.B_F2.SetBackgroundColour(wx.Colour(252, 135, 5))
 				self.B_F2.SetLabel('正在运行中~')
 				self.B_F2.SetForegroundColour('white')
@@ -2235,15 +2235,15 @@ class FileDrop(wx.FileDropTarget):
 		if len(filenames) > 1:
 			print('警告:暂不支持多文件拖放,取最后一个文件')
 
-		File_cfg = configparser.ConfigParser()
-		File_cfg.read('./cfg/File.cfg')
-		File_cfg.set('File', 'path', name)
-		File_cfg.set('File', 'type', str(file_type))
-		File_cfg.write(open('./cfg/File.cfg', 'w'))
-
-		wx.CallAfter(wx.MessageBox, '检测到文件:' + file_type)  # 延期呼叫事件--wx自带的一种多线程方法
+		if file_type == 'txt':
+			##wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[支持]' + '\n' + 'RBS支持加载这种文件', caption='文件处理')
+			wx.CallAfter(wx.LaunchDefaultApplication, name, flags = 0)
+		else:
+			wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[不支持]' + '\n' + '强行加载可能会导致未知错误!', caption='文件处理')
 
 		##M_File.main() # 如果直接这样打开会阻塞线程,windows资源管理器也会卡住
+
+		##frame_main.Hide()
 
 		return True
 
@@ -2299,6 +2299,7 @@ def main():
 	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
 	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
 	global Frame_Draw, Frame_SSC, Frame_College, Frame_Performance_monitor
+	global frame_main
 
 	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
@@ -2306,9 +2307,9 @@ def main():
 	cfg.read('./cfg/main.cfg')
 
 	app = wx.App(eval(cfg.get('window', 'sys_test')))  # GUI循环及前置设置
-	frame = CalcFrame(None)
+	frame_main = CalcFrame(None)
 
-	frame.Show(True)
+	frame_main.Show(True)
 	##app.SetTopWindow(frame=frame)
 
 	Frame_Roll = M_Roll.CalcFrame(None)
@@ -2353,11 +2354,12 @@ def Pre_main():
 	global Frame_Base_conversion, Frame_Traditional_Chinese, Frame_BMI, Frame_PPTNG, Frame_Timer, Frame_Idion, Frame_DDT, Frame_Music
 	global Frame_WALP, Frame_Version, Frame_History, Frame_Date, Frame_File, Frame_QRcode, Frame_BingWallPaper, Frame_Trigonometric
 	global Frame_Draw, Frame_SSC, Frame_College, Frame_Performance_monitor
+	global frame_main
 
 	global Frame_User, Frame_Setting, Frame_Plug_in, Frame_Probe
 
 	# GUI循环及前置设置
-	frame = CalcFrame(None)
+	frame_main = CalcFrame(None)
 
 	Frame_Roll = M_Roll.CalcFrame(None)
 	Frame_Element = M_Element.CalcFrame(None)
@@ -2393,7 +2395,7 @@ def Pre_main():
 	Frame_Plug_in = Plug_in.CalcFrame(None)
 	Frame_Probe = Probe.CalcFrame(None)
 
-	return frame
+	return frame_main
 
 
 def Colour_clean(self):

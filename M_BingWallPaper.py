@@ -24,6 +24,7 @@ class CalcFrame(GUI_BingWallPaper.Main):
 		
 	def MainOnShow(self, event):
 		global Is_First_Boost
+		wait = wx.BusyCursor()
 		if Is_First_Boost == False:
 			print('正在获取下载信息')
 			data_url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=4&mkt=zh-CN"
@@ -53,6 +54,8 @@ class CalcFrame(GUI_BingWallPaper.Main):
 			self.Picture4.SetBitmap(wx.Bitmap('./Cache/BingWallPaper_3R.jpg'))
 
 			Is_First_Boost = True
+
+		del wait
 
 	def B_SETOnButtonClick(self, event):
 		
@@ -86,7 +89,6 @@ def main():
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
-
 
 if __name__ == "__main__":
 	main()
