@@ -22,7 +22,7 @@ class CalcFrame(GUI_About.Main):
 
 		version = cfg.get('main', 'VERSION')
 
-		self.version.SetLabel('CC2021 #' + version)
+		self.version.SetLabel('Version#' + version)
 
 	def Close(self, event):
 		try:

@@ -25,9 +25,11 @@ class CalcFrame(GUI_Performance_monitor.Main):
 
 		plotter_CPU = plot.PlotCanvas(self)
 		plotter_CPU.SetInitialSize(size=(500, 210))
+		plotter_CPU.SetEnableAntiAliasing(True)
 
 		plotter_RAM = plot.PlotCanvas(self)
 		plotter_RAM.SetInitialSize(size=(500, 210))
+		plotter_RAM.SetEnableAntiAliasing(True)
 
 		plotter_RAM.Move(0,220)
 		
@@ -77,10 +79,10 @@ class CalcFrame(GUI_Performance_monitor.Main):
 		line_CPU = plot.PolyLine(data_CPU, colour='red', width=2)
 		line_RAM = plot.PolyLine(data_RAM, colour='blue', width=2)
 
-		gc= plot.PlotGraphics([line_CPU], 'CPU', 'time', 'data')
+		gc= plot.PlotGraphics([line_CPU], 'CPU', 'time', '')
 		plotter_CPU.Draw(gc)
 
-		gc= plot.PlotGraphics([line_RAM], 'RAM', 'time', 'data')
+		gc= plot.PlotGraphics([line_RAM], 'RAM', 'time', '')
 		plotter_RAM.Draw(gc)
 
 	def Close(self, event):

@@ -26,6 +26,7 @@ class Main ( wx.Frame ):
 		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software", pos = wx.DefaultPosition, size = wx.Size( 750,410 ), style = wx.FRAME_SHAPED|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+		self.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOW ) )
 
@@ -52,7 +53,8 @@ class Main ( wx.Frame ):
 
 		wSizer_L1.Add( self.Weather, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Note = wx.Button( self, wx.ID_ANY, u"Ｗelcome to RBS_Software", wx.DefaultPosition, wx.Size( 308,25 ), wx.BORDER_NONE )
+		self.Note = wx.Button( self, wx.ID_ANY, u"Welcome to RBS_Software", wx.DefaultPosition, wx.Size( 308,25 ), wx.BORDER_NONE )
+		self.Note.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Dubai" ) )
 		self.Note.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Note.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
@@ -645,7 +647,7 @@ class Main ( wx.Frame ):
 		self.Layout()
 		self.Net_Timer = wx.Timer()
 		self.Net_Timer.SetOwner( self, Net_Timer )
-		self.Net_Timer.Start( 1000 )
+		self.Net_Timer.Start( 10000 )
 
 		self.PFM_Timer = wx.Timer()
 		self.PFM_Timer.SetOwner( self, PFM_Timer )

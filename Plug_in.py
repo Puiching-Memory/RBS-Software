@@ -39,11 +39,7 @@ class CalcFrame(GUI_Plug_in.Main):
 
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 
 	def Setup(self, event):
 		global place
@@ -52,7 +48,7 @@ class CalcFrame(GUI_Plug_in.Main):
 			path = './plug-in/' + path + '/Info.cfg'
 			print(path)
 			cfg = configparser.ConfigParser()
-			cfg.read(path)
+			cfg.read(path, encoding='utf-8')
 
 			name = cfg.get('main', 'name')
 			self.T_Name.SetLabel('插件:' + name)
@@ -86,7 +82,7 @@ class CalcFrame(GUI_Plug_in.Main):
 
 			self.B_Change.Enable(True)
 
-		except:
+		except IndexError as error:
 			self.T_Name.SetLabel('插件:' + 'N/A')
 			self.T_Author.SetLabel('作者:'+ 'N/A')
 			self.T_PVersion.SetLabel('插件版本:' + 'N/A')
@@ -95,6 +91,8 @@ class CalcFrame(GUI_Plug_in.Main):
 			self.T_State.SetLabel('状态:' + '未知错误')
 			self.B_Change.SetLabel('---')
 			self.B_Change.Enable(False)
+
+			print(error)
 
 	def Change(self, event):
 		if self.B_Change.GetLabel() == '加载':

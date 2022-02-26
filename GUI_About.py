@@ -34,7 +34,7 @@ class Main ( wx.Frame ):
 
 		wSizer31.Add( self.LOGO, 0, wx.ALL, 5 )
 
-		self.version = wx.StaticText( self, wx.ID_ANY, u"CC2021 Ver000.00.00", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.version = wx.StaticText( self, wx.ID_ANY, u"Version#000.00.00", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.version.Wrap( -1 )
 
 		wSizer31.Add( self.version, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -50,7 +50,7 @@ class Main ( wx.Frame ):
 
 		bSizer4.Add( self.m_staticText20, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
-		self.m_staticText81 = wx.StaticText( self, wx.ID_ANY, u"Author--作者\n广州市培正中学 悦社 张凯\n©2021 ZK2021. All rights reserved.", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
+		self.m_staticText81 = wx.StaticText( self, wx.ID_ANY, u"Author--作者\n广州市培正中学 悦社 张凯\n©2022 ZhangKai. All rights reserved.", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTER_HORIZONTAL )
 		self.m_staticText81.Wrap( -1 )
 
 		bSizer4.Add( self.m_staticText81, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
