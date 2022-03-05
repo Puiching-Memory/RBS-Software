@@ -19,7 +19,8 @@ class CalcFrame(GUI_SSC.Main):
 		# 定义主函数
 		GUI_SSC.Main.__init__(self, parent)
 
-		global key_list
+		global key_list,window_frame
+		window_frame = self
 		key_list = []
 
 		self.SetDoubleBuffered(True)  # 声明:启用双缓冲
@@ -325,14 +326,14 @@ class FileDrop(wx.FileDropTarget):
 			try:
 				data = xlrd.open_workbook(filenames[0])
 			except:
-				frame.C_Path.SetLabel('错误的文件')
+				window_frame.C_Path.SetLabel('错误的文件')
 			else:
-				frame.C_Path.SetLabel('文件路径:' + filenames[0])
+				window_frame.C_Path.SetLabel('文件路径:' + filenames[0])
 				table = data.sheets()[0]
 
-			frame.NoteBook.ChangeSelection(2)
-			frame.C_Class.SetLabel('班级:' + str(table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2]))
-			frame.C_NUM.SetLabel('总人数:' + str(len(table.col_values(0, start_rowx=0, end_rowx=None))))
+			window_frame.NoteBook.ChangeSelection(2)
+			window_frame.C_Class.SetLabel('班级:' + str(table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2]))
+			window_frame.C_NUM.SetLabel('总人数:' + str(len(table.col_values(0, start_rowx=0, end_rowx=None))))
 
 			if table.ncols == 1:
 				pass
@@ -343,15 +344,15 @@ class FileDrop(wx.FileDropTarget):
 						list.remove('')
 
 					if i == 1:
-						frame.C_Col1.SetLabel('列A权重:' + str(len(list)))
+						window_frame.C_Col1.SetLabel('列A权重:' + str(len(list)))
 					elif i == 2:
-						frame.C_Col2.SetLabel('列B权重:' + str(len(list)))
+						window_frame.C_Col2.SetLabel('列B权重:' + str(len(list)))
 					elif i == 3:
-						frame.C_Col3.SetLabel('列C权重:' + str(len(list)))
+						window_frame.C_Col3.SetLabel('列C权重:' + str(len(list)))
 					elif i == 4:
-						frame.C_Col4.SetLabel('列D权重:' + str(len(list)))
+						window_frame.C_Col4.SetLabel('列D权重:' + str(len(list)))
 					elif i == 5:
-						frame.C_Col5.SetLabel('列E权重:' + str(len(list)))
+						window_frame.C_Col5.SetLabel('列E权重:' + str(len(list)))
 
 				weight = 0
 				for i in range(0,table.nrows):
@@ -364,26 +365,26 @@ class FileDrop(wx.FileDropTarget):
 				proportion = weight/(weight + table.nrows)
 				P_size = int(100 * proportion)
 
-				frame.C_Guage.SetValue(P_size)
-				frame.C_L.SetLabel('有效数据:' + str(weight) + '/' + str(table.nrows))
-				frame.C_R.SetLabel(str(P_size) + '%')
+				window_frame.C_Guage.SetValue(P_size)
+				window_frame.C_L.SetLabel('有效数据:' + str(weight) + '/' + str(table.nrows))
+				window_frame.C_R.SetLabel(str(P_size) + '%')
 
 
 			fileinfo = os.stat(filenames[0])
-			frame.C_ListBox.Append("索引号:" + str(fileinfo.st_ino))
-			frame.C_ListBox.Append("驻留设备:" + str(fileinfo.st_dev))
-			frame.C_ListBox.Append("文件大小:" + str(fileinfo.st_size) + "字节")
-			frame.C_ListBox.Append("最后一次访问时间:" + str(formatTime(fileinfo.st_atime)))
-			frame.C_ListBox.Append("最后一次修改时间:" + str(formatTime(fileinfo.st_mtime)))
-			frame.C_ListBox.Append("最后一次状态变化的时间:" + str(formatTime(fileinfo.st_ctime)))
-			frame.C_ListBox.Append("保护模式:" + str(fileinfo.st_mode))
-			frame.C_ListBox.Append("节点号:" + str(fileinfo.st_ino))
-			frame.C_ListBox.Append("连接数:" + str(fileinfo.st_nlink))
-			frame.C_ListBox.Append("所有者ID:" + str(fileinfo.st_uid))
-			frame.C_ListBox.Append("所有者组ID:" + str(fileinfo.st_gid))
+			window_frame.C_ListBox.Append("索引号:" + str(fileinfo.st_ino))
+			window_frame.C_ListBox.Append("驻留设备:" + str(fileinfo.st_dev))
+			window_frame.C_ListBox.Append("文件大小:" + str(fileinfo.st_size) + "字节")
+			window_frame.C_ListBox.Append("最后一次访问时间:" + str(formatTime(fileinfo.st_atime)))
+			window_frame.C_ListBox.Append("最后一次修改时间:" + str(formatTime(fileinfo.st_mtime)))
+			window_frame.C_ListBox.Append("最后一次状态变化的时间:" + str(formatTime(fileinfo.st_ctime)))
+			window_frame.C_ListBox.Append("保护模式:" + str(fileinfo.st_mode))
+			window_frame.C_ListBox.Append("节点号:" + str(fileinfo.st_ino))
+			window_frame.C_ListBox.Append("连接数:" + str(fileinfo.st_nlink))
+			window_frame.C_ListBox.Append("所有者ID:" + str(fileinfo.st_uid))
+			window_frame.C_ListBox.Append("所有者组ID:" + str(fileinfo.st_gid))
 
 
-			frame.Resize()
+			window_frame.Resize()
 			
 
 			#if table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2] == 
@@ -401,7 +402,6 @@ class FileDrop(wx.FileDropTarget):
 # 主函数
 ##############################
 def main():
-	global frame
 	app = wx.App(False)
 	frame = CalcFrame(None)
 	frame.Show(True)

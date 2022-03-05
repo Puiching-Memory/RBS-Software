@@ -41,11 +41,11 @@ import M_WALP  # WALP地理信息系统
 import M_Version  # 版本查看器
 import M_History  # 历史上的今天
 import M_Date  # 日期查看器
-import M_Performance_monitor # 性能监视器
+import M_Performance_monitor  # 性能监视器
 import M_File  # 文件管理器
 import M_QRcode  # 二维码生成器
 import M_BingWallPaper  # 必应壁纸
-##import M_WxGL # 3D模块OpenGL
+# import M_WxGL # 3D模块OpenGL
 import M_Trigonometric  # 三角函数
 import M_Draw  # 画板
 import M_SSC  # 作业扫码登记系统
@@ -56,7 +56,7 @@ import Setting  # 设置界面
 import Plug_in  # 插件
 import Probe  # 探针
 
-##import P_PPT # PPT小工具
+# import P_PPT # PPT小工具
 
 # 临时库
 ##import YOLO
@@ -67,8 +67,14 @@ import WeaterAPI  # 天气API(缺乏通用性)
 # RBS_Code
 import RBS_PLC
 
+# TheAlgorithms算法
+#import TheAlgorithms
+#from TheAlgorithms import *
+
 # 核心库
-import wx, wx.adv, wx.svg
+import wx
+import wx.adv
+import wx.svg
 import GUI
 import configparser  # 设置文件(.cfg)库
 import logging  # 日志库
@@ -81,15 +87,17 @@ import psutil
 import time
 import PIL.Image
 import ping3
-import random # 随机数
-##import re # 正则表达式
-##import subprocess # 管线
-import gc # 内存回收
-from ctypes import WinDLL # 运行Windows DLL
+import random  # 随机数
+# import re # 正则表达式
+# import subprocess # 管线
+import gc  # 内存回收
+from ctypes import WinDLL  # 运行Windows DLL
+import imghdr
 
 ###########################################################################
 # Class Main
 ###########################################################################
+
 
 class CalcFrame(GUI.Main):
 	# ↓↓↓↓↓ 定义wx.ID ↓↓↓↓↓
@@ -100,7 +108,7 @@ class CalcFrame(GUI.Main):
 
 	def __init__(self, parent):
 		GUI.Main.__init__(self, parent)  # 初始化GUI
-		
+
 		# 初始化子模块
 		self.Frame_Roll = M_Roll.CalcFrame(None)
 		self.Frame_Element = M_Element.CalcFrame(None)
@@ -136,25 +144,31 @@ class CalcFrame(GUI.Main):
 		self.Frame_Plug_in = Plug_in.CalcFrame(None)
 		self.Frame_Probe = Probe.CalcFrame(None)
 
-		#------------------------------------------------------------
-		
-		self.threads = [] # 预留给多线程
+		# ------------------------------------------------------------
 
-		gdi32= WinDLL("gdi32.dll") # 调用此DLL载入字体
-		fonts = [font for font in os.listdir("fonts") if font.endswith("otf") or font.endswith("ttf")]
+		self.threads = []  # 预留给多线程
+
+		gdi32 = WinDLL("gdi32.dll")  # 调用此DLL载入字体
+		fonts = [font for font in os.listdir(
+			"fonts") if font.endswith("otf") or font.endswith("ttf")]
 		for font in fonts:
-			gdi32.AddFontResourceW(os.path.join("fonts",font))
-			print('载入字体:',os.path.join("fonts",font))
+			gdi32.AddFontResourceW(os.path.join("fonts", font))
+			print('载入字体:', os.path.join("fonts", font))
 
-		for i in range(0, len(self.GetChildren())): # 对所有对象设置字体
+		for i in range(0, len(self.GetChildren())):  # 对所有对象设置字体
 			Nself = self.GetChildren()[i]
-			Nself.SetFont(wx.Font( 9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC" ))
+			Nself.SetFont(wx.Font(9, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
+								  wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC"))
 
 		# 为个别组件单独设置字体
-		self.T_F1.SetFont(wx.Font( wx.Font( 15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC" )))
-		self.T_F2.SetFont(wx.Font( wx.Font( 15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC" )))
-		self.T_F3.SetFont(wx.Font( wx.Font( 15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC" )))
-		self.T_F4.SetFont(wx.Font( wx.Font( 15, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC" )))
+		self.T_F1.SetFont(wx.Font(wx.Font(15, wx.FONTFAMILY_DEFAULT,
+										  wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC")))
+		self.T_F2.SetFont(wx.Font(wx.Font(15, wx.FONTFAMILY_DEFAULT,
+										  wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC")))
+		self.T_F3.SetFont(wx.Font(wx.Font(15, wx.FONTFAMILY_DEFAULT,
+										  wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC")))
+		self.T_F4.SetFont(wx.Font(wx.Font(15, wx.FONTFAMILY_DEFAULT,
+										  wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC")))
 
 		# ↓↓↓↓↓ 定义全局变量 ↓↓↓↓↓
 		global Main_State, FUN_State, version, setup, Colour_G, Hover, colour_Hover, cfg
@@ -180,7 +194,7 @@ class CalcFrame(GUI.Main):
 		Plug_in_list = Plug_in_list.readlines()
 		for i in range(0, len(Plug_in_list)):
 			self.Plug_in_box.Append(str(Plug_in_list[i]).replace('\n', ''))
-			print('载入插件',str(Plug_in_list[i]).replace('\n', ''))
+			print('载入插件', str(Plug_in_list[i]).replace('\n', ''))
 		# ------------------------------
 		setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
 		FUN_State = -1
@@ -201,9 +215,9 @@ class CalcFrame(GUI.Main):
 
 		self.SVG_ICO()  # 设置SVG图标
 
-		BG_Bitmap = PIL.Image.open('./pictures/BG.jpg') # 对不符合要求的背景图片进行修改
-		if BG_Bitmap.getpixel != (750,350):
-			BG_Bitmap = BG_Bitmap.resize((750,350))
+		BG_Bitmap = PIL.Image.open('./pictures/BG.jpg')  # 对不符合要求的背景图片进行修改
+		if BG_Bitmap.getpixel != (750, 350):
+			BG_Bitmap = BG_Bitmap.resize((750, 350))
 			BG_Bitmap.save('./pictures/BG.jpg')
 
 		self.Weather.SetLabel(WeaterAPI.Now_weather())  # 获取and显示天气信息
@@ -216,7 +230,7 @@ class CalcFrame(GUI.Main):
 		self.start()  # 初始化界面布局函数(纯操作,无计算)
 
 		self.SetTransparent(int(transparent))  # 设置窗口透明度
-		##self.SetCursor(wx.Cursor(6)) # 设置窗口光标
+		# self.SetCursor(wx.Cursor(6)) # 设置窗口光标
 
 		# ------------------------------------------------------
 		# 初始化完成后日志输出
@@ -226,9 +240,11 @@ class CalcFrame(GUI.Main):
 		self.Self_CMD('初始化完成,日志已保存')
 
 		if eval(is_push_info):
-			windows_info_window = wx.adv.NotificationMessage('RBS_Software Info')
+			windows_info_window = wx.adv.NotificationMessage(
+				'RBS_Software Info')
 			windows_info_window.SetMessage(wx.GetOsDescription()
-										   + '\n屏幕分辨率:' + str(wx.ClientDisplayRect())
+										   + '\n屏幕分辨率:' +
+										   str(wx.ClientDisplayRect())
 										   + '\nversion:' + wx.version())
 			windows_info_window.Show()
 		else:
@@ -245,7 +261,7 @@ class CalcFrame(GUI.Main):
 			dc = event.GetDC()
 			dc.Clear()
 			dc.DrawBitmap(wx.Bitmap('./pictures/BG.jpg'), 0, 50, useMask=True)
-		##print(1)
+		# print(1)
 		else:
 			dc = event.GetDC()
 			dc.Clear()
@@ -272,7 +288,7 @@ class CalcFrame(GUI.Main):
 		"""
 		self_关闭程序
 		"""
-		while self.threads: # 移除其他线程
+		while self.threads:  # 移除其他线程
 			thread = self.threads[0]
 			thread.timeToQuit.set()
 			self.threads.remove(thread)
@@ -290,15 +306,16 @@ class CalcFrame(GUI.Main):
 		self.PRO_Timer.Stop()
 		self.Time_Timer.Stop()
 
-		gdi32= WinDLL("gdi32.dll") # 调用此DLL卸载字体
-		fonts = [font for font in os.listdir("fonts") if font.endswith("otf") or font.endswith("ttf")]
+		gdi32 = WinDLL("gdi32.dll")  # 调用此DLL卸载字体
+		fonts = [font for font in os.listdir(
+			"fonts") if font.endswith("otf") or font.endswith("ttf")]
 		for font in fonts:
-			gdi32.RemoveFontResourceW(os.path.join("fonts",font))
-			print('卸载字体:',os.path.join("fonts",font))
+			gdi32.RemoveFontResourceW(os.path.join("fonts", font))
+			print('卸载字体:', os.path.join("fonts", font))
 
 		# 销毁GUI
-		##self.Destroy()
-		##self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
+		# self.Destroy()
+		# self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
 		wx.CallAfter(sys.exit, 0)
 
 	def Ico(self, event):
@@ -356,13 +373,17 @@ class CalcFrame(GUI.Main):
 								 "RBS_Software2021")  # 设置系统托盘图标
 
 			# 绑定托盘事件
-			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP, self.OnTaskBar)  # 右键单击托盘图标
-			##self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
-			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK, self.OnTaskBarLeftDClick)  # 左键双击托盘图标
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_RIGHT_UP,
+							  self.OnTaskBar)  # 右键单击托盘图标
+			# self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_UP, self.OnTaskBar) # 左键单击托盘图标
+			self.taskBar.Bind(wx.adv.EVT_TASKBAR_LEFT_DCLICK,
+							  self.OnTaskBarLeftDClick)  # 左键双击托盘图标
 			self.taskBar.Bind(wx.EVT_MENU, self.Close, id=self.MENU_EXIT)  # 退出
 			self.taskBar.Bind(wx.EVT_MENU, self.Ico, id=self.MENU_SHOW)  # 显示窗口
-			self.taskBar.Bind(wx.EVT_MENU, self.Setting, id=self.MENU_SET)  # 设置
-			self.taskBar.Bind(wx.EVT_MENU, self.About, id=self.MENU_ABOUT)  # 关于
+			self.taskBar.Bind(wx.EVT_MENU, self.Setting,
+							  id=self.MENU_SET)  # 设置
+			self.taskBar.Bind(wx.EVT_MENU, self.About,
+							  id=self.MENU_ABOUT)  # 关于
 
 		else:
 			self.Show()
@@ -397,9 +418,10 @@ class CalcFrame(GUI.Main):
 
 	def Cmd(self, event):
 		# 向控制台发送命令
-		##os.system("C:\WINDOWS\system32\cmd.exe")
-		##wx.Shell('C:\WINDOWS\system32\cmd.exe')
-		win32api.ShellExecute(0, 'open', 'C:\WINDOWS\system32\cmd.exe', '', '', 1)
+		# os.system("C:\WINDOWS\system32\cmd.exe")
+		# wx.Shell('C:\WINDOWS\system32\cmd.exe')
+		win32api.ShellExecute(
+			0, 'open', 'C:\WINDOWS\system32\cmd.exe', '', '', 1)
 
 	def About(self, event):
 		# 打开<关于>界面
@@ -486,7 +508,7 @@ class CalcFrame(GUI.Main):
 			self.CMD_IN.SetValue('')
 
 	def move_start(self, frame_pos):
-		##print(frame_pos)
+		# print(frame_pos)
 		self.SetPosition(frame_pos)
 
 	def OnLeftDown(self, event):
@@ -499,7 +521,7 @@ class CalcFrame(GUI.Main):
 			self.threads[0].timeToQuit.set()
 			self.threads.remove(self.threads[0])
 
-		##print('退出线程')
+		# print('退出线程')
 
 	def Change_Size(self, event):
 		print(self.GetSize())
@@ -514,23 +536,24 @@ class CalcFrame(GUI.Main):
 			print(str(Plug_in_list[i]).replace('\n', ''))
 
 	def Plug_in_run(self, event):
-		path = './plug-in/' + self.Plug_in_box.GetString(self.Plug_in_box.GetSelection())
+		path = './plug-in/' + \
+			self.Plug_in_box.GetString(self.Plug_in_box.GetSelection())
 		print(path)
-		
+
 		cfg.read(path + '/Info.cfg', encoding='utf-8')
-		entrance = cfg.get('main','ENTRANCE')
+		entrance = cfg.get('main', 'ENTRANCE')
 
 		path = os.path.abspath(path + '/' + entrance)
 
 		print('尝试执行插件:' + path)
 		self.Self_CMD('尝试执行插件:' + path)
 
-		data = open(path,"r",encoding='utf-8').readlines()
+		data = open(path, "r", encoding='utf-8').readlines()
 		coding = ''
-		for i in range(0,len(data)):
+		for i in range(0, len(data)):
 			coding = coding + data[i]
 
-		#print(coding)
+		# print(coding)
 		exec(coding)
 
 	def Hot_Key_Down(self, event):
@@ -606,7 +629,8 @@ class CalcFrame(GUI.Main):
 		调用gc库
 		"""
 		try:
-			self.Bottom_Bar4.SetLabel(str(gc.get_count()[0]) + '/' + str(gc.get_count()[1]) + '/' + str(gc.get_count()[2]))
+			self.Bottom_Bar4.SetLabel(str(
+				gc.get_count()[0]) + '/' + str(gc.get_count()[1]) + '/' + str(gc.get_count()[2]))
 		except:
 			self.Bottom_Bar4.SetLabel('--/--/--')
 
@@ -637,8 +661,8 @@ class CalcFrame(GUI.Main):
 		except:
 			self.Network.SetLabel('Net:Ero')
 
-		#print('net_time')
-		##print(ping3.ping('www.baidu.com'))
+		# print('net_time')
+		# print(ping3.ping('www.baidu.com'))
 
 	def Time_Tick(self, event):
 		"""
@@ -1833,13 +1857,15 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note1.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note1.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)  # 随机抽取一条
 		note = note[roll]
 		note = note.replace('\n', '')
 
-		self.Colour_Set(note, colour_Main, colour_Bottom, colour_SideL)  # 主界面颜色设置
+		self.Colour_Set(note, colour_Main, colour_Bottom,
+						colour_SideL)  # 主界面颜色设置
 
 		self.G1.SetBackgroundColour(colour_Main)  # 主界面颜色设置
 		self.G1.SetForegroundColour("White")  # 按钮字体颜色设置
@@ -1882,7 +1908,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note2.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note2.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -1931,7 +1958,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note3.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note3.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -1980,7 +2008,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note4.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note4.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2029,7 +2058,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note5.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note5.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2077,7 +2107,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note6.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note6.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2125,7 +2156,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note7.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note7.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2173,7 +2205,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note8.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note8.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2221,7 +2254,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note9.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note9.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2269,7 +2303,8 @@ class CalcFrame(GUI.Main):
 		colour_SideL = colour_cfg.get('colour', 'colour_SideL')
 		colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		note = open('./DATA/Main/Note/Note10.txt', 'r', encoding='utf-8')  # 主界面留言定义
+		note = open('./DATA/Main/Note/Note10.txt',
+					'r', encoding='utf-8')  # 主界面留言定义
 		note = note.readlines()
 		roll = random.randint(0, len(note) - 1)
 		note = note[roll]
@@ -2281,12 +2316,12 @@ class CalcFrame(GUI.Main):
 		self.G10.SetForegroundColour("White")
 
 		self.T_F1.SetLabel("随机数生成器")
-		self.T_F2.SetLabel("进制转换")
+		self.T_F2.SetLabel("单位转换")
 		self.T_F3.SetLabel("值日表")
 		self.T_F4.SetLabel("计时器")
 
 		self.Tip1.SetLabel('利用随机数函数生成随机数字')
-		self.Tip2.SetLabel('2进制/8进制/10进制/16进制转换')
+		self.Tip2.SetLabel('物理、化学、数学单位换算')
 		self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
 		self.Tip4.SetLabel('简单的计时器,真的只是计时')
 
@@ -2300,8 +2335,8 @@ class CalcFrame(GUI.Main):
 		self.BUT_CLFN(10)
 
 		self.Refresh()
-	
-	#辅助函数------------------------------------------------------------
+
+	# 辅助函数------------------------------------------------------------
 
 	def BUT_CLFN(self, num):
 		if num == 1:
@@ -3014,13 +3049,16 @@ class CalcFrame(GUI.Main):
 							wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 		'''
 
-		Internet_ON = wx.svg.SVGimage.CreateFromFile('./pictures/icon_NetY.svg')
-		Internet_OFF = wx.svg.SVGimage.CreateFromFile('./pictures/icon_NetN.svg')
+		Internet_ON = wx.svg.SVGimage.CreateFromFile(
+			'./pictures/icon_NetY.svg')
+		Internet_OFF = wx.svg.SVGimage.CreateFromFile(
+			'./pictures/icon_NetN.svg')
 		File_ON = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveY.svg')
 		File_OFF = wx.svg.SVGimage.CreateFromFile('./pictures/icon_SaveN.svg')
 
 		Internet_ON = Internet_ON.ConvertToScaledBitmap(wx.Size(20, 20), self)
-		Internet_OFF = Internet_OFF.ConvertToScaledBitmap(wx.Size(20, 20), self)
+		Internet_OFF = Internet_OFF.ConvertToScaledBitmap(
+			wx.Size(20, 20), self)
 		File_ON = File_ON.ConvertToScaledBitmap(wx.Size(20, 20), self)
 		File_OFF = File_OFF.ConvertToScaledBitmap(wx.Size(20, 20), self)
 
@@ -3072,7 +3110,8 @@ class CalcFrame(GUI.Main):
 		if self.CMD_OUT.GetValue() == '':
 			self.CMD_OUT.write('>>>' + time.strftime('%H:%M:%S') + ':' + info)
 		else:
-			self.CMD_OUT.write('\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
+			self.CMD_OUT.write(
+				'\n' + '>>>' + time.strftime('%H:%M:%S') + ':' + info)
 
 	def CMD(self, info):
 		"""
@@ -3081,25 +3120,31 @@ class CalcFrame(GUI.Main):
 		if info == 'clear' or info == 'clean' or info == 'cls':
 			self.CMD_OUT.SetValue('')
 		elif info == 'time':
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Time:' + time.strftime('%H:%M:%S'))
+			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue(
+			) + '\n' + '>>>Time:' + time.strftime('%H:%M:%S'))
 		elif info == 'random' or info == 'stochastic':
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>random:' + str(random.random()))
+			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue(
+			) + '\n' + '>>>random:' + str(random.random()))
 		elif info == 'close' or info == 'quit' or info == 'kill':
 			self.Destroy()
 		elif info == 'Net_Check':
 			os.system(
 				'ping localhost && ping www.baidu.com && ipconfig -all && msdt.exe /id NetworkDiagnosticsNetworkAdapter')
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Net_Check:网络检查已执行')
+			self.CMD_OUT.SetValue(
+				self.CMD_OUT.GetValue() + '\n' + '>>>Net_Check:网络检查已执行')
 		elif info == 'Sound_Check':
 			os.system('msdt.exe /id AudioPlaybackDiagnostic')
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>Sound_Check:声音检查已执行')
+			self.CMD_OUT.SetValue(
+				self.CMD_OUT.GetValue() + '\n' + '>>>Sound_Check:声音检查已执行')
 		elif info == 'help' or info == '?':
 			self.CMD_OUT.SetValue(
 				self.CMD_OUT.GetValue() + '\n' + '>>>Help:内置CMD程序版本:021.09.04\n可使用的命令:\nhelp\nquit\ntime\nrandom\nNet_Check\nSound_Check')
 		elif info == 'RBS_PLC_1' or info == 'rbsplc1':
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>RBS_PLC:' + str(RBS_PLC.get_desktop()))
+			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue(
+			) + '\n' + '>>>RBS_PLC:' + str(RBS_PLC.get_desktop()))
 		else:
-			self.CMD_OUT.SetValue(self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
+			self.CMD_OUT.SetValue(
+				self.CMD_OUT.GetValue() + '\n' + '>>>error:' + '未知的指令')
 
 		self.CMD_OUT.SetInsertionPointEnd()  # 设置光标到末尾
 
@@ -3157,6 +3202,7 @@ class CalcFrame(GUI.Main):
 # File Class
 ###########################################################################
 
+
 class FileDrop(wx.FileDropTarget):
 
 	def __init__(self, window):
@@ -3180,9 +3226,15 @@ class FileDrop(wx.FileDropTarget):
 
 		if file_type == 'txt':
 			##wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[支持]' + '\n' + 'RBS支持加载这种文件', caption='文件处理')
-			wx.CallAfter(wx.LaunchDefaultApplication, name, flags = 0)
+			wx.CallAfter(os.system, 'notepad ' + name)  # 调用Windows记事本打开txt文件
+
+		elif file_type == 'jpg' or file_type == 'gif' or file_type == 'png' or file_type == 'bmp' or file_type == 'webp':
+			with open(name, 'rb') as img_file:
+				wx.CallAfter(wx.MessageBox, '文件类型:' + file_type +
+							 '[位图]' + '\n' + '程序推测文件类型：' + imghdr.what(img_file), caption='文件处理')
 		else:
-			wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[不支持]' + '\n' + '强行加载可能会导致未知错误!', caption='文件处理')
+			wx.CallAfter(wx.MessageBox, '文件类型:' + file_type +
+						 '[不支持]' + '\n' + '强行加载可能会导致未知错误!', caption='文件处理')
 
 		return True
 
@@ -3206,8 +3258,8 @@ class WorkerThread(threading.Thread):
 			self.timeToQuit.wait(0.01)
 			if self.timeToQuit.isSet():
 				break
-			##print(wx.GetMouseState())
-			##print(wx.MouseState.LeftIsDown(wx.GetMouseState()))
+			# print(wx.GetMouseState())
+			# print(wx.MouseState.LeftIsDown(wx.GetMouseState()))
 			if not wx.MouseState.LeftIsDown(wx.GetMouseState()):
 				print('检测到鼠标拖动事件异步释放->删除线程')
 				wx.CallAfter(self.frame.OnLeftUp, None)
@@ -3252,22 +3304,34 @@ def Pre_main():
 
 	return frame_main
 
+
 def Log():
 	""" Log日志输出 """
-	##cfg = configparser.ConfigParser()  # 读取设置文件
+	# cfg = configparser.ConfigParser()  # 读取设置文件
 	##log_place = cfg.read('./cfg/setting.cfg')
 	log_place = './log/'
 
 	log_name = '{}.log'.format(
 		time.strftime('%Y-%m-%d-%H-%M'))  # 定义文件后缀名和命名规则
+
 	filename = os.path.join(log_place, log_name)
+	
+	'''
 	logging.basicConfig(  # LOG设置
 		level=logging.DEBUG,  # 输出级别
 		filename=filename,  # 文件名
 		filemode='w',  # 写入模式,w为重新写入,a为递增写入
-		format='%(asctime)s %(message)s', # 命名规则
-		datefmt='%m/%d/%Y %I:%M:%S %p' # 时间格式
-	)
+		format='%(asctime)s %(message)s',  # 命名规则
+		datefmt='%m/%d/%Y %I:%M:%S %p',  # 时间格式
+		)
+	'''
+
+	handler = logging.FileHandler(filename, "w", encoding="UTF-8")
+	formatter = logging.Formatter('%(asctime)s %(message)s',datefmt='%m/%d/%Y %I:%M:%S %p')
+	handler.setFormatter(formatter)
+	root_logger = logging.getLogger()
+	root_logger.addHandler(handler)
+	root_logger.setLevel(logging.INFO)
 
 
 def proc_exist(process_name):
@@ -3279,6 +3343,7 @@ def proc_exist(process_name):
 	if len(processCodeCov) > 0:
 		is_exist = True
 	return is_exist
+
 
 if __name__ == "__main__":
 	main()
