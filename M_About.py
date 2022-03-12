@@ -24,6 +24,8 @@ class CalcFrame(GUI_About.Main):
 
 		self.version.SetLabel('Version#' + version)
 
+		self.m_notebook1.SetSelection(0)
+
 	def Close(self, event):
 		try:
 			if app.GetAppName() != '_core.cp38-win_amd64':

@@ -18,9 +18,9 @@ import wx.grid
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_SSC V5", pos = wx.DefaultPosition, size = wx.Size( 500,600 ), style = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_SSC V6", pos = wx.DefaultPosition, size = wx.Size( 500,600 ), style = wx.DEFAULT_FRAME_STYLE|wx.RESIZE_BORDER|wx.TAB_TRAVERSAL )
 
-		self.SetSizeHints( wx.Size( 500,600 ), wx.Size( 1000,600 ) )
+		self.SetSizeHints( wx.Size( 500,600 ), wx.Size( -1,-1 ) )
 		self.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		bSizer2 = wx.BoxSizer( wx.VERTICAL )
@@ -29,7 +29,85 @@ class Main ( wx.Frame ):
 		self.A = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer21 = wx.BoxSizer( wx.VERTICAL )
 
-		self.A_GRID = wx.grid.Grid( self.A, wx.ID_ANY, wx.DefaultPosition, wx.Size( 1000,300 ), 0 )
+		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.A_NUM = wx.StaticText( self.A, wx.ID_ANY, u"学号:0000", wx.DefaultPosition, wx.Size( 130,-1 ), 0 )
+		self.A_NUM.Wrap( -1 )
+
+		self.A_NUM.SetBackgroundColour( wx.Colour( 227, 227, 227 ) )
+
+		wSizer5.Add( self.A_NUM, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.A_key_list = wx.StaticText( self.A, wx.ID_ANY, u"[]", wx.DefaultPosition, wx.Size( 100,-1 ), 0 )
+		self.A_key_list.Wrap( -1 )
+
+		self.A_key_list.SetBackgroundColour( wx.Colour( 228, 228, 228 ) )
+
+		wSizer5.Add( self.A_key_list, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.A_Replace = wx.Button( self.A, wx.ID_ANY, u"复位", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer5.Add( self.A_Replace, 0, wx.ALL, 5 )
+
+		self.A_Edit_State_Colour = wx.Button( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
+		self.A_Edit_State_Colour.SetBackgroundColour( wx.Colour( 192, 192, 192 ) )
+
+		wSizer5.Add( self.A_Edit_State_Colour, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.A_Edit_State_Text = wx.StaticText( self.A, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
+		self.A_Edit_State_Text.Wrap( -1 )
+
+		wSizer5.Add( self.A_Edit_State_Text, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer21.Add( wSizer5, 0, 0, 5 )
+
+		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		A_Kind_choiceChoices = [ u"A", u"B", u"C", u"D", u"E" ]
+		self.A_Kind_choice = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_Kind_choiceChoices, 0 )
+		self.A_Kind_choice.SetSelection( 0 )
+		wSizer6.Add( self.A_Kind_choice, 0, wx.ALL, 5 )
+
+		A_ClassChoices = [ u"Class1", u"Class2", u"Class3", u"Class4", u"Class5", u"Class6", u"Class7", u"Class8", u"Class9" ]
+		self.A_Class = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_ClassChoices, 0 )
+		self.A_Class.SetSelection( 7 )
+		wSizer6.Add( self.A_Class, 0, wx.ALL, 5 )
+
+		A_Input_StyleChoices = [ u"换行符(自动换行)", u"无换行符" ]
+		self.A_Input_Style = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_Input_StyleChoices, 0 )
+		self.A_Input_Style.SetSelection( 0 )
+		self.A_Input_Style.Enable( False )
+
+		wSizer6.Add( self.A_Input_Style, 0, wx.ALL, 5 )
+
+		self.A_Clean = wx.Button( self.A, wx.ID_ANY, u"清空", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer6.Add( self.A_Clean, 0, wx.ALL, 5 )
+
+
+		bSizer21.Add( wSizer6, 0, 0, 5 )
+
+		wSizer4 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
+		self.A_Export = wx.Button( self.A, wx.ID_ANY, u"导出Excel", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer4.Add( self.A_Export, 0, wx.ALL, 5 )
+
+		self.A_Save_path = wx.DirPickerCtrl( self.A, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
+		wSizer4.Add( self.A_Save_path, 0, wx.ALL, 5 )
+
+		self.A_Auto_Focus = wx.CheckBox( self.A, wx.ID_ANY, u"导出后自动定位文件", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.A_Auto_Focus.SetValue(True)
+		wSizer4.Add( self.A_Auto_Focus, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+
+		bSizer21.Add( wSizer4, 0, 0, 5 )
+
+		self.A_Report = wx.TextCtrl( self.A, wx.ID_ANY, u"没有任何数据的栏目：", wx.DefaultPosition, wx.Size( 2000,90 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		self.A_Report.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+		self.A_Report.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
+
+		bSizer21.Add( self.A_Report, 0, wx.ALL, 5 )
+
+		self.A_GRID = wx.grid.Grid( self.A, wx.ID_ANY, wx.DefaultPosition, wx.Size( 2000,1500 ), 0 )
 
 		# Grid
 		self.A_GRID.CreateGrid( 50, 5 )
@@ -112,92 +190,11 @@ class Main ( wx.Frame ):
 		self.A_GRID.SetDefaultCellAlignment( wx.ALIGN_CENTER, wx.ALIGN_TOP )
 		bSizer21.Add( self.A_GRID, 0, wx.ALL, 5 )
 
-		self.AST_Line = wx.StaticLine( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-		bSizer21.Add( self.AST_Line, 0, wx.EXPAND |wx.ALL, 5 )
-
-		wSizer5 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.A_NUM = wx.StaticText( self.A, wx.ID_ANY, u"学号:0000", wx.DefaultPosition, wx.Size( 130,-1 ), 0 )
-		self.A_NUM.Wrap( -1 )
-
-		self.A_NUM.SetBackgroundColour( wx.Colour( 227, 227, 227 ) )
-
-		wSizer5.Add( self.A_NUM, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.A_key_list = wx.StaticText( self.A, wx.ID_ANY, u"[]", wx.DefaultPosition, wx.Size( 100,-1 ), 0 )
-		self.A_key_list.Wrap( -1 )
-
-		self.A_key_list.SetBackgroundColour( wx.Colour( 228, 228, 228 ) )
-
-		wSizer5.Add( self.A_key_list, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.A_Replace = wx.Button( self.A, wx.ID_ANY, u"复位", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer5.Add( self.A_Replace, 0, wx.ALL, 5 )
-
-		self.A_Edit_State_Colour = wx.Button( self.A, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 25,-1 ), wx.BORDER_NONE )
-		self.A_Edit_State_Colour.SetBackgroundColour( wx.Colour( 192, 192, 192 ) )
-
-		wSizer5.Add( self.A_Edit_State_Colour, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-		self.A_Edit_State_Text = wx.StaticText( self.A, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 50,-1 ), 0 )
-		self.A_Edit_State_Text.Wrap( -1 )
-
-		wSizer5.Add( self.A_Edit_State_Text, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-
-		bSizer21.Add( wSizer5, 0, 0, 5 )
-
-		wSizer6 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		A_Kind_choiceChoices = [ u"A", u"B", u"C", u"D", u"E" ]
-		self.A_Kind_choice = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_Kind_choiceChoices, 0 )
-		self.A_Kind_choice.SetSelection( 0 )
-		wSizer6.Add( self.A_Kind_choice, 0, wx.ALL, 5 )
-
-		A_ClassChoices = [ u"Class1", u"Class2", u"Class3", u"Class4", u"Class5", u"Class6", u"Class7", u"Class8", u"Class9" ]
-		self.A_Class = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_ClassChoices, 0 )
-		self.A_Class.SetSelection( 7 )
-		wSizer6.Add( self.A_Class, 0, wx.ALL, 5 )
-
-		A_Input_StyleChoices = [ u"换行符(自动换行)", u"无换行符" ]
-		self.A_Input_Style = wx.Choice( self.A, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, A_Input_StyleChoices, 0 )
-		self.A_Input_Style.SetSelection( 0 )
-		self.A_Input_Style.Enable( False )
-
-		wSizer6.Add( self.A_Input_Style, 0, wx.ALL, 5 )
-
-		self.A_Clean = wx.Button( self.A, wx.ID_ANY, u"清空", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer6.Add( self.A_Clean, 0, wx.ALL, 5 )
-
-
-		bSizer21.Add( wSizer6, 0, 0, 5 )
-
-		wSizer4 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.A_Export = wx.Button( self.A, wx.ID_ANY, u"导出Excel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer4.Add( self.A_Export, 0, wx.ALL, 5 )
-
-		self.A_Save_path = wx.DirPickerCtrl( self.A, wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE )
-		wSizer4.Add( self.A_Save_path, 0, wx.ALL, 5 )
-
-		self.A_Auto_Focus = wx.CheckBox( self.A, wx.ID_ANY, u"导出后自动定位文件", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.A_Auto_Focus.SetValue(True)
-		wSizer4.Add( self.A_Auto_Focus, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-
-
-		bSizer21.Add( wSizer4, 1, wx.EXPAND, 5 )
-
-		self.A_Report = wx.TextCtrl( self.A, wx.ID_ANY, u"没有任何数据的栏目：", wx.DefaultPosition, wx.Size( 1000,90 ), wx.TE_MULTILINE|wx.TE_READONLY )
-		self.A_Report.SetFont( wx.Font( 10, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
-		self.A_Report.SetForegroundColour( wx.Colour( 255, 0, 0 ) )
-
-		bSizer21.Add( self.A_Report, 0, wx.ALL, 5 )
-
 
 		self.A.SetSizer( bSizer21 )
 		self.A.Layout()
 		bSizer21.Fit( self.A )
-		self.NoteBook.AddPage( self.A, u"条形码登记", False )
+		self.NoteBook.AddPage( self.A, u"条形码登记", True )
 		self.m_panel2 = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
@@ -237,67 +234,39 @@ class Main ( wx.Frame ):
 		self.m_staticline2 = wx.StaticLine( self.C, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer6.Add( self.m_staticline2, 0, wx.EXPAND |wx.ALL, 5 )
 
+		wSizer61 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+
 		C_ListBoxChoices = []
-		self.C_ListBox = wx.ListBox( self.C, wx.ID_ANY, wx.DefaultPosition, wx.Size( 1000,120 ), C_ListBoxChoices, 0 )
-		bSizer6.Add( self.C_ListBox, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.C_ListBox = wx.ListBox( self.C, wx.ID_ANY, wx.DefaultPosition, wx.Size( 300,120 ), C_ListBoxChoices, 0 )
+		wSizer61.Add( self.C_ListBox, 0, wx.ALL, 5 )
+
+		C_PathBoxChoices = []
+		self.C_PathBox = wx.ListBox( self.C, wx.ID_ANY, wx.DefaultPosition, wx.Size( 150,120 ), C_PathBoxChoices, wx.LB_EXTENDED|wx.LB_HSCROLL )
+		wSizer61.Add( self.C_PathBox, 0, wx.ALL, 5 )
+
+
+		bSizer6.Add( wSizer61, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.m_staticline4 = wx.StaticLine( self.C, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
 		bSizer6.Add( self.m_staticline4, 0, wx.EXPAND |wx.ALL, 5 )
 
-		wSizer41 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.C_Col1 = wx.StaticText( self.C, wx.ID_ANY, u"列A权重:0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_Col1.Wrap( -1 )
-
-		wSizer41.Add( self.C_Col1, 0, wx.ALL, 5 )
-
-		self.C_Col2 = wx.StaticText( self.C, wx.ID_ANY, u"列B权重:0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_Col2.Wrap( -1 )
-
-		wSizer41.Add( self.C_Col2, 0, wx.ALL, 5 )
-
-		self.C_Col3 = wx.StaticText( self.C, wx.ID_ANY, u"列C权重:0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_Col3.Wrap( -1 )
-
-		wSizer41.Add( self.C_Col3, 0, wx.ALL, 5 )
-
-		self.C_Col4 = wx.StaticText( self.C, wx.ID_ANY, u"列D权重:0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_Col4.Wrap( -1 )
-
-		wSizer41.Add( self.C_Col4, 0, wx.ALL, 5 )
-
-		self.C_Col5 = wx.StaticText( self.C, wx.ID_ANY, u"列E权重:0", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_Col5.Wrap( -1 )
-
-		wSizer41.Add( self.C_Col5, 0, wx.ALL, 5 )
-
-
-		bSizer6.Add( wSizer41, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
-
-		wSizer61 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
-
-		self.C_L = wx.StaticText( self.C, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_L.Wrap( -1 )
-
-		wSizer61.Add( self.C_L, 0, wx.ALL, 5 )
-
-		self.C_Guage = wx.Gauge( self.C, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 350,-1 ), wx.GA_HORIZONTAL )
-		self.C_Guage.SetValue( 0 )
-		wSizer61.Add( self.C_Guage, 0, wx.ALL, 5 )
-
-		self.C_R = wx.StaticText( self.C, wx.ID_ANY, u"---", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.C_R.Wrap( -1 )
-
-		wSizer61.Add( self.C_R, 0, wx.ALL, 5 )
-
-
-		bSizer6.Add( wSizer61, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.m_gauge3 = wx.Gauge( self.C, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 2000,-1 ), wx.GA_HORIZONTAL )
+		self.m_gauge3.SetValue( 0 )
+		bSizer6.Add( self.m_gauge3, 0, wx.ALL, 5 )
 
 
 		self.C.SetSizer( bSizer6 )
 		self.C.Layout()
 		bSizer6.Fit( self.C )
-		self.NoteBook.AddPage( self.C, u"分析", True )
+		self.NoteBook.AddPage( self.C, u"分析", False )
+		self.D = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer61 = wx.BoxSizer( wx.VERTICAL )
+
+
+		self.D.SetSizer( bSizer61 )
+		self.D.Layout()
+		bSizer61.Fit( self.D )
+		self.NoteBook.AddPage( self.D, u"节点", False )
 
 		bSizer2.Add( self.NoteBook, 0, 0, 0 )
 
@@ -310,13 +279,6 @@ class Main ( wx.Frame ):
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
 		self.Bind( wx.EVT_SIZE, self.MainOnSize )
-		self.A_GRID.Bind( wx.grid.EVT_GRID_EDITOR_HIDDEN, self.A_GRIDOnGridEditorHidden )
-		self.A_GRID.Bind( wx.grid.EVT_GRID_EDITOR_SHOWN, self.A_GRIDOnGridEditorShown )
-		self.A_GRID.Bind( wx.grid.EVT_GRID_LABEL_LEFT_CLICK, self.A_GRIDOnGridLabelLeftClick )
-		self.A_GRID.Bind( wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.A_GRIDOnGridLabelLeftDClick )
-		self.A_GRID.Bind( wx.grid.EVT_GRID_SELECT_CELL, self.A_GRIDOnGridSelectCell )
-		self.A_GRID.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
-		self.A_GRID.Bind( wx.EVT_KILL_FOCUS, self.A_GRIDOnKillFocus )
 		self.A_NUM.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.A_key_list.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.A_Replace.Bind( wx.EVT_BUTTON, self.Replace )
@@ -327,6 +289,14 @@ class Main ( wx.Frame ):
 		self.A_Clean.Bind( wx.EVT_BUTTON, self.Clean )
 		self.A_Export.Bind( wx.EVT_BUTTON, self.Export )
 		self.A_Auto_Focus.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.A_GRID.Bind( wx.grid.EVT_GRID_EDITOR_HIDDEN, self.A_GRIDOnGridEditorHidden )
+		self.A_GRID.Bind( wx.grid.EVT_GRID_EDITOR_SHOWN, self.A_GRIDOnGridEditorShown )
+		self.A_GRID.Bind( wx.grid.EVT_GRID_LABEL_LEFT_CLICK, self.A_GRIDOnGridLabelLeftClick )
+		self.A_GRID.Bind( wx.grid.EVT_GRID_LABEL_LEFT_DCLICK, self.A_GRIDOnGridLabelLeftDClick )
+		self.A_GRID.Bind( wx.grid.EVT_GRID_SELECT_CELL, self.A_GRIDOnGridSelectCell )
+		self.A_GRID.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.A_GRID.Bind( wx.EVT_KILL_FOCUS, self.A_GRIDOnKillFocus )
+		self.C_PathBox.Bind( wx.EVT_LISTBOX, self.C_Check )
 
 	def __del__( self ):
 		pass
@@ -339,27 +309,8 @@ class Main ( wx.Frame ):
 	def MainOnSize( self, event ):
 		event.Skip()
 
-	def A_GRIDOnGridEditorHidden( self, event ):
-		event.Skip()
-
-	def A_GRIDOnGridEditorShown( self, event ):
-		event.Skip()
-
-	def A_GRIDOnGridLabelLeftClick( self, event ):
-		event.Skip()
-
-	def A_GRIDOnGridLabelLeftDClick( self, event ):
-		event.Skip()
-
-	def A_GRIDOnGridSelectCell( self, event ):
-		event.Skip()
-
 	def Hot_Key_Down( self, event ):
 		event.Skip()
-
-	def A_GRIDOnKillFocus( self, event ):
-		event.Skip()
-
 
 
 	def Replace( self, event ):
@@ -379,5 +330,27 @@ class Main ( wx.Frame ):
 	def Export( self, event ):
 		event.Skip()
 
+
+	def A_GRIDOnGridEditorHidden( self, event ):
+		event.Skip()
+
+	def A_GRIDOnGridEditorShown( self, event ):
+		event.Skip()
+
+	def A_GRIDOnGridLabelLeftClick( self, event ):
+		event.Skip()
+
+	def A_GRIDOnGridLabelLeftDClick( self, event ):
+		event.Skip()
+
+	def A_GRIDOnGridSelectCell( self, event ):
+		event.Skip()
+
+
+	def A_GRIDOnKillFocus( self, event ):
+		event.Skip()
+
+	def C_Check( self, event ):
+		event.Skip()
 
 

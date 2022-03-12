@@ -12,6 +12,10 @@
 ##############################
 # import
 ##############################
+##import pyi_splash
+##pyi_splash.update_text('UI Loaded ...')
+##pyi_splash.close()
+
 import wx
 import hashlib
 import os.path

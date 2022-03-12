@@ -1,96 +1,115 @@
-# -*- encoding:UTF-8 -*-
+##############################
+# import
+##############################
 import wx
-import threading
-import random
+
+import GUI_Draw
+import sys
+import ctypes
+try:
+	ctypes.windll.shcore.SetProcessDpiAwareness(True)
+except Exception:
+	pass
+
+from gsnodegraph import EVT_GSNODEGRAPH_ADDNODEBTN
+from nodes import OutputNode, MixNode, ImageNode, BlurNode, BlendNode, ValueNode
+from nodegraph import NodeGraph
+
+# Install a custom displayhook to keep Python from setting the global
+# _ (underscore) to the value of the last evaluated expression.
+# If we don't do this, our mapping of _ to gettext can get overwritten.
+# This is useful/needed in interactive debugging with PyShell.
+def _displayHook(obj):
+	""" Custom display hook to prevent Python stealing '_'. """
+
+	if obj is not None:
+		print(repr(obj))
+
+# Add translation macro to builtin similar to what gettext does.
+import builtins
+builtins.__dict__['_'] = wx.GetTranslation
 
 
-class WorkerThread(threading.Thread):
-    def __init__(self, threadNum, window):
-        threading.Thread.__init__(self)
-        self.threadNum = threadNum
-        self.window = window
-        self.timeToQuit = threading.Event()
-        self.timeToQuit.clear()
-        self.messageCount = random.randint(10, 20)
-        self.messageDelay = 0.1 + 2.0*random.random()
+class MainApp(wx.App):
 
-    # 运行一个线程
-    def run(self):
-        msg = "Thread %d iterating %d times with a delay of %1.4f\n" % (
-            self.threadNum, self.messageCount, self.messageDelay)
-        wx.CallAfter(self.window.LogMessage, msg)
-        for i in range(1, self.messageCount+1):
-            self.timeToQuit.wait(self.messageDelay)
-            if self.timeToQuit.isSet():  # 判断是否设置了标志位
-                break
-            msg = "Message %d from thread %d\n" % (i, self.threadNum)
-            wx.CallAfter(self.window.LogMessage, msg)
-        else:
-            wx.CallAfter(self.window.ThreadFinished, self)
-    # 暂停所有线程
+	def OnInit(self):
 
-    def stop(self):
-        self.timeToQuit.set()
+		# Work around for Python stealing "_".
+		sys.displayhook = _displayHook
+
+		return True
+
+##############################
+# GUI的函数桥接
+##############################
 
 
-class MyFrame(wx.Frame):
-    def __init__(self):
-        wx.Frame.__init__(self, None, title="Multi-threaded GUI")
-        self.threads = []
-        self.count = 0
-        panel = wx.Panel(self)
-        startBtn = wx.Button(panel, -1, "Start a thread")
-        stopBtn = wx.Button(panel, -1, "Stop all threads")
-        self.tc = wx.StaticText(panel, -1, "Worker Threads: 00")
-        self.log = wx.TextCtrl(
-            panel, -1, "", style=wx.TE_RICH | wx.TE_MULTILINE)
-        inner = wx.BoxSizer(wx.HORIZONTAL)
-        inner.Add(startBtn, 0, wx.RIGHT, 15)
-        inner.Add(stopBtn, 0, wx.RIGHT, 15)
-        inner.Add(self.tc, 0, wx.ALIGN_CENTER_VERTICAL)
-        main = wx.BoxSizer(wx.VERTICAL)
-        main.Add(inner, 0, wx.ALL, 5)
-        main.Add(self.log, 1, wx.EXPAND | wx.ALL, 5)
-        panel.SetSizer(main)
-        self.Bind(wx.EVT_BUTTON, self.OnStartButton, startBtn)
-        self.Bind(wx.EVT_BUTTON, self.OnStopButton, stopBtn)
-        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
+class CalcFrame(GUI_Draw.Main):
+	def __init__(self, parent):
+		# 定义主函数
+		GUI_Draw.Main.__init__(self, parent)
+		node_registry = {
+			"image_nodeid": ImageNode,
+			"mix_nodeid": MixNode,
+			"blur_nodeid": BlurNode,
+			"blend_nodeid": BlendNode,
+			"value_nodeid": ValueNode,
+			"output_nodeid": OutputNode
+		}
+		# Setup the config with datatypes and node categories
+		config = {
+			"image_datatype": "IMAGE",
+			"node_datatypes": {
+				"IMAGE": "#C6C62D",  # Yellow
+				"INTEGER": "#A0A0A0",  # Grey
+				"FLOAT": "#A0A0A0",  # Grey
+				"VALUE": "#A0A0A0",  # Depreciated!
+			},
+			"node_categories": {
+				"INPUT": "#E64555",  # Burgendy
+				"DRAW": "#AF4467",  # Pink
+				"MASK": "#084D4D",  # Blue-green
+				"CONVERT": "#564B7C",  # Purple
+				"FILTER": "#558333",  # Green
+				"BLEND": "#498DB8",  # Light blue
+				"COLOR": "#C2AF3A",  # Yellow
+				"TRANSFORM": "#6B8B8B", # Blue-grey
+				"OUTPUT": "#B33641"  # Red
+			}
+		}
 
-        self.UpdateCount()
+		# Init the nodegraph
+		print(self)
+		ng = NodeGraph(parent=self, registry=node_registry, config=config,size=(500,500))
 
-    def OnStartButton(self, evt):
-        self.count += 1
-        thread = WorkerThread(self.count, self)  # 创建一个线程
-        self.threads.append(thread)
-        self.UpdateCount()
-        thread.start()  # 启动线程
+		# Add nodes to the node graph
+		node1 = ng.AddNode("image_nodeid", pos=wx.Point(100, 10))
+		node2 = ng.AddNode("image_nodeid", pos=wx.Point(450, 400))
+		node3 = ng.AddNode("mix_nodeid", pos=wx.Point(400, 100))
+		node4 = ng.AddNode("blur_nodeid", pos=wx.Point(700, 100))
+		node5 = ng.AddNode("blend_nodeid", pos=wx.Point(720, 300))
+		node6 = ng.AddNode("value_nodeid", pos=wx.Point(620, 430))
+		node7 = ng.AddNode("output_nodeid", pos=wx.Point(1000, 290))
 
-    def OnStopButton(self, evt):
-        self.StopThreads()
-        self.UpdateCount()
+	def Close(self, event):
+		try:
+			if app.GetAppName() != '_core.cp38-win_amd64':
+				self.Destroy()
+		except:
+			self.Hide()
 
-    def OnCloseWindow(self, evt):
-        self.StopThreads()
-        self.Destroy()
-
-    def StopThreads(self):  # 从池中删除线程
-        while self.threads:
-            thread = self.threads[0]
-            thread.stop()
-            self.threads.remove(thread)
-
-    def UpdateCount(self):
-        self.tc.SetLabel("Worker Threads: %d" % len(self.threads))
-
-    def LogMessage(self, msg):  # 注册一个消息
-        self.log.AppendText(msg)
-
-    def ThreadFinished(self, thread):  # 删除线程
-        self.threads.remove(thread)
-        self.UpdateCount()
+##############################
+# 主函数
+##############################
 
 
-app = wx.App()
-frm = MyFrame()
-frm.Show()
-app.MainLoop()
+def main():
+	global app
+	app = MainApp(False)
+	frame = CalcFrame(None)
+	frame.Show(True)
+	app.MainLoop()
+
+
+if __name__ == "__main__":
+	main()

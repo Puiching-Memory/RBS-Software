@@ -3,9 +3,15 @@
 ##############################
 import wx
 import xlwt,xlrd
+import wx.lib.plot as plot
 import win32api,win32con
 import os
 import time,datetime
+import ctypes
+
+from gsnodegraph import EVT_GSNODEGRAPH_ADDNODEBTN
+import nodes
+from nodegraph import NodeGraph
 
 import GUI_SSC
 
@@ -36,9 +42,49 @@ class CalcFrame(GUI_SSC.Main):
 
 		self.A_Edit_State_Colour.SetBackgroundColour((192,192,192))
 		self.A_Edit_State_Text.SetLabel('静待')
+
+		# Setup the node registry
+		node_registry = {
+			'excel_importid': nodes.Excel_import,
+			"value_nodeid": nodes.ValueNode,
+			"output_nodeid": nodes.OutputNode,
+		}
+		# Setup the config with datatypes and node categories
+		config = {
+			"image_datatype": "IMAGE",
+			"node_datatypes": {
+				"IMAGE": "#C6C62D",  # Yellow
+				"INTEGER": "#A0A0A0",  # Grey
+				"FLOAT": "#A0A0A0",  # Grey
+				"VALUE": "#A0A0A0",  # Depreciated!
+			},
+			"node_categories": {
+				"INPUT": "#E64555",  # Burgendy
+				"DRAW": "#AF4467",  # Pink
+				"MASK": "#084D4D",  # Blue-green
+				"CONVERT": "#564B7C",  # Purple
+				"FILTER": "#558333",  # Green
+				"BLEND": "#498DB8",  # Light blue
+				"COLOR": "#C2AF3A",  # Yellow
+				"TRANSFORM": "#6B8B8B", # Blue-grey
+				"OUTPUT": "#B33641"  # Red
+			}
+		}
+		# Init the nodegraph
+		##print(self.NoteBook.GetPage(3))
+		ng = NodeGraph(self.NoteBook.GetPage(3), registry=node_registry, config=config,size=(500,600))
+
+		# Add nodes to the node graph
+		ng.AddNode("excel_importid", pos=wx.Point(100, 10))
+		ng.AddNode("output_nodeid", pos=wx.Point(300, 10))
+		
+		ng.Bind(EVT_GSNODEGRAPH_ADDNODEBTN, self.OnAddNodeMenuBtn)
 		
 
 	def Hot_Key_Down(self, event):
+		'''
+		快捷键
+		'''
 		print('检测到快捷键:' + str(event.GetKeyCode()))
 		key = int(event.GetKeyCode())
 
@@ -262,9 +308,47 @@ class CalcFrame(GUI_SSC.Main):
 		event.Skip()
 
 	#C-------------------------------------------------------------------------
+	def C_Check(self,event):
+		name = self.C_PathBox.GetString(self.C_PathBox.GetSelections()[0])
+		try:
+			data = xlrd.open_workbook(name)
+		except:
+			self.C_Path.SetLabel('错误的文件')
+		else:
+			self.C_Path.SetLabel('文件路径:' + name)
+			table = data.sheets()[0]
 
+		self.NoteBook.ChangeSelection(2)
+		self.C_Class.SetLabel('班级:' + str(table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2]))
+		self.C_NUM.SetLabel('总人数:' + str(len(table.col_values(0, start_rowx=0, end_rowx=None))))
 
+		fileinfo = os.stat(name)
+		self.C_ListBox.Clear()
+		self.C_ListBox.Append("索引号:" + str(fileinfo.st_ino))
+		self.C_ListBox.Append("驻留设备:" + str(fileinfo.st_dev))
+		self.C_ListBox.Append("文件大小:" + str(fileinfo.st_size) + "字节")
+		self.C_ListBox.Append("最后一次访问时间:" + str(formatTime(fileinfo.st_atime)))
+		self.C_ListBox.Append("最后一次修改时间:" + str(formatTime(fileinfo.st_mtime)))
+		self.C_ListBox.Append("最后一次状态变化的时间:" + str(formatTime(fileinfo.st_ctime)))
+		self.C_ListBox.Append("保护模式:" + str(fileinfo.st_mode))
+		self.C_ListBox.Append("节点号:" + str(fileinfo.st_ino))
+		self.C_ListBox.Append("连接数:" + str(fileinfo.st_nlink))
+		self.C_ListBox.Append("所有者ID:" + str(fileinfo.st_uid))
+		self.C_ListBox.Append("所有者组ID:" + str(fileinfo.st_gid))
+
+	def C_CheckDC(self, event):
+		return super().C_CheckDC(event)
+	#D----------------------------------------------------------------------
+
+	def OnAddNodeMenuBtn(self, event):
+		print("Open add node menu")
+		
 	#Main----------------------------------------------------------------------
+	def NoteBookOnNotebookPageChanged(self,event):
+		if self.NoteBook.GetSelection() == 3:
+			print('初始化D')
+			self.D_init()
+
 	def MainOnSize(self, event):
 		'''
 		主界面->窗口大小调整
@@ -273,10 +357,7 @@ class CalcFrame(GUI_SSC.Main):
 			size = self.GetSize()[0] / self.A_GRID.GetNumberCols() - 30
 			self.A_GRID.SetColSize(i,int(size))
 
-
-		#self.ST_Line.Move(1,self.GetSize()[0] - 100)
-		#self.NUM.Move(1,self.GetSize()[0] - 100)
-
+		##self.A_GRID.SetSize(self.GetSize()[0],200)
 		event.Skip()
 
 	def Resize(self):
@@ -308,7 +389,7 @@ class FileDrop(wx.FileDropTarget):
 		self.window = window
 
 	def OnDropFiles(self, x, y, filenames):
-
+		
 		for name in filenames:
 			print(name)
 
@@ -316,85 +397,13 @@ class FileDrop(wx.FileDropTarget):
 			end = int(len(name))
 			file_type = str(name)[font: end]
 
-			print('文件类型:' + file_type)
+			if file_type == 'xls':
+				if window_frame.C_PathBox.FindString(name) == -1: # 防止重复导入
+					window_frame.C_PathBox.Append(name)
+					window_frame.NoteBook.ChangeSelection(2)
 
-		if len(filenames) > 1:
-			print('警告:暂不支持多文件拖放,取最后一个文件')
-
-
-		if file_type == 'xls':
-			try:
-				data = xlrd.open_workbook(filenames[0])
-			except:
-				window_frame.C_Path.SetLabel('错误的文件')
 			else:
-				window_frame.C_Path.SetLabel('文件路径:' + filenames[0])
-				table = data.sheets()[0]
-
-			window_frame.NoteBook.ChangeSelection(2)
-			window_frame.C_Class.SetLabel('班级:' + str(table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2]))
-			window_frame.C_NUM.SetLabel('总人数:' + str(len(table.col_values(0, start_rowx=0, end_rowx=None))))
-
-			if table.ncols == 1:
-				pass
-			else:
-				for i in range(1,6):
-					list = table.col_values(i, start_rowx=0, end_rowx=None)
-					for i2 in range(0,list.count('')):
-						list.remove('')
-
-					if i == 1:
-						window_frame.C_Col1.SetLabel('列A权重:' + str(len(list)))
-					elif i == 2:
-						window_frame.C_Col2.SetLabel('列B权重:' + str(len(list)))
-					elif i == 3:
-						window_frame.C_Col3.SetLabel('列C权重:' + str(len(list)))
-					elif i == 4:
-						window_frame.C_Col4.SetLabel('列D权重:' + str(len(list)))
-					elif i == 5:
-						window_frame.C_Col5.SetLabel('列E权重:' + str(len(list)))
-
-				weight = 0
-				for i in range(0,table.nrows):
-					list = table.row_values(i, start_colx=0, end_colx=None)
-					for i2 in range(0,list.count('')):
-						list.remove('')
-					if len(list) != 1:
-						weight = weight + 1
-
-				proportion = weight/(weight + table.nrows)
-				P_size = int(100 * proportion)
-
-				window_frame.C_Guage.SetValue(P_size)
-				window_frame.C_L.SetLabel('有效数据:' + str(weight) + '/' + str(table.nrows))
-				window_frame.C_R.SetLabel(str(P_size) + '%')
-
-
-			fileinfo = os.stat(filenames[0])
-			window_frame.C_ListBox.Append("索引号:" + str(fileinfo.st_ino))
-			window_frame.C_ListBox.Append("驻留设备:" + str(fileinfo.st_dev))
-			window_frame.C_ListBox.Append("文件大小:" + str(fileinfo.st_size) + "字节")
-			window_frame.C_ListBox.Append("最后一次访问时间:" + str(formatTime(fileinfo.st_atime)))
-			window_frame.C_ListBox.Append("最后一次修改时间:" + str(formatTime(fileinfo.st_mtime)))
-			window_frame.C_ListBox.Append("最后一次状态变化的时间:" + str(formatTime(fileinfo.st_ctime)))
-			window_frame.C_ListBox.Append("保护模式:" + str(fileinfo.st_mode))
-			window_frame.C_ListBox.Append("节点号:" + str(fileinfo.st_ino))
-			window_frame.C_ListBox.Append("连接数:" + str(fileinfo.st_nlink))
-			window_frame.C_ListBox.Append("所有者ID:" + str(fileinfo.st_uid))
-			window_frame.C_ListBox.Append("所有者组ID:" + str(fileinfo.st_gid))
-
-
-			window_frame.Resize()
-			
-
-			#if table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2] == 
-			#table.col_values(colx, start_rowx=0, end_rowx=None
-
-			#print(table.col_values(0, start_rowx=0, end_rowx=None)[0][0:2])
-
-			
-		else:
-			wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[不支持]' + '\n' + '强行加载可能会导致未知错误!', caption='文件处理')
+				wx.CallAfter(wx.MessageBox, '文件类型:' + file_type + '[不支持]' + '\n' + '强行加载可能会导致未知错误!', caption='文件处理')
 
 		return True
 

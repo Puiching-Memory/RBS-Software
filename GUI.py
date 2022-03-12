@@ -115,60 +115,63 @@ class Main ( wx.Frame ):
 
 		wSizer_L2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.G1 = wx.Button( self, wx.ID_ANY, u"语文 3", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G1 = wx.Button( self, wx.ID_ANY, u"语文 3", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G1.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G1, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G1, 0, 0, 0 )
 
-		self.G2 = wx.Button( self, wx.ID_ANY, u"数学 4", wx.DefaultPosition, wx.DefaultSize, wx.BORDER_NONE )
+		self.G2 = wx.Button( self, wx.ID_ANY, u"数学 4", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G2.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G2, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G2, 0, 0, 2 )
 
-		self.G3 = wx.Button( self, wx.ID_ANY, u"英语 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G3 = wx.Button( self, wx.ID_ANY, u"英语 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G3, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G3, 0, 0, 2 )
 
-		self.G4 = wx.Button( self, wx.ID_ANY, u"信息 4", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G4 = wx.Button( self, wx.ID_ANY, u"信息 4", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G4, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G4, 0, 0, 2 )
 
-		self.G5 = wx.Button( self, wx.ID_ANY, u"历史 2", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G5 = wx.Button( self, wx.ID_ANY, u"历史 2", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G5.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G5, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G5, 0, 0, 2 )
 
-		self.G6 = wx.Button( self, wx.ID_ANY, u"地理 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G6 = wx.Button( self, wx.ID_ANY, u"地理 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G6, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G6, 0, 0, 2 )
 
-		self.G7 = wx.Button( self, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G7 = wx.Button( self, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G7, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G7, 0, 0, 2 )
 
-		self.G8 = wx.Button( self, wx.ID_ANY, u"化学 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G8 = wx.Button( self, wx.ID_ANY, u"化学 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G8.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G8, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G8, 0, 0, 2 )
 
-		self.G9 = wx.Button( self, wx.ID_ANY, u"生物 1", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G9 = wx.Button( self, wx.ID_ANY, u"生物 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G9.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G9, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G9, 0, 0, 2 )
 
-		self.G10 = wx.Button( self, wx.ID_ANY, u"通用 4", wx.DefaultPosition, wx.Size( 70,-1 ), wx.BORDER_NONE )
+		self.G10 = wx.Button( self, wx.ID_ANY, u"通用 4", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
 		self.G10.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
-		wSizer_L2.Add( self.G10, 0, wx.RIGHT|wx.LEFT, 2 )
+		wSizer_L2.Add( self.G10, 0, 0, 2 )
 
 
 		bSizer_main.Add( wSizer_L2, 0, wx.ALIGN_CENTER_HORIZONTAL, 0 )
+
+		self.m_staticline4 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+		bSizer_main.Add( self.m_staticline4, 0, wx.EXPAND, 5 )
 
 		wSizer_C = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -564,16 +567,13 @@ class Main ( wx.Frame ):
 		self.Plug_in_box = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 200,70 ), Plug_in_boxChoices, 0 )
 		bSizer181.Add( self.Plug_in_box, 0, wx.ALL, 5 )
 
-		self.CMD_OUT = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,170 ), wx.TE_MULTILINE|wx.TE_READONLY )
-		bSizer181.Add( self.CMD_OUT, 0, wx.ALL, 5 )
+		self.CMD_OUT = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,180 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		bSizer181.Add( self.CMD_OUT, 0, wx.TOP|wx.RIGHT|wx.LEFT, 5 )
 
 		wSizer13 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.CMD_IN = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 175,25 ), 0 )
+		self.CMD_IN = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 200,20 ), wx.TE_PROCESS_ENTER )
 		wSizer13.Add( self.CMD_IN, 0, wx.TOP|wx.LEFT, 5 )
-
-		self.Push = wx.Button( self, wx.ID_ANY, u"↑", wx.DefaultPosition, wx.Size( 25,25 ), 0 )
-		wSizer13.Add( self.Push, 0, wx.TOP, 5 )
 
 
 		bSizer181.Add( wSizer13, 0, 0, 5 )
@@ -674,6 +674,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
 		self.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.Bind( wx.EVT_MOVE, self.OnMove )
+		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightDown )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
 		self.Weather.Bind( wx.EVT_BUTTON, self.GetWeather )
 		self.Note.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
@@ -781,7 +782,8 @@ class Main ( wx.Frame ):
 		self.Tip4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.B_Side_Refresh.Bind( wx.EVT_BUTTON, self.Plug_in_refresh )
 		self.B_Side_Run.Bind( wx.EVT_BUTTON, self.Plug_in_run )
-		self.Push.Bind( wx.EVT_BUTTON, self.CMD_Enter )
+		self.CMD_IN.Bind( wx.EVT_KEY_DOWN, self.CMD_INOnKeyDown )
+		self.CMD_IN.Bind( wx.EVT_TEXT_ENTER, self.CMD_INOnTextEnter )
 		self.Space1.Bind( wx.EVT_BUTTON, self.Space1_Change )
 		self.Space2.Bind( wx.EVT_BUTTON, self.Space2_Change )
 		self.Bottom_Bar2.Bind( wx.EVT_BUTTON, self.BT2 )
@@ -815,6 +817,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def OnMove( self, event ):
+		event.Skip()
+
+	def OnRightDown( self, event ):
 		event.Skip()
 
 	def Change_Size( self, event ):
@@ -1080,7 +1085,10 @@ class Main ( wx.Frame ):
 	def Plug_in_run( self, event ):
 		event.Skip()
 
-	def CMD_Enter( self, event ):
+	def CMD_INOnKeyDown( self, event ):
+		event.Skip()
+
+	def CMD_INOnTextEnter( self, event ):
 		event.Skip()
 
 	def Space1_Change( self, event ):

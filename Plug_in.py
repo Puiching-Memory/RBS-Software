@@ -72,10 +72,13 @@ class CalcFrame(GUI_Plug_in.Main):
 
 			for i in range(0,len(list_main)):
 				list_name = str(list_main[i]).replace('\n', '')
+				print(list_name)
 				if str(list_name) == name:
 					self.B_Change.SetLabel('卸载')
 					place = i
-					#print(place)
+					break
+				else:
+					self.B_Change.SetLabel('加载')
 
 			if self.B_Change.GetLabel() == '---':
 					self.B_Change.SetLabel('加载')

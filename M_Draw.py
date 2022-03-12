@@ -16,13 +16,12 @@ class CalcFrame(GUI_Draw.Main):
 		GUI_Draw.Main.__init__(self, parent)
 
 	def EVT_PAINT(self,event):
-		global dc
+		global dc,gc,path
 		# Create paint DC
 		dc = wx.PaintDC(self)
 
 		# Create graphics context from it
 		gc = wx.GraphicsContext.Create(dc)
-
 		gc.SetAntialiasMode(True)
 
 		# make a path that contains a circle and some lines
@@ -39,12 +38,8 @@ class CalcFrame(GUI_Draw.Main):
 		gc.StrokePath(path)
 		
 	def MainOnLeftDown(self, event):
-		global dc 
-		##dc.DrawCircle(event.)
-
-	def OnMove(self,event):
-		pos = event.GetPosition()
-		print(pos)
+		path.AddCircle(event.GetPosition()[0],event.GetPosition()[1],1)
+		gc.StrokePath(path)
 
 	def Close(self, event):
 		try:

@@ -19,6 +19,8 @@ class CalcFrame(GUI_Roll.Main):
 
 		self.SetDoubleBuffered(True)  # 声明:启用双缓冲
 
+		self.notebook.SetSelection(0)
+
 		if self.Using_TimeSeed.IsChecked() == False:
 			random.seed(self.SP_Seed.GetValue())
 		else:
