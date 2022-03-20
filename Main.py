@@ -84,8 +84,7 @@ import logging  # 日志库
 import threading  # 多线程
 import sys
 import os
-import win32com.client
-import win32api
+import win32gui, win32com.client, win32api
 import psutil
 import time
 import PIL.Image
@@ -96,7 +95,8 @@ import random  # 随机数
 import gc  # 内存回收
 import ctypes
 ##from ctypes import WinDLL  # 运行Windows DLL
-import imghdr
+import imghdr # 检测图片类型
+import RBS_windows_api
 
 ###########################################################################
 # Class Main
@@ -263,6 +263,12 @@ class CalcFrame(GUI.Main):
 
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(
 			self.Size))
+		
+		##dialog_hwnd = win32gui.FindWindow(None,'RBS_Software')
+		##password_hwnd = win32gui.GetDlgItem(dialog_hwnd, -31979)
+
+		self.windowEffect = RBS_windows_api.WindowEffect()
+		##self.windowEffect.setAeroEffect(int(self.GetHandle()))
 
 	def Sacc(self, event):
 		"""
@@ -522,21 +528,8 @@ class CalcFrame(GUI.Main):
 			self.CMD(self.CMD_IN.GetValue())
 			self.CMD_IN.SetValue('')
 
-	def move_start(self, frame_pos):
-		##print(frame_pos)
-		self.SetPosition(frame_pos)
-
 	def OnLeftDown(self, event):
-		thread = WorkerThread(self)
-		self.threads.append(thread)
-		thread.start()
-
-	def OnLeftUp(self, event):
-		if self.threads:
-			self.threads[0].timeToQuit.set()
-			self.threads.remove(self.threads[0])
-
-		##print('退出线程')
+		self.windowEffect.moveWindow(self.GetHandle())
 
 	def Change_Size(self, event):
 		print(self.GetSize())
@@ -3212,6 +3205,7 @@ class FileDrop(wx.FileDropTarget):
 ###########################################################################
 # 窗口拖动处理Class
 # Window Move Class
+# warning:此类已弃用！
 ###########################################################################
 class WorkerThread(threading.Thread):
 	def __init__(self, frame):
@@ -3266,6 +3260,12 @@ class MyPopupMenu(wx.Menu):
 		cmi = wx.MenuItem(self,wx.NewIdRef(),'刷新')
 		self.Append(cmi)
 		self.Bind(wx.EVT_MENU, self.Refresh, cmi)
+		
+		self.window = self.GetInvokingWindow()
+		print(self.window)
+		self.windowEffect = RBS_windows_api.WindowEffect()
+		#self.windowEffect.setAeroEffect(int(self.window.GetHandle()))
+
 		
 	def OnMinimize(self,event):
 		self.parent.Ico()

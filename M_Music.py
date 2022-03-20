@@ -6,6 +6,7 @@ import wx
 import GUI_Music
 
 import pydub,pydub.playback
+import Netease_cloud_CaChe # 网易云音乐缓存转换MP3算法
 
 ##############################
 # GUI的函数桥接
@@ -16,6 +17,8 @@ class CalcFrame(GUI_Music.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_Music.Main.__init__(self, parent)
+
+		self.NoteBook.SetSelection(0)
 
 
 	def import_file(self, event):
@@ -57,6 +60,20 @@ class CalcFrame(GUI_Music.Main):
 			audio_data.export(self.Save.GetPath() + '.mp3', format="mp3")
 		elif self.Save_Type.GetString(self.Save_Type.GetSelection()) == 'WAV':
 			audio_data.export(self.Save.GetPath() + '.wav', format="wav")
+
+	#B-------------------------------------------------------------------------
+
+	def B_RUN(self, event):
+		self.B_BRUN.Enable(False)
+
+		UC_PATH = self.B_CachePath.GetPath()
+		MP3_PATH = self.B_ExportPath.GetPath()
+		if UC_PATH != '' and MP3_PATH != '':
+			transform = Netease_cloud_CaChe.Transform()
+			print(UC_PATH)
+			transform.do_transform(UC_PATH,MP3_PATH + '/')
+
+		self.B_BRUN.Enable(True)
 
 	def Close(self, event):
 		self.Destroy()

@@ -194,7 +194,7 @@ class Main ( wx.Frame ):
 		self.A.SetSizer( bSizer21 )
 		self.A.Layout()
 		bSizer21.Fit( self.A )
-		self.NoteBook.AddPage( self.A, u"条形码登记", True )
+		self.NoteBook.AddPage( self.A, u"条形码登记", False )
 		self.m_panel2 = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 
@@ -267,6 +267,34 @@ class Main ( wx.Frame ):
 		self.D.Layout()
 		bSizer61.Fit( self.D )
 		self.NoteBook.AddPage( self.D, u"节点", False )
+		self.E = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer62 = wx.BoxSizer( wx.VERTICAL )
+
+		self.E_FilePath = wx.StaticText( self.E, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 250,-1 ), 0 )
+		self.E_FilePath.Wrap( -1 )
+
+		bSizer62.Add( self.E_FilePath, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.E_Tip = wx.StaticText( self.E, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 250,-1 ), 0 )
+		self.E_Tip.Wrap( -1 )
+
+		bSizer62.Add( self.E_Tip, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.E_QRcode = wx.Button( self.E, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 300,300 ), wx.BORDER_NONE )
+		self.E_QRcode.SetBackgroundColour( wx.Colour( 192, 192, 192 ) )
+
+		bSizer62.Add( self.E_QRcode, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.E_SendBottom = wx.Button( self.E, wx.ID_ANY, u"开始传输", wx.DefaultPosition, wx.Size( 250,-1 ), 0 )
+		self.E_SendBottom.Enable( False )
+
+		bSizer62.Add( self.E_SendBottom, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+
+		self.E.SetSizer( bSizer62 )
+		self.E.Layout()
+		bSizer62.Fit( self.E )
+		self.NoteBook.AddPage( self.E, u"传输", True )
 
 		bSizer2.Add( self.NoteBook, 0, 0, 0 )
 
@@ -297,6 +325,7 @@ class Main ( wx.Frame ):
 		self.A_GRID.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.A_GRID.Bind( wx.EVT_KILL_FOCUS, self.A_GRIDOnKillFocus )
 		self.C_PathBox.Bind( wx.EVT_LISTBOX, self.C_Check )
+		self.E_SendBottom.Bind( wx.EVT_BUTTON, self.E_Send )
 
 	def __del__( self ):
 		pass
@@ -351,6 +380,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def C_Check( self, event ):
+		event.Skip()
+
+	def E_Send( self, event ):
 		event.Skip()
 
 

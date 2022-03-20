@@ -34,7 +34,7 @@ class Main ( wx.Frame ):
 
 		wSizer_L1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.version = wx.Button( self, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,25 ), wx.BORDER_NONE )
+		self.version = wx.Button( self, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,25 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.version.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.version.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
@@ -46,7 +46,7 @@ class Main ( wx.Frame ):
 
 		wSizer_L1.Add( self.Network, 0, 0, 5 )
 
-		self.Weather = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 90,25 ), wx.BORDER_NONE )
+		self.Weather = wx.Button( self, wx.ID_ANY, u"---", wx.DefaultPosition, wx.Size( 90,25 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.Weather.SetFont( wx.Font( 8, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Microsoft YaHei UI" ) )
 		self.Weather.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Weather.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
