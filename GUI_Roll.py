@@ -123,7 +123,7 @@ class Main ( wx.Frame ):
 		wSizer51.Add( self.B_MAX, 0, wx.ALL, 5 )
 
 
-		bSizer4.Add( wSizer51, 0, 0, 5 )
+		bSizer4.Add( wSizer51, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		wSizer11 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
@@ -135,7 +135,7 @@ class Main ( wx.Frame ):
 
 		wSizer12 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.B_DATA = wx.StaticText( self.B, wx.ID_ANY, u"00", wx.DefaultPosition, wx.Size( -1,100 ), 0 )
+		self.B_DATA = wx.StaticText( self.B, wx.ID_ANY, u"00", wx.DefaultPosition, wx.Size( 150,100 ), wx.ALIGN_CENTER_HORIZONTAL )
 		self.B_DATA.Wrap( -1 )
 
 		self.B_DATA.SetFont( wx.Font( 45, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False, "微软雅黑" ) )
@@ -149,7 +149,7 @@ class Main ( wx.Frame ):
 		self.B.SetSizer( bSizer4 )
 		self.B.Layout()
 		bSizer4.Fit( self.B )
-		self.notebook.AddPage( self.B, u"随机学号", False )
+		self.notebook.AddPage( self.B, u"随机学号", True )
 		self.Panel_Setting = wx.Panel( self.notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer41 = wx.BoxSizer( wx.VERTICAL )
 
@@ -178,7 +178,7 @@ class Main ( wx.Frame ):
 		self.Panel_Setting.SetSizer( bSizer41 )
 		self.Panel_Setting.Layout()
 		bSizer41.Fit( self.Panel_Setting )
-		self.notebook.AddPage( self.Panel_Setting, u"设置", True )
+		self.notebook.AddPage( self.Panel_Setting, u"设置", False )
 
 		Sizer.Add( self.notebook, 1, wx.EXPAND |wx.ALL, 5 )
 

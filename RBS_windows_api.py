@@ -130,7 +130,7 @@ class Windows_shadow():
 			hWnd,
 			DWMWINDOWATTRIBUTE.DWMWA_NCRENDERING_POLICY.value,
 			byref(c_int(DWMNCRENDERINGPOLICY.DWMNCRP_ENABLED.value)),
-			4,
+			1,
 		)
 		margins = MARGINS(-1, -1, -1, -1)
 		self.DwmExtendFrameIntoClientArea(hWnd, byref(margins))
@@ -151,6 +151,26 @@ class WindowEffect():
 		self.winCompAttrData.Attribute = WINDOWCOMPOSITIONATTRIB.WCA_ACCENT_POLICY.value[0]
 		self.winCompAttrData.SizeOfData = sizeof(self.accentPolicy)
 		self.winCompAttrData.Data = pointer(self.accentPolicy)
+
+	def addWindowAnimation(self, hWnd):
+		""" 还原窗口动画效果
+
+		Parameters
+		----------
+		hWnd : int or `sip.voidptr`
+			窗口句柄
+		"""
+		style = win32gui.GetWindowLong(hWnd, win32con.GWL_STYLE)
+		win32gui.SetWindowLong(
+			hWnd,
+			win32con.GWL_STYLE,
+			style
+			| win32con.WS_MAXIMIZEBOX
+			| win32con.WS_CAPTION
+			| win32con.CS_DBLCLKS
+			| win32con.WS_THICKFRAME,
+		)
+
 
 	def setAcrylicEffect(self, hWnd: int, gradientColor: str = 'F2F2F230',
 						 isEnableShadow: bool = True, animationId: int = 0):

@@ -32,7 +32,7 @@ class Main ( wx.Frame ):
 		bSizer3.Add( self.m_staticText21, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		Version_LChoices = []
-		self.Version_L = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 100,280 ), Version_LChoices, 0 )
+		self.Version_L = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 85,280 ), Version_LChoices, 0 )
 		bSizer3.Add( self.Version_L, 0, wx.ALL, 5 )
 
 
@@ -60,7 +60,7 @@ class Main ( wx.Frame ):
 
 		bSizer7.Add( wSizer9, 0, 0, 5 )
 
-		self.Info = wx.TextCtrl( self, wx.ID_ANY, u"选择一个版本以查看日志", wx.DefaultPosition, wx.Size( 400,280 ), wx.TE_MULTILINE|wx.TE_READONLY )
+		self.Info = wx.TextCtrl( self, wx.ID_ANY, u"选择一个版本以查看日志", wx.DefaultPosition, wx.Size( 425,280 ), wx.TE_MULTILINE|wx.TE_READONLY )
 		self.Info.Enable( False )
 
 		bSizer7.Add( self.Info, 0, wx.ALL, 5 )

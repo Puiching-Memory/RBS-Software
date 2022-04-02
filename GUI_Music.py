@@ -34,6 +34,8 @@ class Main ( wx.Frame ):
 		wSizer1.Add( self.File, 0, wx.ALL, 5 )
 
 		self.B_Play = wx.Button( self.A, wx.ID_ANY, u"Play", wx.DefaultPosition, wx.Size( 60,-1 ), 0 )
+		self.B_Play.Enable( False )
+
 		wSizer1.Add( self.B_Play, 0, wx.ALL, 5 )
 
 
@@ -65,7 +67,7 @@ class Main ( wx.Frame ):
 		self.A.SetSizer( bSizer21 )
 		self.A.Layout()
 		bSizer21.Fit( self.A )
-		self.NoteBook.AddPage( self.A, u"格式转换器", False )
+		self.NoteBook.AddPage( self.A, u"格式转换器", True )
 		self.B = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
@@ -102,7 +104,7 @@ class Main ( wx.Frame ):
 		self.B.SetSizer( bSizer3 )
 		self.B.Layout()
 		bSizer3.Fit( self.B )
-		self.NoteBook.AddPage( self.B, u"网易云缓存转换器", True )
+		self.NoteBook.AddPage( self.B, u"网易云缓存转换器", False )
 
 		bSizer2.Add( self.NoteBook, 1, wx.EXPAND |wx.ALL, 5 )
 

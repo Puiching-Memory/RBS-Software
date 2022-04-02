@@ -1,7 +1,9 @@
 ##############################
 # import
 ##############################
+import periodictable
 import wx
+##import periodictable
 
 import GUI_Element
 
@@ -15,255 +17,195 @@ class CalcFrame(GUI_Element.Main):
 		# 定义主函数
 		GUI_Element.Main.__init__(self, parent)
 
-		X = -1
-		Y = 0
-		list1 = [
-			"1 H  \n 氢 \n 1.00",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"2 He \n 氦 \n 4.00",
-		]
-		list2 = [
-			"3 Li \n 锂 \n 6.94",
-			"4 Be \n 铍 \n 9.01",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"5 B \n 硼 \n 10.81",
-			"6 C \n 碳 \n 12.01",
-			"7 N \n 氮 \n 14.00",
-			"8 O \n 氧 \n 15.99",
-			"9 F \n 氟 \n 18.99",
-			"10 Ne \n 氖 \n 20.17",
-		]
-		list3 = [
-			"11 Na \n 钠 \n 22.98",
-			"12 Mg \n 镁 \n 24.30",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"13 Al \n 铝 \n 26.98",
-			"14 Si \n 硅 \n 28.08",
-			"15 P \n 磷 \n 30.97",
-			"16 S \n 硫 \n 32.06",
-			"17 Cl \n 氯 \n 35.45",
-			"18 Ar \n 氩 \n 39.94",
-		]
-		list4 = [
-			"19 K \n 钾 \n 39.10",
-			"20 Ca \n 钙 \n 40.08",
-			"21 Sc \n 钪 \n 44.96",
-			"22 Ti \n 钛 \n 47.87",
-			"23 V \n 钒 \n 50.94",
-			"24 Cr \n 铬 \n 52.00",
-			"25 Mn \n 锰 \n 54.94",
-			"26 Fe \n 铁 \n 55.85",
-			"27 Co \n 钴 \n 58.93",
-			"28 Ni \n 镍 \n 58.69",
-			"29 Cu \n 铜 \n 63.55",
-			"30 Zn \n 锌 \n 65.38",
-			"31 Ga \n 镓 \n 69.72",
-			"32 Ge \n 锗 \n 72.63",
-			"33 As \n 砷 \n 74.92",
-			"34 Se \n 硒 \n 78.96",
-			"35 Br \n 溴 \n 79.90",
-			"36 Kr \n 氪 \n 83.80",
-		]
-		list5 = [
-			"37 Rb \n\n 85.47",
-			"38 Sr \n\n 87.62",
-			"39 Y \n\n 88.91",
-			"40 Zr \n\n 91.22",
-			"41 Nb \n\n 92.91",
-			"42 Mo \n\n 95.96",
-			"43 Tc \n\n [98]",
-			"44 Ru \n\n 101.1",
-			"45 Rh \n\n 102.9",
-			"46 Pd \n\n 106.4",
-			"47 Ag \n\n 107.9",
-			"48 Cd \n\n 112.4",
-			"49 In \n\n 114.8",
-			"50 Sn \n\n 118.7",
-			"51 Sb \n\n 121.8",
-			"52 Te \n\n 127.6",
-			"53 I \n\n 126.9",
-			"54 Xe \n\n 131.3",
-		]
-		list6 = [
-			"37 Rb \n\n 85.47",
-			"38 Sr \n\n 87.62",
-			"39 Y \n\n 88.91",
-			"40 Zr \n\n 91.22",
-			"41 Nb \n\n 92.91",
-			"42 Mo \n\n 95.96",
-			"43 Tc \n\n [98]",
-			"44 Ru \n\n 101.1",
-			"45 Rh \n\n 102.9",
-			"46 Pd \n\n 106.4",
-			"47 Ag \n\n 107.9",
-			"48 Cd \n\n 112.4",
-			"49 In \n\n 114.8",
-			"50 Sn \n\n 118.7",
-			"51 Sb \n\n 121.8",
-			"52 Te \n\n 127.6",
-			"53 I \n\n 126.9",
-			"54 Xe \n\n 131.3",
-		]
-		list7 = [
-			"37 Rb \n\n 85.47",
-			"38 Sr \n\n 87.62",
-			"39 Y \n\n 88.91",
-			"40 Zr \n\n 91.22",
-			"41 Nb \n\n 92.91",
-			"42 Mo \n\n 95.96",
-			"43 Tc \n\n [98]",
-			"44 Ru \n\n 101.1",
-			"45 Rh \n\n 102.9",
-			"46 Pd \n\n 106.4",
-			"47 Ag \n\n 107.9",
-			"48 Cd \n\n 112.4",
-			"49 In \n\n 114.8",
-			"50 Sn \n\n 118.7",
-			"51 Sb \n\n 121.8",
-			"52 Te \n\n 127.6",
-			"53 I \n\n 126.9",
-			"54 Xe \n\n 131.3",
-		]
-		list8 = [
-			"37 Rb \n\n 85.47",
-			"38 Sr \n\n 87.62",
-			"39 Y \n\n 88.91",
-			"40 Zr \n\n 91.22",
-			"41 Nb \n\n 92.91",
-			"42 Mo \n\n 95.96",
-			"43 Tc \n\n [98]",
-			"44 Ru \n\n 101.1",
-			"45 Rh \n\n 102.9",
-			"46 Pd \n\n 106.4",
-			"47 Ag \n\n 107.9",
-			"48 Cd \n\n 112.4",
-			"49 In \n\n 114.8",
-			"50 Sn \n\n 118.7",
-			"51 Sb \n\n 121.8",
-			"52 Te \n\n 127.6",
-			"53 I \n\n 126.9",
-			"54 Xe \n\n 131.3",
-		]
-		list9 = [
-			"37 Rb \n\n 85.47",
-			"38 Sr \n\n 87.62",
-			"39 Y \n\n 88.91",
-			"40 Zr \n\n 91.22",
-			"41 Nb \n\n 92.91",
-			"42 Mo \n\n 95.96",
-			"43 Tc \n\n [98]",
-			"44 Ru \n\n 101.1",
-			"45 Rh \n\n 102.9",
-			"46 Pd \n\n 106.4",
-			"47 Ag \n\n 107.9",
-			"48 Cd \n\n 112.4",
-			"49 In \n\n 114.8",
-			"50 Sn \n\n 118.7",
-			"51 Sb \n\n 121.8",
-			"52 Te \n\n 127.6",
-			"53 I \n\n 126.9",
-			"54 Xe \n\n 131.3",
-		]
+		H = periodictable.H
+		He = periodictable.He
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list1[X]))
+		Li = periodictable.Li
+		Be = periodictable.Be
+		B = periodictable.B
+		C = periodictable.C
+		N = periodictable.N
+		O = periodictable.O
+		F = periodictable.F
+		Ne = periodictable.Ne
 
-		X = -1
-		Y = 1
+		Na = periodictable.Na
+		Mg = periodictable.Mg
+		Al = periodictable.Al
+		Si = periodictable.Si
+		P = periodictable.P
+		S = periodictable.S
+		Cl = periodictable.Cl
+		Ar = periodictable.Ar
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list2[X]))
+		K = periodictable.K
+		Ca = periodictable.Ca
+		Sc = periodictable.Sc
+		Ti = periodictable.Ti
+		V = periodictable.V
+		Cr = periodictable.Cr
+		Mn = periodictable.Mn
+		Fe = periodictable.Fe
+		Co = periodictable.Co
+		Ni = periodictable.Ni
+		Cu = periodictable.Cu
+		Zn = periodictable.Zn
+		Ga = periodictable.Ga
+		Ge = periodictable.Ge
+		As =periodictable.As
+		Se = periodictable.Se
+		Br = periodictable.Br
+		Kr = periodictable.Kr
+		list4 = [K,Ca,Sc,Ti,V,Cr,Mn,Fe,Co,Ni,Cu,Zn,Ga,Ge,As,Se,Br,Kr]
 
-		X = -1
-		Y = 2
+		Rb = periodictable.Rb
+		Sr = periodictable.Sr
+		Y = periodictable.Y
+		Zr = periodictable.Zr
+		Nb = periodictable.Nb
+		Mo = periodictable.Mo
+		Tc = periodictable.Tc
+		Ru = periodictable.Ru
+		Rh = periodictable.Rh
+		Pd = periodictable.Pd
+		Ag = periodictable.Ag
+		Cd = periodictable.Cd
+		In = periodictable.In
+		Sn = periodictable.Sn
+		Sb = periodictable.Sb
+		Te = periodictable.Te
+		I = periodictable.I
+		Xe =periodictable.Xe
+		list5 = [Rb,Sr,Y,Zr,Nb,Mo,Tc,Ru,Rh,Pd,Ag,Cd,In,Sn,Sb,Te,I,Xe]
+		
+		Cs = periodictable.Cs
+		Ba = periodictable.Ba
+		La_Lu = 'La~Lu'
+		Hf = periodictable.Hf
+		Ta = periodictable.Ta
+		W = periodictable.W
+		Re = periodictable.Re
+		Os = periodictable.Os
+		Ir = periodictable.Ir
+		Pt = periodictable.Pt
+		Au = periodictable.Au
+		Hg = periodictable.Hg
+		Tl = periodictable.Tl
+		Pb = periodictable.Pb
+		Bi = periodictable.Bi
+		Po = periodictable.Po
+		At = periodictable.At
+		Rn = periodictable.Rn
+		list6 = [Cs,Ba,La_Lu,Hf,Ta,W,Re,Os,Ir,Pt,Au,Hg,Tl,Pb,Bi,Po,At,Rn]
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list3[X]))
+		Fr = periodictable.Fr
+		Ra = periodictable.Ra
+		Ac_Lr = 'Ac~Lr'
+		Rf = periodictable.Rf
+		Db = periodictable.Db
+		Sg = periodictable.Sg
+		Bh = periodictable.Bh
+		Hs = periodictable.Hs
+		Mt = periodictable.Mt
+		Ds = periodictable.Ds
+		Rg = periodictable.Rg
+		Cn = periodictable.Cn
+		Nh = periodictable.Nh
+		Fl = periodictable.Fl
+		Mc = periodictable.Mc
+		Lv = periodictable.Lv
+		Ts = periodictable.Ts
+		Og = periodictable.Og
+		list7 = [Fr,Ra,Ac_Lr,Rf,Db,Sg,Bh,Hs,Mt,Ds,Rg,Cn,Nh,Fl,Mc,Lv,Ts,Og]
 
-		X = -1
-		Y = 3
+		La = periodictable.La
+		Ce = periodictable.Ce
+		Pr = periodictable.Pr
+		Nd = periodictable.Nd
+		Pm = periodictable.Pm
+		Sm = periodictable.Sm
+		Eu = periodictable.Eu
+		Gd = periodictable.Gd
+		Tb = periodictable.Tb
+		Dy = periodictable.Dy
+		Ho = periodictable.Ho
+		Er = periodictable.Er
+		Tm = periodictable.Tm
+		Yb = periodictable.Yb
+		Lu = periodictable.Lu
+		list8 = [La,Ce,Pr,Nd,Pm,Sm,Eu,Gd,Tb,Dy,Ho,Er,Tm,Yb,Lu]
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list4[X]))
+		Ac = periodictable.Ac
+		Th = periodictable.Th
+		Pa = periodictable.Pa
+		U = periodictable.U
+		Np = periodictable.Np
+		Pu = periodictable.Pu
+		Am = periodictable.Am
+		Cm = periodictable.Cm
+		Bk = periodictable.Bk
+		Cf = periodictable.Cf
+		Es = periodictable.Es
+		Fm = periodictable.Fm
+		Md = periodictable.Md
+		No = periodictable.No
+		Lr = periodictable.Lr
+		list9 = [Ac,Th,Pa,U,Np,Pu,Am,Cm,Bk,Cf,Es,Fm,Md,No,Lr]
 
-		X = -1
-		Y = 4
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list5[X]))
+		self.SetData(0,0,H)
+		self.SetData(0,17,He)
 
-		X = -1
-		Y = 5
+		self.SetData(1,0,Li)
+		self.SetData(1,1,Be)
+		self.SetData(1,12,B)
+		self.SetData(1,13,C)
+		self.SetData(1,14,N)
+		self.SetData(1,15,O)
+		self.SetData(1,16,F)
+		self.SetData(1,17,Ne)
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list6[X]))
+		self.SetData(2,0,Na)
+		self.SetData(2,1,Mg)
+		self.SetData(2,12,Al)
+		self.SetData(2,13,Si)
+		self.SetData(2,14,P)
+		self.SetData(2,15,S)
+		self.SetData(2,16,Cl)
+		self.SetData(2,17,Ar)
 
-		X = -1
-		Y = 6
+		for i,ele in zip(range(0,18), list4):
+			self.SetData(3,i,ele)
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list7[X]))
+		for i,ele in zip(range(0,18), list5):
+			self.SetData(4,i,ele)
 
-		X = -1
-		Y = 7
+		for i,ele in zip(range(0,18), list6):
+			self.SetData(5,i,ele)
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list8[X]))
+		for i,ele in zip(range(0,18), list7):
+			self.SetData(6,i,ele)
 
-		X = -1
-		Y = 8
+		for i,ele in zip(range(0,18), list8):
+			self.SetData(7,i,ele)
 
-		while X < 17:
-			X = X + 1
-			self.GRID1.SetCellValue(Y, X, str(list9[X]))
+		for i,ele in zip(range(0,18), list9):
+			self.SetData(8,i,ele)
+		
+		##self.GRID.SetLabelFont(wx.f)
+		self.GRID.AutoSize()
+	def MainOnSize(self,event):
+		print(self.GetSize())
+		event.Skip()
+		
+	def SetData(self,X,Y,Elemet):
+		if type(Elemet) == type('str'):
+			self.GRID.SetCellValue(X,Y,Elemet)
+		else:
+			self.GRID.SetCellValue(X,Y,str(Elemet.symbol)+'  '+str(Elemet.number)+'\n'+str(Elemet.name)+'\n'+str(Elemet.mass))
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 
 ##############################
 # 主函数

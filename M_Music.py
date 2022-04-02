@@ -5,6 +5,8 @@ import wx
 
 import GUI_Music
 
+import threading
+
 import pydub,pydub.playback
 import Netease_cloud_CaChe # 网易云音乐缓存转换MP3算法
 
@@ -22,20 +24,19 @@ class CalcFrame(GUI_Music.Main):
 
 
 	def import_file(self, event):
-		global audio_data
-		audio_data = pydub.AudioSegment.from_file(self.File.GetPath())
+		self.audio_data = pydub.AudioSegment.from_file(self.File.GetPath())
 
 		data_list = []
 
-		loudness_DBFS = audio_data.dBFS # DBFS响度
-		loudness_RMS = audio_data.rms # RMS均方根值
-		peak_amplitude = audio_data.max # RMS最高值
-		channel_count = audio_data.channels # 声道_1:单声道/2:立体声
-		bytes_per_sample = audio_data.sample_width # 位宽_1:8位/2:16位
-		frames_per_second = audio_data.frame_rate # 采样率
-		bytes_per_frame = audio_data.frame_width # 每帧字节
-		duration_seconds = audio_data.duration_seconds # 持续时间，秒
-		raw_audio_data = audio_data.raw_data # 原始音频数据
+		loudness_DBFS = self.audio_data.dBFS # DBFS响度
+		loudness_RMS = self.audio_data.rms # RMS均方根值
+		peak_amplitude = self.audio_data.max # RMS最高值
+		channel_count = self.audio_data.channels # 声道_1:单声道/2:立体声
+		bytes_per_sample = self.audio_data.sample_width # 位宽_1:8位/2:16位
+		frames_per_second = self.audio_data.frame_rate # 采样率
+		bytes_per_frame = self.audio_data.frame_width # 每帧字节
+		duration_seconds = self.audio_data.duration_seconds # 持续时间，秒
+		raw_audio_data = self.audio_data.raw_data # 原始音频数据
 
 		##print(raw_audio_data)
 		data_list.append('DBFS响度:' + str(loudness_DBFS))
@@ -49,17 +50,24 @@ class CalcFrame(GUI_Music.Main):
 
 		self.Info.Clear()
 		self.Info.InsertItems(data_list,0)
+		self.B_Play.Enable()
 		
 	def Play(self, event):
-		pydub.playback.play(audio_data)
+		thr = threading.Thread(target=self.Play_threading)
+		thr.start()
+
+	def Play_threading(self,*event):
+		self.B_Play.Disable()
+		pydub.playback.play(self.audio_data)
+		self.B_Play.Enable()
 		
 	def SaveOnFileChanged(self, event):
 		if self.Save_Type.GetString(self.Save_Type.GetSelection()) == 'OGG':
-			audio_data.export(self.Save.GetPath() + '.ogg', format="ogg")
+			self.audio_data.export(self.Save.GetPath() + '.ogg', format="ogg")
 		elif self.Save_Type.GetString(self.Save_Type.GetSelection()) == 'MP3':
-			audio_data.export(self.Save.GetPath() + '.mp3', format="mp3")
+			self.audio_data.export(self.Save.GetPath() + '.mp3', format="mp3")
 		elif self.Save_Type.GetString(self.Save_Type.GetSelection()) == 'WAV':
-			audio_data.export(self.Save.GetPath() + '.wav', format="wav")
+			self.audio_data.export(self.Save.GetPath() + '.wav', format="wav")
 
 	#B-------------------------------------------------------------------------
 

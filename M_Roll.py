@@ -4,6 +4,7 @@
 import wx
 import random
 import time
+import threading
 
 import GUI_Roll
 
@@ -47,18 +48,28 @@ class CalcFrame(GUI_Roll.Main):
 	#--------------------------------------------------------------------------
 
 	def B_RUN(self, event):
-		Resize(self)
+		thr = threading.Thread(target=self.B_RUN_threading)
+		thr.start()
+
+
+	def B_RUN_threading(self,*event):
+		self.B_B_RUN.Enable(False)
+		##Resize(self)
 		for i in range(0,100):
 			if i < 80:
-				wx.MilliSleep(10)
+				##wx.MilliSleep(10)
+				time.sleep(0.01)
 				self.B_DATA.SetLabel(str(random.randint(self.B_MIN.GetValue(), self.B_MAX.GetValue())))
 			elif i < 95:
-				wx.MilliSleep(50)
+				##wx.MilliSleep(50)
+				time.sleep(0.05)
 				self.B_DATA.SetLabel(str(random.randint(self.B_MIN.GetValue(), self.B_MAX.GetValue())))
 			else:
-				wx.MilliSleep(100)
+				##wx.MilliSleep(100)
+				time.sleep(0.1)
 				self.B_DATA.SetLabel(str(random.randint(self.B_MIN.GetValue(), self.B_MAX.GetValue())))
 
+		self.B_B_RUN.Enable(True)
 	#--------------------------------------------------------------------------
 	def SP_SeedOnSpinCtrl(self, event):
 		random.seed(self.SP_Seed.GetValue())

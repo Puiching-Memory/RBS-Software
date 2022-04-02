@@ -40,6 +40,7 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.Bind( wx.EVT_SHOW, self.MainOnShow )
 
 	def __del__( self ):
 		pass
@@ -47,6 +48,9 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def MainOnShow( self, event ):
 		event.Skip()
 
 

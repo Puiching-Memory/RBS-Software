@@ -23,7 +23,7 @@ Time_Timer = 1004
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software", pos = wx.DefaultPosition, size = wx.Size( 750,410 ), style = wx.FRAME_SHAPED|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"RBS_Software", pos = wx.DefaultPosition, size = wx.Size( 750,410 ), style = wx.FRAME_SHAPED|wx.BORDER_STATIC )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		self.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
@@ -34,13 +34,13 @@ class Main ( wx.Frame ):
 
 		wSizer_L1 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.version = wx.Button( self, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 80,25 ), wx.BORDER_NONE|wx.BU_LEFT )
+		self.version = wx.Button( self, wx.ID_ANY, u"#V000.00.00", wx.DefaultPosition, wx.Size( 75,25 ), wx.BORDER_NONE|wx.BU_LEFT )
 		self.version.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.version.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
 		wSizer_L1.Add( self.version, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.Network = wx.Button( self, wx.ID_ANY, u"Net:N/A", wx.DefaultPosition, wx.Size( 60,25 ), wx.BORDER_NONE )
+		self.Network = wx.Button( self, wx.ID_ANY, u"Net:N/A", wx.DefaultPosition, wx.Size( 65,25 ), wx.BORDER_NONE )
 		self.Network.SetForegroundColour( wx.Colour( 255, 255, 255 ) )
 		self.Network.SetBackgroundColour( wx.Colour( 242, 171, 57 ) )
 
@@ -678,6 +678,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
 		self.Weather.Bind( wx.EVT_BUTTON, self.GetWeather )
 		self.Note.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
+		self.Note.Bind( wx.EVT_LEFT_DCLICK, self.OnLeftDClick )
 		self.Note.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
 		self.Note.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
 		self.B_File.Bind( wx.EVT_BUTTON, self.File )
@@ -828,6 +829,9 @@ class Main ( wx.Frame ):
 	def GetWeather( self, event ):
 		event.Skip()
 
+
+	def OnLeftDClick( self, event ):
+		event.Skip()
 
 	def OnLeftDown( self, event ):
 		event.Skip()

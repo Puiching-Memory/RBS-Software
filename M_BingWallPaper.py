@@ -7,6 +7,7 @@ import json
 import PIL.Image
 import win32api,win32con,win32gui
 import os
+import threading
 
 import GUI_BingWallPaper
 
@@ -19,13 +20,16 @@ class CalcFrame(GUI_BingWallPaper.Main):
 	def __init__(self, parent):
 		# 定义主函数
 		GUI_BingWallPaper.Main.__init__(self, parent)
-		global Is_First_Boost
-		Is_First_Boost = False
+		self.Is_First_Boost = False
 		
 	def MainOnShow(self, event):
-		global Is_First_Boost
+		thr = threading.Thread(target=self.MainOnShow_threading)
+		thr.start()
+
+	def MainOnShow_threading(self,*event):
 		wait = wx.BusyCursor()
-		if Is_First_Boost == False:
+		self.Enable(False)
+		if self.Is_First_Boost == False:
 			print('正在获取下载信息')
 			data_url = "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=4&mkt=zh-CN"
 			res = requests.get(data_url, timeout=3600)
@@ -53,8 +57,8 @@ class CalcFrame(GUI_BingWallPaper.Main):
 			self.Picture3.SetBitmap(wx.Bitmap('./Cache/BingWallPaper_2R.jpg'))
 			self.Picture4.SetBitmap(wx.Bitmap('./Cache/BingWallPaper_3R.jpg'))
 
-			Is_First_Boost = True
-
+			self.Is_First_Boost = True
+		self.Enable(True)
 		del wait
 
 	def B_SETOnButtonClick(self, event):
@@ -75,11 +79,8 @@ class CalcFrame(GUI_BingWallPaper.Main):
 		)
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
+		
 ##############################
 # 主函数
 ##############################

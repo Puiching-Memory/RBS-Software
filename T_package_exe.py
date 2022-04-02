@@ -17,7 +17,7 @@ def get_all_file_paths(directory):
 
 def pyinstaller():
 	# pyinstaller 打包命令
-	os.system('pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w --hidden-import=pyi_splash')
+	os.system('pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w --exclude-module tkinter --exclude-module lxml')
 
 def zip():
     #遍历写入.zip

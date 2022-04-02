@@ -114,6 +114,8 @@ class CalcFrame(GUI.Main):
 		GUI.Main.__init__(self, parent)  # 初始化GUI
 
 		# 初始化子模块
+		start_time = time.time()
+
 		self.Frame_Roll = M_Roll.CalcFrame(None)
 		self.Frame_Element = M_Element.CalcFrame(None)
 		self.Frame_Pinyin = M_Pinyin.CalcFrame(None)
@@ -147,10 +149,12 @@ class CalcFrame(GUI.Main):
 		self.Frame_Setting = Setting.CalcFrame(None)
 		self.Frame_Plug_in = Plug_in.CalcFrame(None)
 		self.Frame_Probe = Probe.CalcFrame(None)
+
+		end_time = round(time.time() - start_time, 3)
+
+		print('载入子模块用时：' + str(end_time) + 's')
+		self.Self_CMD('载入子模块用时：' + str(end_time) + 's')
 		# ------------------------------------------------------------
-
-		self.threads = []  # 预留给多线程
-
 		try:
 			ctypes.windll.shcore.SetProcessDpiAwareness(True) # DPI(未经测试！)
 		except Exception as error:
@@ -237,7 +241,7 @@ class CalcFrame(GUI.Main):
 
 		self.SetTransparent(int(transparent))  # 设置窗口透明度
 		# self.SetCursor(wx.Cursor(6)) # 设置窗口光标
-		self.Raise() # 将窗口提升至顶出现
+		self.Raise() # 将窗口提升至顶层
 
 		# ------------------------------------------------------
 		# 初始化完成后日志输出
@@ -246,9 +250,7 @@ class CalcFrame(GUI.Main):
 		logging.info(str('Initialization complete初始化完成:'))
 		logging.info('Version软件版本:' + version)
 
-		self.Self_CMD('载入设置完成')  # 向自定义控制台发送消息
-		self.Self_CMD('文件完整性检查:' + Is_complete)
-		self.Self_CMD('初始化完成,日志已保存')
+		self.Self_CMD('文件完整性检查:' + Is_complete)# 向自定义控制台发送消息
 
 		if eval(is_push_info):
 			windows_info_window = wx.adv.NotificationMessage(
@@ -268,7 +270,12 @@ class CalcFrame(GUI.Main):
 		##password_hwnd = win32gui.GetDlgItem(dialog_hwnd, -31979)
 
 		self.windowEffect = RBS_windows_api.WindowEffect()
+		##self.windowEffect.addWindowAnimation(int(self.GetHandle()))
+		##RBS_windows_api.Windows_shadow().addShadowEffect(int(self.GetHandle()))
 		##self.windowEffect.setAeroEffect(int(self.GetHandle()))
+
+		# 清理
+		del start_time,end_time,i,Nself,path,BG_Bitmap,gdi32,font,fonts,transparent,is_push_info,is_round,version,Plug_in_list
 
 	def Sacc(self, event):
 		"""
@@ -305,11 +312,6 @@ class CalcFrame(GUI.Main):
 		"""
 		self_关闭程序
 		"""
-		while self.threads:  # 移除其他线程
-			thread = self.threads[0]
-			thread.timeToQuit.set()
-			self.threads.remove(thread)
-
 		if self.IsShown() == True:
 			pass
 		else:
@@ -530,6 +532,9 @@ class CalcFrame(GUI.Main):
 
 	def OnLeftDown(self, event):
 		self.windowEffect.moveWindow(self.GetHandle())
+
+	def OnLeftDClick(self,event):
+		print('标题栏双击事件')
 
 	def Change_Size(self, event):
 		print(self.GetSize())
@@ -2142,7 +2147,7 @@ class CalcFrame(GUI.Main):
 		self.T_F1.SetLabel("音频分析器")
 		self.T_F2.SetLabel("大学评分数据库")
 		self.T_F3.SetLabel("二维码")
-		self.T_F4.SetLabel("None")
+		self.T_F4.SetLabel("NONE")
 
 		self.Tip1.SetLabel('对于音频的可视化分析')
 		self.Tip2.SetLabel('临时模块-数据库已完成20%')
