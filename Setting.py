@@ -23,7 +23,9 @@ class CalcFrame(GUI_Setting.Main):
 		SYS_PUSHINFO = cfg.get('window', 'is_push_info')
 		FRAM_ROUND = cfg.get('window', 'is_round')
 		SYS_TEST = cfg.get('window', 'sys_test')
+		FRAM_AeroEffect = cfg.get('window','Aero')
 		fast_on = cfg.get('performance', 'fast_on')
+		
 
 		#print(eval(SYS_TEST))
 
@@ -34,17 +36,23 @@ class CalcFrame(GUI_Setting.Main):
 		self.FRAM_ROUND.SetValue(eval(FRAM_ROUND))
 		self.SYS_TEST.SetValue(eval(SYS_TEST))
 		self.Fast_on_Box.SetValue(eval(fast_on))
+		self.FRAM_AeroEffect.SetValue(eval(FRAM_AeroEffect))
+
+		#--------------------------------------------------
+		self.Notebook.SetSelection(0)
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 
 	def Save(self, event):
-		save(self)
-		print('save')
+		cfg.set('window', 'transparency', str(self.TREY_slider.GetValue()))
+		cfg.set('performance', 'fast_on', str(self.Fast_on_Box.IsChecked()))
+		cfg.set('window', 'is_push_info', str(self.SYS_PUSHINFO.IsChecked()))
+		cfg.set('window', 'is_round', str(self.FRAM_ROUND.IsChecked()))
+		cfg.set('window', 'Aero', str(self.FRAM_AeroEffect.IsChecked()))
+		cfg.set('window', 'sys_test', str(self.SYS_TEST.IsChecked()))
+		cfg.write(open('./cfg/main.cfg', 'w'))
+		print('保存设置')
 	
 	def Cancel(self, event):
 		self.Destroy()
@@ -60,14 +68,6 @@ def main():
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
-
-def save(self):
-	cfg.set('window', 'transparency', str(self.TREY_slider.GetValue()))
-	cfg.set('performance', 'fast_on', str(self.Fast_on_Box.IsChecked()))
-	cfg.set('window', 'is_push_info', str(self.SYS_PUSHINFO.IsChecked()))
-	cfg.set('window', 'is_round', str(self.FRAM_ROUND.IsChecked()))
-	cfg.set('window', 'sys_test', str(self.SYS_TEST.IsChecked()))
-	cfg.write(open('./cfg/main.cfg', 'w'))
 
 if __name__ == "__main__":
 	main()

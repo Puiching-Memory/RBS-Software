@@ -195,8 +195,8 @@ class CalcFrame(GUI.Main):
 		transparent = self.cfg.get('window', 'transparency') # 透明度
 		is_push_info = self.cfg.get('window', 'is_push_info') # 通知栏
 		is_round = self.cfg.get('window', 'is_round') # 圆形边角
-		version = self.cfg.get('main', 'VERSION') # 版本号
-		Is_complete = self.cfg.get('Check', 'Is_complete') # 启动检测是否运行
+		AeroEffect = self.cfg.get('window', 'Aero') # 毛玻璃
+		version = self.cfg.get('main', 'VERSION') # 版本号		
 
 		# 载入插件-----------------------
 		Plug_in_list = open('./DATA/main/plug_in/List.txt')
@@ -206,7 +206,7 @@ class CalcFrame(GUI.Main):
 			print('载入插件', str(Plug_in_list[i]).replace('\n', ''))
 		# ------------------------------
 		self.Main_State = 0
-		self.setup = 0  # 初始化操作所用的变量,所有操作完成后会变成1
+		self.setup = 1  # 初始化操作所用的变量,所有操作完成后会变成0
 		self.FUN_State = -1
 		self.Hover = 0  # 检测当前Hover的按钮是哪个
 		self.colour_Hover = '#A65F00'  # 顶部按钮被Hover时呈现的颜色
@@ -223,6 +223,11 @@ class CalcFrame(GUI.Main):
 		else:
 			pass
 
+		self.windowEffect = RBS_windows_api.WindowEffect()
+
+		if eval(AeroEffect) == True:
+			self.windowEffect.setAeroEffect(self.GetHandle())
+
 		self.SVG_ICO()  # 设置SVG图标
 
 		BG_Bitmap = PIL.Image.open('./pictures/BG.jpg')  # 对不符合要求的背景图片进行修改
@@ -237,7 +242,7 @@ class CalcFrame(GUI.Main):
 		self.SetDropTarget(FileDrop(self))  # 声明:接受文件拖放
 		self.SetIcon(wx.Icon('ICOV4.ico', wx.BITMAP_TYPE_ICO))  # 设置GUI图标(左上角)
 
-		self.start()  # 初始化界面布局函数(纯操作,无计算)
+		self.Start()  # 初始化界面布局函数(纯操作,无计算)
 
 		self.SetTransparent(int(transparent))  # 设置窗口透明度
 		# self.SetCursor(wx.Cursor(6)) # 设置窗口光标
@@ -246,11 +251,8 @@ class CalcFrame(GUI.Main):
 		# ------------------------------------------------------
 		# 初始化完成后日志输出
 		Log()  # 初始化LOG设置
-		logging.info('Document integrity check文件完整性检查:' + Is_complete)
 		logging.info(str('Initialization complete初始化完成:'))
 		logging.info('Version软件版本:' + version)
-
-		self.Self_CMD('文件完整性检查:' + Is_complete)# 向自定义控制台发送消息
 
 		if eval(is_push_info):
 			windows_info_window = wx.adv.NotificationMessage(
@@ -266,29 +268,48 @@ class CalcFrame(GUI.Main):
 		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(
 			self.Size))
 		
-		##dialog_hwnd = win32gui.FindWindow(None,'RBS_Software')
-		##password_hwnd = win32gui.GetDlgItem(dialog_hwnd, -31979)
+		##dialog_hwnd = win32gui.FindWindow("Shell_TrayWnd", None)
+		##m_hBar = win32gui.FindWindowEx(dialog_hwnd, 0, "ReBarWindow32", None)
+		##m_hMin = win32gui.FindWindowEx(m_hBar, 0, "MSTaskSwWClass", None)
 
-		self.windowEffect = RBS_windows_api.WindowEffect()
-		##self.windowEffect.addWindowAnimation(int(self.GetHandle()))
-		##RBS_windows_api.Windows_shadow().addShadowEffect(int(self.GetHandle()))
-		##self.windowEffect.setAeroEffect(int(self.GetHandle()))
+		##dialog_hwnd = win32gui.FindWindow(None,"RBS_Software")
+		##password_hwnd = win32gui.GetDlgItem(dialog_hwnd, -31910)
+	
+		self.Refresh()
 
+		self.ANI_i = 0
 		# 清理
 		del start_time,end_time,i,Nself,path,BG_Bitmap,gdi32,font,fonts,transparent,is_push_info,is_round,version,Plug_in_list
+
+	def ANI(self, event):
+		self.ANI_i = self.ANI_i + 1	
+		dc = wx.ClientDC(self)
+		gc = wx.GraphicsContext.Create(dc)
+		gc.SetPen(wx.Pen(wx.Colour(255,255,255,150), 30))
+		gc.DrawRectangle(0, self.ANI_i * 10, 750, 20)
+		gc.DrawRectangle(0, 400 - self.ANI_i * 10, 750, 20)
+
+		if self.ANI_i == 20:
+			self.ANI_Timer.Stop()
+			self.ANI_i = 0
 
 	def Sacc(self, event):
 		"""
 		主界面背景图片绘制
 		"""
+
 		if self.setup == 1:
 			dc = event.GetDC()
-			dc.Clear()
 			dc.DrawBitmap(wx.Bitmap('./pictures/BG.jpg'), 0, 50, useMask=True)
-		# print(1)
-		else:
-			dc = event.GetDC()
-			dc.Clear()
+		
+			self.setup = 0
+
+		elif self.setup == 2:
+			self.setup = 0
+			self.ANI_Timer.Start(1)
+			##event.Skip()
+
+		##event.Skip()
 
 	def Close(self, event):
 		"""
@@ -1830,484 +1851,511 @@ class CalcFrame(GUI.Main):
 
 	def G_1(self, event):
 		""" 1号功能分区-语文 """
+		if self.Main_State != 1:
+			self.Colour_clean()  # 清空所有颜色
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()  # 主界面颜色定义
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page1.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note1.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)  # 随机抽取一条
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom,self.colour_SideL)  # 主界面颜色设置
+
+			self.G1.SetBackgroundColour(colour_Main)  # 主界面颜色设置
+			self.G1.SetForegroundColour("White")  # 按钮字体颜色设置
+
+			self.T_F1.SetLabel("中文转拼音")  # 设置功能按钮的标签
+			self.T_F2.SetLabel("简-繁转换")
+			self.T_F3.SetLabel("成语接龙")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('将输入的中文转化为拼音,支持多音字')
+			self.Tip2.SetLabel('如题,将中文简体和繁体字互相转换')
+			self.Tip3.SetLabel('拥有一万对成语的接龙,你能顶得住吗?')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			# 功能主标题下方的四个按钮的设置(每四个一组,网络,文件)
+			self.Function_icon(0, 0, 0, 0, 1, 1, 1, 0)
+
+			self.BUT_CLFN(1)  # 检查该功能分区下的四个功能是否正在运行
+
+			self.Refresh()  # 刷新屏幕
+
 		self.Main_State = 1
-
-		self.Colour_clean()  # 清空所有颜色
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()  # 主界面颜色定义
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page1.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note1.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)  # 随机抽取一条
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom,self.colour_SideL)  # 主界面颜色设置
-
-		self.G1.SetBackgroundColour(colour_Main)  # 主界面颜色设置
-		self.G1.SetForegroundColour("White")  # 按钮字体颜色设置
-
-		self.T_F1.SetLabel("中文转拼音")  # 设置功能按钮的标签
-		self.T_F2.SetLabel("简-繁转换")
-		self.T_F3.SetLabel("成语接龙")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('将输入的中文转化为拼音,支持多音字')
-		self.Tip2.SetLabel('如题,将中文简体和繁体字互相转换')
-		self.Tip3.SetLabel('拥有一万对成语的接龙,你能顶得住吗?')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		# 功能主标题下方的四个按钮的设置(每四个一组,网络,文件)
-		self.Function_icon(0, 0, 0, 0, 1, 1, 1, 0)
-
-		self.BUT_CLFN(1)  # 检查该功能分区下的四个功能是否正在运行
-
-		self.Refresh()  # 刷新屏幕
 
 	def G_2(self, event):
 		""" 2号功能分区-数学 """
+		if self.Main_State != 2:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page2.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note2.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G2.SetBackgroundColour(colour_Main)
+			self.G2.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("圆周率")
+			self.T_F2.SetLabel("3D_Math")
+			self.T_F3.SetLabel("三角函数")
+			self.T_F4.SetLabel("数学画板")
+
+			self.Tip1.SetLabel('记录了小数点后一万位,支持本地解算')
+			self.Tip2.SetLabel('创建3D的数学模型')
+			self.Tip3.SetLabel('简单的三角函数计算器')
+			self.Tip4.SetLabel('简易数学画板')
+
+			self.TIP1.SetLabel('')
+			self.TIP2.SetLabel('状态:未启用')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('状态:FUNT')
+
+			self.Function_icon(0, 0, 0, 0, 1, 0, 0, 0)
+
+			self.BUT_CLFN(2)
+
+			self.Refresh()
+
 		self.Main_State = 2
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page2.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note2.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G2.SetBackgroundColour(colour_Main)
-		self.G2.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("圆周率")
-		self.T_F2.SetLabel("3D_Math")
-		self.T_F3.SetLabel("三角函数")
-		self.T_F4.SetLabel("数学画板")
-
-		self.Tip1.SetLabel('记录了小数点后一万位,支持本地解算')
-		self.Tip2.SetLabel('创建3D的数学模型')
-		self.Tip3.SetLabel('简单的三角函数计算器')
-		self.Tip4.SetLabel('简易数学画板')
-
-		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('状态:未启用')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('状态:FUNT')
-
-		self.Function_icon(0, 0, 0, 0, 1, 0, 0, 0)
-
-		self.BUT_CLFN(2)
-
-		self.Refresh()
 
 	def G_3(self, event):
 		""" 3号功能分区-英语 """
+		if self.Main_State != 3:
+
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page3.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note3.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G3.SetBackgroundColour(colour_Main)
+			self.G3.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("大小写转换")
+			self.T_F2.SetLabel("NONE")
+			self.T_F3.SetLabel("NONE")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('将所有英文字母在大写/小写中转换')
+			self.Tip2.SetLabel('什么都没有呢!')
+			self.Tip3.SetLabel('什么都没有呢!')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(0, 0, 0, 0, 0, 0, 0, 0)
+
+			self.BUT_CLFN(3)
+
+			self.Refresh()
+
 		self.Main_State = 3
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page3.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note3.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G3.SetBackgroundColour(colour_Main)
-		self.G3.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("大小写转换")
-		self.T_F2.SetLabel("NONE")
-		self.T_F3.SetLabel("NONE")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('将所有英文字母在大写/小写中转换')
-		self.Tip2.SetLabel('什么都没有呢!')
-		self.Tip3.SetLabel('什么都没有呢!')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(0, 0, 0, 0, 0, 0, 0, 0)
-
-		self.BUT_CLFN(3)
-
-		self.Refresh()
 
 	def G_4(self, event):
 		""" 4号功能分区-信息 """
-		self.Main_State = 4
+		
+		if self.Main_State != 4:
+			self.Colour_clean()
 
-		self.Colour_clean()
+			if self.Main_State == 0:
+				self.Start_ToolBox()
 
-		self.start()
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page4.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
 
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page4.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+			note = open('./DATA/Main/Note/Note4.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
 
-		note = open('./DATA/Main/Note/Note4.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
 
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+			self.G4.SetBackgroundColour(colour_Main)
+			self.G4.SetForegroundColour("White")
 
-		self.G4.SetBackgroundColour(colour_Main)
-		self.G4.SetForegroundColour("White")
+			self.T_F1.SetLabel("RBS_SSC")
+			self.T_F2.SetLabel("PPT出图")
+			self.T_F3.SetLabel("BMI")
+			self.T_F4.SetLabel("DDT")
 
-		self.T_F1.SetLabel("RBS_SSC")
-		self.T_F2.SetLabel("PPT出图")
-		self.T_F3.SetLabel("BMI")
-		self.T_F4.SetLabel("DDT")
+			self.Tip1.SetLabel('扫码登记作业系统')
+			self.Tip2.SetLabel('将选定文件夹内的所有PPT导出为图片')
+			self.Tip3.SetLabel('BMI计算器,简单,易用,但没人关心这个')
+			self.Tip4.SetLabel('(DDT)破环性实验功能\n谨慎使用，任何造成的损失后果自负')
 
-		self.Tip1.SetLabel('扫码登记作业系统')
-		self.Tip2.SetLabel('将选定文件夹内的所有PPT导出为图片')
-		self.Tip3.SetLabel('BMI计算器,简单,易用,但没人关心这个')
-		self.Tip4.SetLabel('(DDT)破环性实验功能\n谨慎使用，任何造成的损失后果自负')
+			self.TIP1.SetLabel('')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('状态:FUNT')
 
-		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('状态:FUNT')
+			self.Function_icon(0, 0, 0, 0, 1, 1, 0, 0)
 
-		self.Function_icon(0, 0, 0, 0, 1, 1, 0, 0)
-
-		self.BUT_CLFN(4)
+			self.BUT_CLFN(4)
 
 		self.Refresh()
+
+		self.Main_State = 4
 
 	def G_5(self, event):
 		""" 5号功能分区-历史 """
+		
+		if self.Main_State != 5:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page5.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note5.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G5.SetBackgroundColour(colour_Main)
+			self.G5.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("历史上的今天")
+			self.T_F2.SetLabel("必应壁纸")
+			self.T_F3.SetLabel("NONE")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('数据来自www.ipip5.com')
+			self.Tip2.SetLabel('朋友,不知道用什么壁纸?来这找找吧')
+			self.Tip3.SetLabel('什么都没有呢!')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('')
+			self.TIP2.SetLabel('状态:FUNT')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(1, 1, 0, 0, 1, 1, 0, 0)
+
+			self.BUT_CLFN(5)
+
+			self.Refresh()
+
 		self.Main_State = 5
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page5.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note5.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G5.SetBackgroundColour(colour_Main)
-		self.G5.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("历史上的今天")
-		self.T_F2.SetLabel("必应壁纸")
-		self.T_F3.SetLabel("NONE")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('数据来自www.ipip5.com')
-		self.Tip2.SetLabel('朋友,不知道用什么壁纸?来这找找吧')
-		self.Tip3.SetLabel('什么都没有呢!')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('')
-		self.TIP2.SetLabel('状态:FUNT')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(1, 1, 0, 0, 1, 1, 0, 0)
-
-		self.BUT_CLFN(5)
-
-		self.Refresh()
 
 	def G_6(self, event):
 		""" 6号功能分区-地理 """
+		
+		if self.Main_State != 6:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page6.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note6.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G6.SetBackgroundColour(colour_Main)
+			self.G6.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("WALP")
+			self.T_F2.SetLabel("NONE")
+			self.T_F3.SetLabel("NONE")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('WALP地理信息系统')
+			self.Tip2.SetLabel('什么都没有呢!')
+			self.Tip3.SetLabel('什么都没有呢!')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('状态:GUIF')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(1, 0, 0, 0, 1, 0, 0, 0)
+
+			self.BUT_CLFN(6)
+
+			self.Refresh()
+
 		self.Main_State = 6
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page6.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note6.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G6.SetBackgroundColour(colour_Main)
-		self.G6.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("WALP")
-		self.T_F2.SetLabel("NONE")
-		self.T_F3.SetLabel("NONE")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('WALP地理信息系统')
-		self.Tip2.SetLabel('什么都没有呢!')
-		self.Tip3.SetLabel('什么都没有呢!')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('状态:GUIF')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(1, 0, 0, 0, 1, 0, 0, 0)
-
-		self.BUT_CLFN(6)
-
-		self.Refresh()
 
 	def G_7(self, event):
 		""" 7号功能分区-物理 """
+		
+		if self.Main_State != 7:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page7.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note7.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G7.SetBackgroundColour(colour_Main)
+			self.G7.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("音频分析器")
+			self.T_F2.SetLabel("大学评分数据库")
+			self.T_F3.SetLabel("二维码")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('对于音频的可视化分析')
+			self.Tip2.SetLabel('临时模块-数据库已完成20%')
+			self.Tip3.SetLabel('二维码生成系统')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('状态:FUNT')
+			self.TIP2.SetLabel('状态:FUNT')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(0, 0, 0, 0, 1, 1, 1, 0)
+
+			self.BUT_CLFN(7)
+
+			self.Refresh()
+
 		self.Main_State = 7
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page7.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note7.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G7.SetBackgroundColour(colour_Main)
-		self.G7.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("音频分析器")
-		self.T_F2.SetLabel("大学评分数据库")
-		self.T_F3.SetLabel("二维码")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('对于音频的可视化分析')
-		self.Tip2.SetLabel('临时模块-数据库已完成20%')
-		self.Tip3.SetLabel('二维码生成系统')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('状态:FUNT')
-		self.TIP2.SetLabel('状态:FUNT')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(0, 0, 0, 0, 1, 1, 1, 0)
-
-		self.BUT_CLFN(7)
-
-		self.Refresh()
 
 	def G_8(self, event):
 		""" 8号功能分区-化学 """
+		
+		if self.Main_State != 8:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page8.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note8.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G8.SetBackgroundColour(colour_Main)
+			self.G8.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("元素周期表")
+			self.T_F2.SetLabel("NONE")
+			self.T_F3.SetLabel("NONE")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('经典门捷列夫元素周期表')
+			self.Tip2.SetLabel('什么都没有呢!')
+			self.Tip3.SetLabel('什么都没有呢!')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('状态:FUNT')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(0, 0, 0, 0, 0, 0, 0, 0)
+
+			self.BUT_CLFN(8)
+
+			self.Refresh()
+
 		self.Main_State = 8
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page8.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note8.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G8.SetBackgroundColour(colour_Main)
-		self.G8.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("元素周期表")
-		self.T_F2.SetLabel("NONE")
-		self.T_F3.SetLabel("NONE")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('经典门捷列夫元素周期表')
-		self.Tip2.SetLabel('什么都没有呢!')
-		self.Tip3.SetLabel('什么都没有呢!')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('状态:FUNT')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(0, 0, 0, 0, 0, 0, 0, 0)
-
-		self.BUT_CLFN(8)
-
-		self.Refresh()
 
 	def G_9(self, event):
 		""" 9号功能分区-生物 """
+		
+		if self.Main_State != 9:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page9.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note9.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G9.SetBackgroundColour(colour_Main)
+			self.G9.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("基因库")
+			self.T_F2.SetLabel("NONE")
+			self.T_F3.SetLabel("NONE")
+			self.T_F4.SetLabel("NONE")
+
+			self.Tip1.SetLabel('从本地数据库中获取基因数列\n然后进行蛋白质转录')
+			self.Tip2.SetLabel('什么都没有呢!')
+			self.Tip3.SetLabel('什么都没有呢!')
+			self.Tip4.SetLabel('什么都没有呢!')
+
+			self.TIP1.SetLabel('状态:过时')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('')
+			self.TIP4.SetLabel('')
+
+			self.Function_icon(0, 0, 0, 0, 1, 0, 0, 0)
+
+			self.BUT_CLFN(9)
+
+			self.Refresh()
+		
 		self.Main_State = 9
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page9.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note9.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G9.SetBackgroundColour(colour_Main)
-		self.G9.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("基因库")
-		self.T_F2.SetLabel("NONE")
-		self.T_F3.SetLabel("NONE")
-		self.T_F4.SetLabel("NONE")
-
-		self.Tip1.SetLabel('从本地数据库中获取基因数列\n然后进行蛋白质转录')
-		self.Tip2.SetLabel('什么都没有呢!')
-		self.Tip3.SetLabel('什么都没有呢!')
-		self.Tip4.SetLabel('什么都没有呢!')
-
-		self.TIP1.SetLabel('状态:过时')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('')
-		self.TIP4.SetLabel('')
-
-		self.Function_icon(0, 0, 0, 0, 1, 0, 0, 0)
-
-		self.BUT_CLFN(9)
-
-		self.Refresh()
 
 	def G_10(self, event):
 		""" 10号功能分区-通用 """
+		if self.Main_State != 10:
+			self.Colour_clean()
+
+			if self.Main_State == 0:
+				self.Start_ToolBox()
+
+			colour_cfg = configparser.ConfigParser()
+			colour_cfg.read('./DATA/Main/Theme/colourful/Page10.cfg')
+			colour_Main = colour_cfg.get('colour', 'colour_Main')
+			self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
+			self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
+			self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
+
+			note = open('./DATA/Main/Note/Note10.txt',
+						'r', encoding='utf-8')  # 主界面留言定义
+			note = note.readlines()
+			roll = random.randint(0, len(note) - 1)
+			note = note[roll]
+			note = note.replace('\n', '')
+
+			self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
+
+			self.G10.SetBackgroundColour(colour_Main)
+			self.G10.SetForegroundColour("White")
+
+			self.T_F1.SetLabel("随机数生成器")
+			self.T_F2.SetLabel("单位转换")
+			self.T_F3.SetLabel("值日表")
+			self.T_F4.SetLabel("计时器")
+
+			self.Tip1.SetLabel('利用随机数函数生成随机数字')
+			self.Tip2.SetLabel('物理、化学、数学单位换算')
+			self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
+			self.Tip4.SetLabel('简单的计时器,真的只是计时')
+
+			self.TIP1.SetLabel('FUNT')
+			self.TIP2.SetLabel('')
+			self.TIP3.SetLabel('状态:过时')
+			self.TIP4.SetLabel('状态:FUNT')
+
+			self.Function_icon(0, 0, 0, 0, 0, 0, 1, 0)
+
+			self.BUT_CLFN(10)
+
+			self.Refresh()
+
 		self.Main_State = 10
-
-		self.Colour_clean()
-
-		self.start()
-
-		colour_cfg = configparser.ConfigParser()
-		colour_cfg.read('./DATA/Main/Theme/colourful/Page10.cfg')
-		colour_Main = colour_cfg.get('colour', 'colour_Main')
-		self.colour_Bottom = colour_cfg.get('colour', 'colour_Bottom')
-		self.colour_SideL = colour_cfg.get('colour', 'colour_SideL')
-		self.colour_Hover = colour_cfg.get('colour', 'colour_Hover')
-
-		note = open('./DATA/Main/Note/Note10.txt',
-					'r', encoding='utf-8')  # 主界面留言定义
-		note = note.readlines()
-		roll = random.randint(0, len(note) - 1)
-		note = note[roll]
-		note = note.replace('\n', '')
-
-		self.Colour_Set(note, colour_Main, self.colour_Bottom, self.colour_SideL)
-
-		self.G10.SetBackgroundColour(colour_Main)
-		self.G10.SetForegroundColour("White")
-
-		self.T_F1.SetLabel("随机数生成器")
-		self.T_F2.SetLabel("单位转换")
-		self.T_F3.SetLabel("值日表")
-		self.T_F4.SetLabel("计时器")
-
-		self.Tip1.SetLabel('利用随机数函数生成随机数字')
-		self.Tip2.SetLabel('物理、化学、数学单位换算')
-		self.Tip3.SetLabel('将班级值日表显示在电脑壁纸上!')
-		self.Tip4.SetLabel('简单的计时器,真的只是计时')
-
-		self.TIP1.SetLabel('FUNT')
-		self.TIP2.SetLabel('')
-		self.TIP3.SetLabel('状态:过时')
-		self.TIP4.SetLabel('状态:FUNT')
-
-		self.Function_icon(0, 0, 0, 0, 0, 0, 1, 0)
-
-		self.BUT_CLFN(10)
-
-		self.Refresh()
 
 	# 辅助函数------------------------------------------------------------
 
@@ -2743,157 +2791,159 @@ class CalcFrame(GUI.Main):
 		self.Side3.SetBackgroundColour(colour_SideL)
 		self.Side4.SetBackgroundColour(colour_SideL)
 
-	def start(self):
+	def Start_ToolBox(self):
 		"""
 		程序初始化界面
 		"""
-		if self.setup == 1:
-			buer = True
-			self.T_F1.Show(buer)
-			self.T_F2.Show(buer)
-			self.T_F3.Show(buer)
-			self.T_F4.Show(buer)
+		self.setup = 2
+		buer = True
+		self.T_F1.Show(buer)
+		self.T_F2.Show(buer)
+		self.T_F3.Show(buer)
+		self.T_F4.Show(buer)
 
-			self.Net1.Show(buer)
-			self.Net2.Show(buer)
-			self.Net3.Show(buer)
-			self.Net4.Show(buer)
+		self.Net1.Show(buer)
+		self.Net2.Show(buer)
+		self.Net3.Show(buer)
+		self.Net4.Show(buer)
 
-			self.File1.Show(buer)
-			self.File2.Show(buer)
-			self.File3.Show(buer)
-			self.File4.Show(buer)
+		self.File1.Show(buer)
+		self.File2.Show(buer)
+		self.File3.Show(buer)
+		self.File4.Show(buer)
 
-			self.Star1.Show(buer)
-			self.Star2.Show(buer)
-			self.Star3.Show(buer)
-			self.Star4.Show(buer)
+		self.Star1.Show(buer)
+		self.Star2.Show(buer)
+		self.Star3.Show(buer)
+		self.Star4.Show(buer)
 
-			self.Help1.Show(buer)
-			self.Help2.Show(buer)
-			self.Help3.Show(buer)
-			self.Help4.Show(buer)
+		self.Help1.Show(buer)
+		self.Help2.Show(buer)
+		self.Help3.Show(buer)
+		self.Help4.Show(buer)
 
-			self.P_F1.Show(buer)
-			self.P_F2.Show(buer)
-			self.P_F3.Show(buer)
-			self.P_F4.Show(buer)
+		self.P_F1.Show(buer)
+		self.P_F2.Show(buer)
+		self.P_F3.Show(buer)
+		self.P_F4.Show(buer)
 
-			self.B_F1.Show(buer)
-			self.B_F2.Show(buer)
-			self.B_F3.Show(buer)
-			self.B_F4.Show(buer)
+		self.B_F1.Show(buer)
+		self.B_F2.Show(buer)
+		self.B_F3.Show(buer)
+		self.B_F4.Show(buer)
 
-			self.Tip1.Show(buer)
-			self.Tip2.Show(buer)
-			self.Tip3.Show(buer)
-			self.Tip4.Show(buer)
+		self.Tip1.Show(buer)
+		self.Tip2.Show(buer)
+		self.Tip3.Show(buer)
+		self.Tip4.Show(buer)
 
-			self.TIP1.Show(buer)
-			self.TIP2.Show(buer)
-			self.TIP3.Show(buer)
-			self.TIP4.Show(buer)
+		self.TIP1.Show(buer)
+		self.TIP2.Show(buer)
+		self.TIP3.Show(buer)
+		self.TIP4.Show(buer)
 
-			self.Side1.Show(buer)
-			self.Side2.Show(buer)
-			self.Side3.Show(buer)
-			self.Side4.Show(buer)
+		self.Side1.Show(buer)
+		self.Side2.Show(buer)
+		self.Side3.Show(buer)
+		self.Side4.Show(buer)
 
-			self.B_Side_Close.Show(buer)
-			self.CMD_OUT.Show(buer)
-			self.CMD_IN.Show(buer)
-			self.B_Side_Refresh.Show(buer)
-			self.B_Side_Run.Show(buer)
+		self.B_Side_Close.Show(buer)
+		self.CMD_OUT.Show(buer)
+		self.CMD_IN.Show(buer)
+		self.B_Side_Refresh.Show(buer)
+		self.B_Side_Run.Show(buer)
 
-			self.Side_Tip.Show(buer)
-			self.Plug_in_box.Show(buer)
+		self.Side_Tip.Show(buer)
+		self.Plug_in_box.Show(buer)
 
-			self.Line1.Show(buer)
-			self.Line2.Show(buer)
-			self.Line3.Show(buer)
-			self.Space_left.Show(buer)
+		self.Line1.Show(buer)
+		self.Line2.Show(buer)
+		self.Line3.Show(buer)
+		self.Space_left.Show(buer)
 
-			self.Spacer_M.Show(False)
+		self.Spacer_M.Show(False)
 
-			self.resize()
-			self.SetBackgroundColour('White')
+		self.SetBackgroundColour('White')
+		self.resize()
 
-			self.setup = 2
+		
 
-		elif self.setup == 0:
-			buer = False
-			self.T_F1.Show(buer)
-			self.T_F2.Show(buer)
-			self.T_F3.Show(buer)
-			self.T_F4.Show(buer)
+	def Start(self):
+		buer = False
+		self.T_F1.Show(buer)
+		self.T_F2.Show(buer)
+		self.T_F3.Show(buer)
+		self.T_F4.Show(buer)
 
-			self.Net1.Show(buer)
-			self.Net2.Show(buer)
-			self.Net3.Show(buer)
-			self.Net4.Show(buer)
+		self.Net1.Show(buer)
+		self.Net2.Show(buer)
+		self.Net3.Show(buer)
+		self.Net4.Show(buer)
 
-			self.File1.Show(buer)
-			self.File2.Show(buer)
-			self.File3.Show(buer)
-			self.File4.Show(buer)
+		self.File1.Show(buer)
+		self.File2.Show(buer)
+		self.File3.Show(buer)
+		self.File4.Show(buer)
 
-			self.Star1.Show(buer)
-			self.Star2.Show(buer)
-			self.Star3.Show(buer)
-			self.Star4.Show(buer)
+		self.Star1.Show(buer)
+		self.Star2.Show(buer)
+		self.Star3.Show(buer)
+		self.Star4.Show(buer)
 
-			self.Help1.Show(buer)
-			self.Help2.Show(buer)
-			self.Help3.Show(buer)
-			self.Help4.Show(buer)
+		self.Help1.Show(buer)
+		self.Help2.Show(buer)
+		self.Help3.Show(buer)
+		self.Help4.Show(buer)
 
-			self.P_F1.Show(buer)
-			self.P_F2.Show(buer)
-			self.P_F3.Show(buer)
-			self.P_F4.Show(buer)
+		self.P_F1.Show(buer)
+		self.P_F2.Show(buer)
+		self.P_F3.Show(buer)
+		self.P_F4.Show(buer)
 
-			self.B_F1.Show(buer)
-			self.B_F2.Show(buer)
-			self.B_F3.Show(buer)
-			self.B_F4.Show(buer)
+		self.B_F1.Show(buer)
+		self.B_F2.Show(buer)
+		self.B_F3.Show(buer)
+		self.B_F4.Show(buer)
 
-			self.Tip1.Show(buer)
-			self.Tip2.Show(buer)
-			self.Tip3.Show(buer)
-			self.Tip4.Show(buer)
+		self.Tip1.Show(buer)
+		self.Tip2.Show(buer)
+		self.Tip3.Show(buer)
+		self.Tip4.Show(buer)
 
-			self.TIP1.Show(buer)
-			self.TIP2.Show(buer)
-			self.TIP3.Show(buer)
-			self.TIP4.Show(buer)
+		self.TIP1.Show(buer)
+		self.TIP2.Show(buer)
+		self.TIP3.Show(buer)
+		self.TIP4.Show(buer)
 
-			self.Side1.Show(buer)
-			self.Side2.Show(buer)
-			self.Side3.Show(buer)
-			self.Side4.Show(buer)
+		self.Side1.Show(buer)
+		self.Side2.Show(buer)
+		self.Side3.Show(buer)
+		self.Side4.Show(buer)
 
-			self.B_Side_Close.Show(buer)
-			self.CMD_OUT.Show(buer)
-			self.CMD_IN.Show(buer)
-			self.B_Side_Refresh.Show(buer)
-			self.B_Side_Run.Show(buer)
+		self.B_Side_Close.Show(buer)
+		self.CMD_OUT.Show(buer)
+		self.CMD_IN.Show(buer)
+		self.B_Side_Refresh.Show(buer)
+		self.B_Side_Run.Show(buer)
 
-			self.Side_Tip.Show(buer)
-			self.Plug_in_box.Show(buer)
+		self.Side_Tip.Show(buer)
+		self.Plug_in_box.Show(buer)
 
-			self.Line1.Show(buer)
-			self.Line2.Show(buer)
-			self.Line3.Show(buer)
-			self.Space_left.Show(buer)
+		self.Line1.Show(buer)
+		self.Line2.Show(buer)
+		self.Line3.Show(buer)
+		self.Space_left.Show(buer)
 
-			self.Spacer_M.Show(True)
+		self.Spacer_M.Show(True)
 
-			self.setup = 1
+		self.setup = 1
 
 	def Home(self):
 		"""
 		返回初始界面
 		"""
+		self.ANI_Timer.Stop()
+		self.ANI_i = 0
 		self.colour_Hover = '#A65F00'
 
 		buer = False
@@ -3300,13 +3350,6 @@ def main():
 	frame_main.Show(True)
 
 	app.MainLoop()
-
-
-def Pre_main():
-	global frame_main
-	frame_main = CalcFrame(None)
-
-	return frame_main
 
 
 def Log():

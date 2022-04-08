@@ -81,20 +81,21 @@ class CalcFrame(GUI_Preparation.Main):
 
 		Frame_main = Main.CalcFrame(None)
 
-		cfg.set('Check', 'Is_complete', 'not running')
-		cfg.write(open('./cfg/main.cfg', 'w'))
-
 		Frame_main.Show()
 		wx.CallAfter(self.Hide)
 
 	def Normal(self, event):
 		self.T_M.SetLabel("启动检测线程")
-		thread = MyThread(target=self.Main_Boolst)  # 创建一个线程
-		thread2 = MyThread(target=self.threading_Normal)  # 创建一个线程
+		thread = threading.Thread(target=self.threading_Normal)  # 创建一个线程
 
-		thread.start()  # 启动线程
-		thread2.start()
+		thread.start()
 
+		self.T_M.SetLabel("加载核心库")
+		Frame_main = Main.CalcFrame(None)
+		Frame_main.Self_CMD('文件完整性检查结束')
+		
+		Frame_main.ShowWithEffect(wx.SHOW_EFFECT_BLEND)
+		##wx.CallLater(10,Frame_main.ShowWithEffect,wx.SHOW_EFFECT_BLEND)
 		#thread.join()
 		#thread2.join()
 
@@ -108,7 +109,7 @@ class CalcFrame(GUI_Preparation.Main):
 		#del thread, thread2, self
 
 		print('Pre_Finish')
-		del thread,thread2
+		del thread
 
 	def threading_Normal(self):
 		"""This runs in a different thread.  Sleep is used to simulate a long running task."""
@@ -146,10 +147,6 @@ class CalcFrame(GUI_Preparation.Main):
 			check = 'ERROR'
 		print(hexd)
 
-		self.T_T.SetLabel("写入设置文件")
-		cfg.set('Check', 'Is_complete', check)
-		cfg.write(open('./cfg/main.cfg', 'w'))
-
 		self.T_T.SetLabel("扫描文件夹")
 		for CheckDir in ['Log', 'Cache', 'plug-in']:
 			if os.path.exists(CheckDir):
@@ -162,33 +159,12 @@ class CalcFrame(GUI_Preparation.Main):
 		os.remove('DATA_LCK.zip')
 
 		self.T_T.SetLabel("文件检查完成")
-
-		wx.CallLater(10,self.HideWithEffect,wx.SHOW_EFFECT_BLEND)
-		wx.CallLater(10, self.DestroyChildren)
+		self.HideWithEffect(wx.SHOW_EFFECT_BLEND)
+		self.DestroyChildren()
+		##wx.CallLater(10,self.HideWithEffect,wx.SHOW_EFFECT_BLEND)
+		##wx.CallLater(10, self.DestroyChildren)
 
 		del self,directory,file_paths,zip,file,list_hash,check,i,hexd,p,m,f,line,CheckDir
-
-	def Main_Boolst(self):
-		self.T_M.SetLabel("加载核心库")
-		Frame_main = Main.CalcFrame(None)
-		wx.CallLater(10,Frame_main.ShowWithEffect,wx.SHOW_EFFECT_BLEND)
-
-		del Frame_main
-
-class MyThread(threading.Thread):
-	def __init__(self, target, args=()):
-		super(MyThread, self).__init__()
-		self.target = target
-		self.args = args
-
-	def run(self):
-		self.result = wx.CallAfter(self.target,*self.args)
-	def get_result(self):
-		threading.Thread.join(self)  # 等待线程执行完毕
-		try:
-			return self.result
-		except Exception:
-			return None
 
 ##############################
 # 主函数

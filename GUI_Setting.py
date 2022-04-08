@@ -26,10 +26,10 @@ class Main ( wx.Frame ):
 		self.m_mgr.SetManagedWindow( self )
 		self.m_mgr.SetFlags(wx.aui.AUI_MGR_DEFAULT)
 
-		self.m_notebook1 = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.NB_FIXEDWIDTH )
-		self.m_mgr.AddPane( self.m_notebook1, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).CloseButton( False ).PaneBorder( False ).Movable( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ) )
+		self.Notebook = wx.Notebook( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( -1,-1 ), wx.NB_FIXEDWIDTH )
+		self.m_mgr.AddPane( self.Notebook, wx.aui.AuiPaneInfo() .Center() .CaptionVisible( False ).CloseButton( False ).PaneBorder( False ).Movable( False ).Dock().Resizable().FloatingSize( wx.DefaultSize ) )
 
-		self.m_panel1 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.m_panel1 = wx.Panel( self.Notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer1 = wx.BoxSizer( wx.VERTICAL )
 
 		self.m_staticline2 = wx.StaticLine( self.m_panel1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
@@ -42,13 +42,16 @@ class Main ( wx.Frame ):
 
 		wSizer1.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.TREY_slider = wx.Slider( self.m_panel1, wx.ID_ANY, 255, 10, 255, wx.DefaultPosition, wx.Size( 200,-1 ), wx.SL_BOTH|wx.SL_LABELS )
+		self.TREY_slider = wx.Slider( self.m_panel1, wx.ID_ANY, 255, 50, 255, wx.DefaultPosition, wx.Size( 200,-1 ), wx.SL_BOTH|wx.SL_LABELS )
 		wSizer1.Add( self.TREY_slider, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 		self.m_checkBox4 = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"失去焦点后半透明", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_checkBox4.Enable( False )
 
 		wSizer1.Add( self.m_checkBox4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.SYS_TEST = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"系统-调试模式", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer1.Add( self.SYS_TEST, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer1, 0, 0, 5 )
@@ -80,8 +83,8 @@ class Main ( wx.Frame ):
 		self.FRAM_ROUND.SetValue(True)
 		wSizer4.Add( self.FRAM_ROUND, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.SYS_TEST = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"系统-调试模式", wx.DefaultPosition, wx.DefaultSize, 0 )
-		wSizer4.Add( self.SYS_TEST, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.FRAM_AeroEffect = wx.CheckBox( self.m_panel1, wx.ID_ANY, u"主界面-毛玻璃背景", wx.DefaultPosition, wx.DefaultSize, 0 )
+		wSizer4.Add( self.FRAM_AeroEffect, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		bSizer1.Add( wSizer4, 0, 0, 5 )
@@ -93,8 +96,8 @@ class Main ( wx.Frame ):
 		self.m_panel1.SetSizer( bSizer1 )
 		self.m_panel1.Layout()
 		bSizer1.Fit( self.m_panel1 )
-		self.m_notebook1.AddPage( self.m_panel1, u"界面", True )
-		self.m_panel2 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.Notebook.AddPage( self.m_panel1, u"界面", True )
+		self.m_panel2 = wx.Panel( self.Notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
 		self.m_staticline3 = wx.StaticLine( self.m_panel2, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
@@ -124,8 +127,8 @@ class Main ( wx.Frame ):
 		self.m_panel2.SetSizer( bSizer3 )
 		self.m_panel2.Layout()
 		bSizer3.Fit( self.m_panel2 )
-		self.m_notebook1.AddPage( self.m_panel2, u"日志", False )
-		self.m_panel3 = wx.Panel( self.m_notebook1, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.Notebook.AddPage( self.m_panel2, u"日志", False )
+		self.m_panel3 = wx.Panel( self.Notebook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer5 = wx.BoxSizer( wx.VERTICAL )
 
 		self.m_staticline5 = wx.StaticLine( self.m_panel3, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
@@ -134,6 +137,8 @@ class Main ( wx.Frame ):
 		wSizer3 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
 		self.Fast_on_Box = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"启动-跳过文件检查", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.Fast_on_Box.Enable( False )
+
 		wSizer3.Add( self.Fast_on_Box, 0, wx.ALL, 5 )
 
 		self.m_checkBox2 = wx.CheckBox( self.m_panel3, wx.ID_ANY, u"系统-最小化后休眠", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -157,7 +162,7 @@ class Main ( wx.Frame ):
 		self.m_panel3.SetSizer( bSizer5 )
 		self.m_panel3.Layout()
 		bSizer5.Fit( self.m_panel3 )
-		self.m_notebook1.AddPage( self.m_panel3, u"性能", False )
+		self.Notebook.AddPage( self.m_panel3, u"性能", False )
 
 		self.m_panel4 = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.Size( 600,40 ), wx.TAB_TRAVERSAL )
 		self.m_mgr.AddPane( self.m_panel4, wx.aui.AuiPaneInfo() .Bottom() .CaptionVisible( False ).CloseButton( False ).PaneBorder( False ).Movable( False ).Dock().Fixed().Layer( 1 ) )

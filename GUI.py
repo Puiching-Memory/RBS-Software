@@ -15,6 +15,7 @@ PFM_Timer = 1001
 PRAM_Timer = 1002
 PRO_Timer = 1003
 Time_Timer = 1004
+ANI_Timer = 1005
 
 ###########################################################################
 ## Class Main
@@ -115,44 +116,44 @@ class Main ( wx.Frame ):
 
 		wSizer_L2 = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.G1 = wx.Button( self, wx.ID_ANY, u"语文 3", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G1 = wx.Button( self, wx.ID_ANY, u"语文 3", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G1.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G1.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G1, 0, 0, 0 )
 
-		self.G2 = wx.Button( self, wx.ID_ANY, u"数学 4", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G2 = wx.Button( self, wx.ID_ANY, u"数学 4", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G2.SetFont( wx.Font( 9, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
 		self.G2.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G2, 0, 0, 2 )
 
-		self.G3 = wx.Button( self, wx.ID_ANY, u"英语 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G3 = wx.Button( self, wx.ID_ANY, u"英语 1", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G3.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G3, 0, 0, 2 )
 
-		self.G4 = wx.Button( self, wx.ID_ANY, u"信息 4", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G4 = wx.Button( self, wx.ID_ANY, u"信息 4", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G4.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G4, 0, 0, 2 )
 
-		self.G5 = wx.Button( self, wx.ID_ANY, u"历史 2", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G5 = wx.Button( self, wx.ID_ANY, u"历史 2", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G5.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G5, 0, 0, 2 )
 
-		self.G6 = wx.Button( self, wx.ID_ANY, u"地理 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G6 = wx.Button( self, wx.ID_ANY, u"地理 1", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G6.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G6, 0, 0, 2 )
 
-		self.G7 = wx.Button( self, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G7 = wx.Button( self, wx.ID_ANY, u"物理 3", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G7.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G7, 0, 0, 2 )
 
-		self.G8 = wx.Button( self, wx.ID_ANY, u"化学 1", wx.DefaultPosition, wx.Size( 74,-1 ), wx.BORDER_NONE )
+		self.G8 = wx.Button( self, wx.ID_ANY, u"化学 1", wx.DefaultPosition, wx.Size( 75,-1 ), wx.BORDER_NONE )
 		self.G8.SetBackgroundColour( wx.Colour( 255, 255, 255 ) )
 
 		wSizer_L2.Add( self.G8, 0, 0, 2 )
@@ -665,6 +666,8 @@ class Main ( wx.Frame ):
 		self.Time_Timer.SetOwner( self, Time_Timer )
 		self.Time_Timer.Start( 900 )
 
+		self.ANI_Timer = wx.Timer()
+		self.ANI_Timer.SetOwner( self, ANI_Timer )
 
 		self.Centre( wx.BOTH )
 
@@ -674,6 +677,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_ICONIZE, self.Ico )
 		self.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.Bind( wx.EVT_MOVE, self.OnMove )
+		self.Bind( wx.EVT_PAINT, self.MainOnPaint )
 		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightDown )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
 		self.Weather.Bind( wx.EVT_BUTTON, self.GetWeather )
@@ -799,6 +803,7 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_TIMER, self.PRAM_Tick, id=PRAM_Timer )
 		self.Bind( wx.EVT_TIMER, self.PRO_Tick, id=PRO_Timer )
 		self.Bind( wx.EVT_TIMER, self.Time_Tick, id=Time_Timer )
+		self.Bind( wx.EVT_TIMER, self.ANI, id=ANI_Timer )
 
 	def __del__( self ):
 		pass
@@ -818,6 +823,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def OnMove( self, event ):
+		event.Skip()
+
+	def MainOnPaint( self, event ):
 		event.Skip()
 
 	def OnRightDown( self, event ):
@@ -1135,6 +1143,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def Time_Tick( self, event ):
+		event.Skip()
+
+	def ANI( self, event ):
 		event.Skip()
 
 
