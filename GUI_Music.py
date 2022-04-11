@@ -67,7 +67,7 @@ class Main ( wx.Frame ):
 		self.A.SetSizer( bSizer21 )
 		self.A.Layout()
 		bSizer21.Fit( self.A )
-		self.NoteBook.AddPage( self.A, u"格式转换器", True )
+		self.NoteBook.AddPage( self.A, u"格式转换器", False )
 		self.B = wx.Panel( self.NoteBook, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		bSizer3 = wx.BoxSizer( wx.VERTICAL )
 
@@ -98,13 +98,19 @@ class Main ( wx.Frame ):
 		bSizer3.Add( wSizer31, 0, wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 		self.B_BRUN = wx.Button( self.B, wx.ID_ANY, u"导出", wx.DefaultPosition, wx.Size( 200,-1 ), 0 )
+		self.B_BRUN.Enable( False )
+
 		bSizer3.Add( self.B_BRUN, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+
+		self.B_Guage = wx.Gauge( self.B, wx.ID_ANY, 100, wx.DefaultPosition, wx.Size( 350,-1 ), wx.GA_HORIZONTAL )
+		self.B_Guage.SetValue( 0 )
+		bSizer3.Add( self.B_Guage, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 
 
 		self.B.SetSizer( bSizer3 )
 		self.B.Layout()
 		bSizer3.Fit( self.B )
-		self.NoteBook.AddPage( self.B, u"网易云缓存转换器", False )
+		self.NoteBook.AddPage( self.B, u"网易云缓存转换器", True )
 
 		bSizer2.Add( self.NoteBook, 1, wx.EXPAND |wx.ALL, 5 )
 
@@ -119,6 +125,8 @@ class Main ( wx.Frame ):
 		self.File.Bind( wx.EVT_FILEPICKER_CHANGED, self.import_file )
 		self.B_Play.Bind( wx.EVT_BUTTON, self.Play )
 		self.Save.Bind( wx.EVT_FILEPICKER_CHANGED, self.SaveOnFileChanged )
+		self.B_CachePath.Bind( wx.EVT_DIRPICKER_CHANGED, self.B_CachePathOnDirChanged )
+		self.B_ExportPath.Bind( wx.EVT_DIRPICKER_CHANGED, self.B_ExportPathOnDirChanged )
 		self.B_BRUN.Bind( wx.EVT_BUTTON, self.B_RUN )
 
 	def __del__( self ):
@@ -136,6 +144,12 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 	def SaveOnFileChanged( self, event ):
+		event.Skip()
+
+	def B_CachePathOnDirChanged( self, event ):
+		event.Skip()
+
+	def B_ExportPathOnDirChanged( self, event ):
 		event.Skip()
 
 	def B_RUN( self, event ):

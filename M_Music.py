@@ -6,9 +6,9 @@ import wx
 import GUI_Music
 
 import threading
+import os
 
 import pydub,pydub.playback
-import Netease_cloud_CaChe # 网易云音乐缓存转换MP3算法
 
 ##############################
 # GUI的函数桥接
@@ -72,21 +72,54 @@ class CalcFrame(GUI_Music.Main):
 	#B-------------------------------------------------------------------------
 
 	def B_RUN(self, event):
-		self.B_BRUN.Enable(False)
-
 		UC_PATH = self.B_CachePath.GetPath()
 		MP3_PATH = self.B_ExportPath.GetPath()
 		if UC_PATH != '' and MP3_PATH != '':
-			transform = Netease_cloud_CaChe.Transform()
-			print(UC_PATH)
-			transform.do_transform(UC_PATH,MP3_PATH + '/')
+			thr = threading.Thread(target=self.B_RUN_threading)
+			thr.run()
+		
+	def B_RUN_threading(self):
+		self.B_BRUN.Enable(False)
+		self.B_Guage.Pulse()
 
+		UC_PATH = self.B_CachePath.GetPath()
+		MP3_PATH = self.B_ExportPath.GetPath() + '/'
+
+		files = os.listdir(UC_PATH + '/')
+		for file in files:
+			if file[-2:] == 'uc':  # 后缀uc结尾为歌曲缓存
+				print(file)
+				uc_file = open(UC_PATH + '/' + file, mode='rb')
+				uc_content = uc_file.read()
+				mp3_content = bytearray()
+				for byte in uc_content:
+					byte ^= 0xa3
+					mp3_content.append(byte)
+				##song_id = self.get_songid_by_filename(file)
+				##song_name, singer_name = self.get_song_info(song_id)
+				singer_name = 'N'
+				song_name = 'A'
+				mp3_file_name = MP3_PATH + '%s - %s.mp3' % (singer_name, song_name)
+				mp3_file = open(mp3_file_name, 'wb')
+				mp3_file.write(mp3_content)
+				uc_file.close()
+				mp3_file.close()
+				print('success %s' % mp3_file_name)
+
+		self.B_Guage.SetValue(0)
 		self.B_BRUN.Enable(True)
+
+	def B_ExportPathOnDirChanged(self,event):
+		if self.B_CachePath.GetPath() != '':
+			self.B_BRUN.Enable()
+
+	def B_CachePathOnDirChanged(self,event):
+		if self.B_ExportPath.GetPath() != '':
+			self.B_BRUN.Enable()
+
 
 	def Close(self, event):
 		self.Destroy()
-
-
 		
 ##############################
 # 主函数
@@ -99,6 +132,7 @@ def main():
 	frame = CalcFrame(None)
 	frame.Show(True)
 	app.MainLoop()
+
 
 
 if __name__ == "__main__":

@@ -4,9 +4,9 @@ RBS是一个应用于教育行业的工具箱软件
 
 # >提示
 
-- 作者的母语是中文,所有README都基于中文版翻译得来,一切歧义最终应查看本文解释
-- 中文:[README_cn.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README_cn.md) 2022/2/7
-- English:[README.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README.md) ----/-/-
+- 作者的母语是中文,所有文档都基于中文版翻译得来
+- 中文:[README_Zh_CN.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README_cn.md) 2022/4/11
+- English:[README_EN.md](https://github.com/Puiching-Memory/RBS-Software/blob/main/README.md) ----/-/-
 
 # >程序结构
 
@@ -22,36 +22,32 @@ RBS是一个应用于教育行业的工具箱软件
 ##### 运行库列表
 
 ```
-autopep8==1.5.7
-beautifulsoup4==4.9.3
+beautifulsoup4==4.10.0
 bs4==0.0.1
-certifi==2021.5.30
-charset-normalizer==2.0.4
-cmake==3.21.1.post1
+certifi==2021.10.8
+charset-normalizer==2.0.12
+cmake==3.22.2
 colorama==0.4.4
-idna==3.2
-numpy==1.21.1
-opencv-python==4.5.3.56
-Pillow==8.3.1
-ping3==3.0.1
-psutil==5.8.0
-pyflakes==2.3.1
-pynput==1.7.3
-pypinyin==0.42.0
+idna==3.3
+numpy==1.22.2
+Pillow==9.0.1
+psutil==5.9.0
+pydub==0.25.1
+pynput==1.7.6
+pypinyin==0.46.0
 python-jsonrpc-server==0.4.0
 python-language-server==0.36.2
-pywin32==301
-qrcode==7.2
-requests==2.26.0
-rope==0.19.0
-simpleaudio==1.0.4
+pywin32==303
+qrcode==7.3.1
+requests==2.27.1
 six==1.16.0
-soupsieve==2.2.1
-ujson==4.0.2
-urllib3==1.26.6
+soupsieve==2.3.1
+urllib3==1.26.8
 wxPython==4.1.1
 xlrd==2.0.1
 xlwt==1.3.0
+zhconv==1.4.3
+zhdate==0.1
 ```
 
 ##### pip 批量安装
@@ -77,7 +73,7 @@ pip install pyinstaller
 ##### 打包命令
 
 ```
-pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w
+pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w --exclude-module tkinter --exclude-module lxml
 ```
 
 ##### 提示
@@ -91,63 +87,55 @@ pyinstaller -D Preparation.py -i ICOV4.ico --upx-dir UPX -y -n RBS_Software -w
 
 你可以在plug-in文件夹中添加插件,程序的插件功能基于python的函数exec()运行.
 
+每个插件应开设独立命名的文件夹，并带有Info.cfg文件作为识别信息
+
+你可以参考官方示例插件，位于./plug-in/Example
+
+# >主题
+
+RBS使用的颜色主题读取于一组外部文件(通常是.cfg)，其数据结构为十六进制颜色
+
+你可以自己尝试修改这些文件，用以获取自定义的颜色效果，例如：全黑的黑夜模式
+
+文件路径：./DATA/Main/Theme/*
+
 # 维护者
 
-[@PuichingMemory](https://github.com/Puiching-Memory)
+[@PuichingMemory](https://github.com/Puiching-Memory "用户个人空间链接")
 
 # >更新日志
 
-##### 只显示最近的两次更新(我知道你不关心这个)😛
+##### 只显示最近的更新(我知道你不关心这个)😛
 
-['2022/02/05', 'Ver022.02.05']
+['2022/04/03', 'Ver022.04.03']
 -----RBS_Software update log(项目更新日志)-----
 +改进:
-1.主界面部分细节改进
-2.添加了'性能监视器'模块
-3.清理了过时文件
-4.模块'简繁转换'数据库已更新
-5.'音频分析器'模块已完善,支持导入MP3、wav、flac、ogg文件，可导出ogg、wav、MP3文件
-6.'随机数'模块已更新至V4
+1.主界面及部分子模块界面优化
+2.为'随机数'模块,随机学号功能添加了多线程,皆在解决GUI阻塞问题
+3.BUG修复：为'Bing壁纸'模块添加了多线程(IS022.0312B)
+4.'元素周期表'模块数据录入已完成
+5.为'Music'模块添加了多线程
+6.剔除多余的库文件以减少打包文件大小
+7.为'历史上的今天'添加了多线程
+8.移除了初始化后不再使用的变量,减小内存占用
 -问题:
-1.OpenGL在初始化进程中引发错误导致软件卡在启动界面(IS09191)
+1.(IS09191) -> wxGL库打包错误,可能由于某些库的缺失导致启动失败(IS022.0208A)
 2.由于pi值精度过高导致的浮点数计算BUG(IS09181)
-3.'文件管理器'清理文件时遇到占用冲突[WinError 32](IS12251)
-4.主界面ping模块暂时禁用(IS12312)
-5.'数学画板'关闭按钮不能正常工作(IS01011)
-6.log等文件可能会因为编码格式(utf-8)而导致中文出现乱码(IS01141)
-7.'值日表'模块的实现算法已过时
+3.'值日表'模块的实现算法已过时
+4.'基因库'算法已过时
+5.载入插件并将插件文件夹手动移除后将导致问题(IS022.0227A)
+6.插件在关闭后无法释放内存(IS022.0312A)
+7.在windows Server2012(远程链接)中字体显示会缺损
+8.在启动'Bing壁纸'模块后清理缓存会导致设置壁纸操作错误
+9.'历史上的今天'api请求缺少ssl验证(IS022.0327A)
+?计划：
+1.数学统计(import statistics)
+2.bilibili api(import bilibili_api)
+$实验：
+1.窗口背景透明效果：win7毛玻璃/win10亚克力效果
+2.窗口阴影
 ||信息:
 ALL:--MB
 DIST:--MB
 ZIP:--MB
 NSIS:--MB
-
----
-
-['2022/01/24', 'Ver022.01.24']
------RBS_Software update log(项目更新日志)-----
-+改进:
-1.'关于'界面改进
-2.BUG修复:主界面'CMD功能'无法使用(IS12252)
-3.代码规范优化-进度1
-4.'RBS_DDT'项目已作为模块'M_DDT'进行集成
-5.'RBS_PLC'部分功能集成
-6.插件功能已重写,现在使用.py文件接口(#200)
-7.主界面'快速启动'功能长期缺少维护,现已删除(IS12253)
-8.文件结构优化
-9.BUG修复:必应壁纸模块不能正常工作(IS12255)
--问题:
-1.OpenGL在初始化进程中引发错误导致软件卡在启动界面(IS09191)
-2.由于pi值精度过高导致的浮点数计算BUG(IS09181)
-3.'文件管理器'清理文件时遇到占用冲突[WinError 32](IS12251)
-4.主界面ping模块暂时禁用(IS12312)
-5.'数学画板'关闭按钮不能正常工作(IS01011)
-6.log等文件可能会因为编码格式(utf-8)而导致中文出现乱码(IS01141)
-7.'值日表'模块的实现算法已过时
-||信息:
-ALL:482MB
-DIST:40.7MB
-ZIP:--MB
-NSIS:--MB
-
----
