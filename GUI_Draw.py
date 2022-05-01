@@ -32,10 +32,11 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.Close )
+		self.Bind( wx.EVT_ERASE_BACKGROUND, self.MainOnEraseBackground )
 		self.Bind( wx.EVT_LEFT_DOWN, self.MainOnLeftDown )
 		self.Bind( wx.EVT_LEFT_UP, self.MainOnLeftUp )
 		self.Bind( wx.EVT_MOVE, self.OnMove )
-		self.Bind( wx.EVT_PAINT, self.EVT_PAINT )
+		self.Bind( wx.EVT_PAINT, self.MainOnPaint )
 
 	def __del__( self ):
 		pass
@@ -43,6 +44,9 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def Close( self, event ):
+		event.Skip()
+
+	def MainOnEraseBackground( self, event ):
 		event.Skip()
 
 	def MainOnLeftDown( self, event ):
@@ -54,7 +58,7 @@ class Main ( wx.Frame ):
 	def OnMove( self, event ):
 		event.Skip()
 
-	def EVT_PAINT( self, event ):
+	def MainOnPaint( self, event ):
 		event.Skip()
 
 

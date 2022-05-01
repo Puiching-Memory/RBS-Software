@@ -60,7 +60,14 @@ class Main ( wx.Frame ):
 
 		bSizer4.Add( self.m_staticText15, 0, wx.ALL, 5 )
 
-		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"我会住在其中的一颗星星上面，在某一颗星星上微笑着，每当夜晚你仰望星空的时候，就会像是看到所有的星星都在微笑一般。每一个人都有自己的星星，但其中的含意却因人而异。对旅人而言，星星是向导；对其他人而言，它们只不过是天际中闪闪发光的小东西而已；对学者而言，星星则是一门待解的难题；对我那位商人来说，它们就是财富。不过，星星本身是沉默的。你，只有你，了解这些星星与众不同的含义。星星发亮是为了让每一个人有一天都能找到属于自己的星星。", wx.DefaultPosition, wx.Size( 200,210 ), 0 )
+		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"星空回响", wx.DefaultPosition, wx.Size( 200,25 ), 0 )
+		self.m_staticText6.Wrap( -1 )
+
+		self.m_staticText6.SetFont( wx.Font( 14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )
+
+		bSizer4.Add( self.m_staticText6, 0, wx.ALL, 5 )
+
+		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"色彩迷离了双眼\n光芒在此流动\n坠落着，盘旋着\n或圆或线\n散开了，是满天星\n团圆了，是一场梦\n让声与光随风而行\n纵情歌唱，直到某日绽放笑容", wx.DefaultPosition, wx.Size( 200,185 ), 0 )
 		self.m_staticText17.Wrap( -1 )
 
 		self.m_staticText17.SetFont( wx.Font( 7, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "微软雅黑" ) )

@@ -15,11 +15,6 @@ import shutil
 from subprocess import Popen
 import qrcode
 
-
-from gsnodegraph import EVT_GSNODEGRAPH_ADDNODEBTN
-import nodes
-from nodegraph import NodeGraph
-
 import GUI_SSC
 
 ##############################
@@ -49,44 +44,6 @@ class CalcFrame(GUI_SSC.Main):
 
 		self.A_Edit_State_Colour.SetBackgroundColour((192, 192, 192))
 		self.A_Edit_State_Text.SetLabel('静待')
-
-		# Setup the node registry
-		node_registry = {
-			'excel_importid': nodes.Excel_import,
-			"value_nodeid": nodes.ValueNode,
-			"output_nodeid": nodes.OutputNode,
-		}
-		# Setup the config with datatypes and node categories
-		config = {
-			"image_datatype": "IMAGE",
-			"node_datatypes": {
-				"IMAGE": "#C6C62D",  # Yellow
-				"INTEGER": "#A0A0A0",  # Grey
-				"FLOAT": "#A0A0A0",  # Grey
-				"VALUE": "#A0A0A0",  # Depreciated!
-			},
-			"node_categories": {
-				"INPUT": "#E64555",  # Burgendy
-				"DRAW": "#AF4467",  # Pink
-				"MASK": "#084D4D",  # Blue-green
-				"CONVERT": "#564B7C",  # Purple
-				"FILTER": "#558333",  # Green
-				"BLEND": "#498DB8",  # Light blue
-				"COLOR": "#C2AF3A",  # Yellow
-				"TRANSFORM": "#6B8B8B",  # Blue-grey
-				"OUTPUT": "#B33641"  # Red
-			}
-		}
-		# Init the nodegraph
-		# print(self.NoteBook.GetPage(3))
-		ng = NodeGraph(self.NoteBook.GetPage(
-			3), registry=node_registry, config=config, size=(500, 600))
-
-		# Add nodes to the node graph
-		ng.AddNode("excel_importid", pos=wx.Point(100, 10))
-		ng.AddNode("output_nodeid", pos=wx.Point(300, 10))
-
-		ng.Bind(EVT_GSNODEGRAPH_ADDNODEBTN, self.OnAddNodeMenuBtn)
 
 	def Hot_Key_Down(self, event):
 		'''

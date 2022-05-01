@@ -680,11 +680,13 @@ class Main ( wx.Frame ):
 		self.Bind( wx.EVT_PAINT, self.MainOnPaint )
 		self.Bind( wx.EVT_RIGHT_DOWN, self.OnRightDown )
 		self.Bind( wx.EVT_SIZE, self.Change_Size )
+		self.version.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
+		self.Network.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
 		self.Weather.Bind( wx.EVT_BUTTON, self.GetWeather )
+		self.Weather.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
 		self.Note.Bind( wx.EVT_KEY_DOWN, self.Hot_Key_Down )
 		self.Note.Bind( wx.EVT_LEFT_DCLICK, self.OnLeftDClick )
 		self.Note.Bind( wx.EVT_LEFT_DOWN, self.OnLeftDown )
-		self.Note.Bind( wx.EVT_LEFT_UP, self.OnLeftUp )
 		self.B_File.Bind( wx.EVT_BUTTON, self.File )
 		self.B_File.Bind( wx.EVT_ENTER_WINDOW, self.H_File )
 		self.B_File.Bind( wx.EVT_LEAVE_WINDOW, self.L_File )
@@ -751,6 +753,7 @@ class Main ( wx.Frame ):
 		self.Side4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave_L4 )
 		self.T_F1.Bind( wx.EVT_ENTER_WINDOW, self.Hover1 )
 		self.T_F1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Net1.Bind( wx.EVT_BUTTON, self.H_Net1 )
 		self.P_F1.Bind( wx.EVT_ENTER_WINDOW, self.Hover1 )
 		self.P_F1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.B_F1.Bind( wx.EVT_BUTTON, self.Function1 )
@@ -760,6 +763,7 @@ class Main ( wx.Frame ):
 		self.Tip1.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.T_F2.Bind( wx.EVT_ENTER_WINDOW, self.Hover2 )
 		self.T_F2.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Net2.Bind( wx.EVT_BUTTON, self.H_Net2 )
 		self.P_F2.Bind( wx.EVT_ENTER_WINDOW, self.Hover2 )
 		self.P_F2.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.B_F2.Bind( wx.EVT_BUTTON, self.Function2 )
@@ -769,6 +773,7 @@ class Main ( wx.Frame ):
 		self.Tip2.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.T_F3.Bind( wx.EVT_ENTER_WINDOW, self.Hover3 )
 		self.T_F3.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Net3.Bind( wx.EVT_BUTTON, self.H_Net3 )
 		self.P_F3.Bind( wx.EVT_ENTER_WINDOW, self.Hover3 )
 		self.P_F3.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.B_F3.Bind( wx.EVT_BUTTON, self.Function3 )
@@ -778,6 +783,7 @@ class Main ( wx.Frame ):
 		self.Tip3.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.T_F4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.T_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
+		self.Net4.Bind( wx.EVT_BUTTON, self.H_Net4 )
 		self.P_F4.Bind( wx.EVT_ENTER_WINDOW, self.Hover4 )
 		self.P_F4.Bind( wx.EVT_LEAVE_WINDOW, self.Leave )
 		self.B_F4.Bind( wx.EVT_BUTTON, self.Function4 )
@@ -834,18 +840,18 @@ class Main ( wx.Frame ):
 	def Change_Size( self, event ):
 		event.Skip()
 
+	def OnLeftDown( self, event ):
+		event.Skip()
+
+
 	def GetWeather( self, event ):
 		event.Skip()
+
 
 
 	def OnLeftDClick( self, event ):
 		event.Skip()
 
-	def OnLeftDown( self, event ):
-		event.Skip()
-
-	def OnLeftUp( self, event ):
-		event.Skip()
 
 	def File( self, event ):
 		event.Skip()
@@ -1043,6 +1049,9 @@ class Main ( wx.Frame ):
 	def Leave( self, event ):
 		event.Skip()
 
+	def H_Net1( self, event ):
+		event.Skip()
+
 
 
 	def Function1( self, event ):
@@ -1055,6 +1064,9 @@ class Main ( wx.Frame ):
 	def Hover2( self, event ):
 		event.Skip()
 
+
+	def H_Net2( self, event ):
+		event.Skip()
 
 
 
@@ -1069,6 +1081,9 @@ class Main ( wx.Frame ):
 		event.Skip()
 
 
+	def H_Net3( self, event ):
+		event.Skip()
+
 
 
 	def Function3( self, event ):
@@ -1081,6 +1096,9 @@ class Main ( wx.Frame ):
 	def Hover4( self, event ):
 		event.Skip()
 
+
+	def H_Net4( self, event ):
+		event.Skip()
 
 
 

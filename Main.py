@@ -98,6 +98,9 @@ import ctypes
 import imghdr # 检测图片类型
 import RBS_windows_api
 
+import wx.lib.agw.infobar as IB
+import wx.lib.agw.supertooltip as STT
+
 ###########################################################################
 # Class Main
 ###########################################################################
@@ -225,7 +228,7 @@ class CalcFrame(GUI.Main):
 
 		self.windowEffect = RBS_windows_api.WindowEffect()
 
-		if eval(AeroEffect) == True:
+		if eval(AeroEffect) == True: # 应用win7风格的毛玻璃
 			self.windowEffect.setAeroEffect(self.GetHandle())
 
 		self.SVG_ICO()  # 设置SVG图标
@@ -265,8 +268,12 @@ class CalcFrame(GUI.Main):
 		else:
 			pass
 
-		print('屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) + '\n彩色模式:' + str(wx.ColourDisplay()) + '\nGUI大小:' + str(
-			self.Size))
+		self.Self_CMD('启动检查:'
+				+ '\n屏幕PPI值:' + str(wx.Display.GetPPI(wx.Display())) 
+				+ '\n彩色模式:' + str(wx.ColourDisplay()) 
+				+ '\nGUI大小:' + str(self.Size)
+				+ '\n屏幕分辨率:' + str(wx.ClientDisplayRect())
+				+ '\n执行版本:' + str(wx.version()))
 		
 		##dialog_hwnd = win32gui.FindWindow("Shell_TrayWnd", None)
 		##m_hBar = win32gui.FindWindowEx(dialog_hwnd, 0, "ReBarWindow32", None)
@@ -274,7 +281,31 @@ class CalcFrame(GUI.Main):
 
 		##dialog_hwnd = win32gui.FindWindow(None,"RBS_Software")
 		##password_hwnd = win32gui.GetDlgItem(dialog_hwnd, -31910)
-	
+
+		self._infoBar = IB.InfoBar(self)
+		##self.Sizer.Insert(5,self._infoBar,wx.SizerFlags().Expand())
+		##self._infoBar.ShowMessage("Something happened", wx.ICON_INFORMATION)
+
+		self.tip = STT.SuperToolTip('')
+		self.tip.SetHeader("联网识别图标")
+		self.tip.SetMessage("绿色代表该功能使用时需要网络\n红色代表该功能使用时不需要网络")
+		self.tip.SetHeaderFont(wx.Font(12, wx.FONTFAMILY_DEFAULT,wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC"))
+		self.tip.SetMessageFont(wx.Font(8, wx.FONTFAMILY_DEFAULT,wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "HarmonyOS Sans SC"))
+		##self.tip.SetDrawHeaderLine(True)
+		##self.tip.ApplyStyle("Firefox")
+		self.tip.SetTopGradientColour(wx.Colour('#ff9472'))
+		self.tip.SetMiddleGradientColour(wx.Colour('#f2709c'))
+		self.tip.SetBottomGradientColour(wx.Colour('#f2709c'))
+		##self.tip.SetDropShadow(True)
+
+		##cstyle= win32gui.GetClassLong(self.tip.GetTipWindow().GetHandle(), -26)
+		##win32api.SetClassLong(self.tip.GetTipWindow().GetHandle(), -26, cstyle | 0x00020000)
+		
+
+		##self.windowEffect.setAcrylicEffect(tip.GetTipWindow().GetHandle())
+		##print(tip.GetTipWindow().GetHandle(),self.GetHandle())
+		
+
 		self.Refresh()
 
 		self.ANI_i = 0
@@ -901,6 +932,22 @@ class CalcFrame(GUI.Main):
 
 	def H_BT3(self, event):
 		self.Bottom_Bar3.SetBackgroundColour(self.colour_Hover)
+
+	def H_Net1(self,event):
+		self.tip.SetTarget(self.Net1)
+		self.tip.DoShowNow()
+
+	def H_Net2(self,event):
+		self.tip.SetTarget(self.Net2)
+		self.tip.DoShowNow()
+
+	def H_Net3(self,event):
+		self.tip.SetTarget(self.Net3)
+		self.tip.DoShowNow()
+
+	def H_Net4(self,event):
+		self.tip.SetTarget(self.Net4)
+		self.tip.DoShowNow()
 
 	# ---------------------------------------------------------------------
 

@@ -1,127 +1,210 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Dec 27 19:22:11 2018
-#QQ群：476842922（欢迎加群讨论学习
-@author: Administrator
-"""
+# -*- encoding: utf-8 -*-
+# Python 3.9.6 64bit
+'''
+@File        : MySktech.py
+@Time        : 2022/01/03 21:51
+@Author      : Wreng
+@Description : wxpython 实现简易的画板
+@Other       : version - Python 3.9.6 64bit, wxPython 4.1.1
+'''
+
 import wx
 
-class AppFrame( wx.Frame )  :
+"""
+实现画板，有两种方式：直接法和缓冲法。
+缓冲法，可以有效的避免屏闪；当绘图不是很复杂的时候，直接法的屏闪也不是很明显。
+两种的实现也比较简单，分别由专门的dc一一对应的。
+"""
+BUFFERED = True    # 使用缓冲法，即 double buffered
+# BUFFERED = False # 使用直接法
 
-    def __init__( self )  :
+class Myline():
+    """笔画类，包含笔迹的颜色、粗细、样式、数据点"""
+    def __init__(self, color, thick, style, datas):
+        self.pen_msg = (color, thick, style)
+        self.datas = datas
 
-        wx.Frame.__init__( self, None, title="Am I transparent?",
-                           style=wx.DEFAULT_FRAME_STYLE | wx.STAY_ON_TOP )
-        self.SetClientSize( (300, 300) )
+class SimpleSketchWindow(wx.Window):
+    """画板缓冲窗口"""
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
 
-        self.alphaValue = 255
-        self.alphaIncrement = -4
+        self.cur_pos = (0,0) # 当前鼠标位置
+        self.cur_line = []   # 当前笔画 [(x1, y1), (x2, y2), ... ,(xn,yn)]
+        self.lines = []      # 所有笔画 [line1, line2, ..., line m]
+        
+        self.pen_color = 'RED' # 笔迹颜色
+        self.pen_thick = 4     # 笔迹粗细
+        self.pen_style = wx.PENSTYLE_SOLID # 笔类型
 
-        pnl = wx.Panel( self )
-        self.stTxt = wx.StaticText( pnl, -1, str( self.alphaValue ), (25, 25) )
-        self.stTxt.SetFont( wx.Font( 18, wx.SWISS, wx.NORMAL, wx.NORMAL ) )
+        # 设置缓存区
+        if BUFFERED:
+            self.buffer = None
+            self.InitBuffer()
 
-        self.changeAlpha_timer = wx.Timer( self )
-        self.changeAlpha_timer.Start( 50 )       # 20 changes per second
-        self.Bind( wx.EVT_TIMER, self.ChangeAlpha )
+        # 设置背景颜色
+        self.SetBackgroundColour('white')
+        # 设置鼠标图标为“铅笔”
+        self.SetCursor(wx.Cursor(wx.CURSOR_PENCIL))
 
-        self.Bind( wx.EVT_CLOSE, self.OnCloseWindow )
+        # 绑定事件
+        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
+        self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
+        self.Bind(wx.EVT_MOTION, self.OnMotion)
+        self.Bind(wx.EVT_PAINT, self.OnPaint) # 触发时机：窗口大小变换
+        self.Bind(wx.EVT_SIZE, self.OnSize)
 
-    #end AppFrame class
+    def InitBuffer(self):
+        """初始化缓冲区"""
+        if BUFFERED:
+            # 设置缓冲区与窗口的大小一致
+            size = self.GetClientSize()
+            self.buffer = wx.Bitmap(*size)
+            # 第一个参数为None，相当于初始化 buffer
+            dc = wx.BufferedDC(None, self.buffer)
+        else:
+            # 直接获得当前窗口的设别上下文
+            dc = wx.ClientDC(self)
 
-    #--------------------------------------------------------
+        # 默认的绘画：绘制已存在的笔迹
+        self.DefaultDrawing(dc)
 
-    def ChangeAlpha( self, evt )  :
-        """ The term "alpha" means variable transparency
-              as opposed to a "mask" which is binary transparency.
-              alpha == 255 :  fully opaque
-              alpha ==   0 :  fully transparent (mouse is ineffective!)
+        # 添加你的绘画
+        self.DoMyDrawing(dc)
 
-            Only top-level controls can be transparent; no other controls can.
-            This is because they are implemented by the OS, not wx.
-        """
+    def DefaultDrawing(self, dc:wx.DC):
+        """默认绘画"""
+        
+        # 设置背景颜色
+        dc.SetBackground(wx.Brush(self.GetBackgroundColour()))
+        dc.Clear() # 使用当前背景刷来清除设备上下文。
 
-        self.alphaValue += self.alphaIncrement
-        if (self.alphaValue) <= 0 or (self.alphaValue >= 255) :
+        # 绘制所有的笔画
+        self.DrawAllLines(dc)
 
-            # Reverse the increment direction.
-            self.alphaIncrement = -self.alphaIncrement
+    def DrawAllLines(self, dc:wx.DC):
+        """绘制所有的直线"""
+        for line in self.lines:
+            # 设置笔画
+            pen = wx.Pen(*line.pen_msg)
+            dc.SetPen(pen)
+            # 绘制直线
+            for i in range(1, len(line.datas)):
+                coord = (line.datas[i-1].x, line.datas[i-1].y,
+                         line.datas[i].x, line.datas[i].y)
+                dc.DrawLine(*coord)
 
-            if self.alphaValue <= 0 :
-                self.alphaValue = 0
+    def DoMyDrawing(self, dc:wx.DC):
+        """需要继承此类，然后重构此函数"""
+        pass
 
-            if self.alphaValue > 255 :
-                self.alphaValue = 255
-        #end if
+    # ====================================================================
+    # 事件响应函数
+    # ====================================================================
+    def OnSize(self, event):
+        """响应窗口大小改变"""
 
-        self.stTxt.SetLabel( str( self.alphaValue ) )
+        # 每次窗口大小变换，都需要重新设置缓冲区大小
+        self.InitBuffer()
 
-        # Note that we no longer need to use ctypes or win32api to
-        # make transparent windows, however I'm not removing the
-        # MakeTransparent code from this sample as it may be helpful
-        # to someone for other uses, someday.
+        print("OnSize")
+        event.Skip()
 
-        #self.MakeTransparent( self.alphaValue )
+    def OnPaint(self, event):
+        """响应Paint Event"""
 
-        # Instead, just call the SetTransparent() method
-        self.SetTransparent( self.alphaValue )      # Easy !
+        if BUFFERED:
+            wx.BufferedPaintDC(self, self.buffer)
+        else:
+            dc = wx.PaintDC(self)
+            # 重新绘制
+            self.DefaultDrawing(dc)
+            self.DoMyDrawing(dc)
+        
+        print("OnPaint")
+        event.Skip()
 
-    #end ChangeAlpha def
+    def OnLeftDown(self, event:wx.MouseEvent):
+        """鼠标左键按下，记录起始坐标"""
+        
+        # 获得当前鼠标位置
+        self.cur_pos = event.GetPosition()
+        # 新笔画的起点
+        self.cur_line = []
+        self.cur_line.append(self.cur_pos)
 
-    #--------------------------------------------------------
+        print("Left Down: (%d, %d)" % (self.cur_pos.x, self.cur_pos.y))
+        event.Skip()
 
-    def OnCloseWindow( self, evt ) :
+    def OnLeftUp(self, event:wx.MouseEvent):
+        """鼠标左键松开，记录当前笔画"""
 
-        self.changeAlpha_timer.Stop()
-        del self.changeAlpha_timer       # avoid a memory leak
-        self.Destroy()
+        if len(self.cur_line) > 1:
+            self.lines.append(Myline(
+                self.pen_color, self.pen_thick, self.pen_style, self.cur_line))
 
-    #-----------------------------------------------------
+        print("Left Up: (%d, %d)" % (self.cur_pos.x, self.cur_pos.y))
+        event.Skip()
 
-    def MakeTransparent( self, amount ) :
-        """
-        This is how the method SetTransparent() is implemented
-            on all MS Windows platforms.
-        """
-        import os
-        if os.name == 'nt' :  # could substitute: sys.platform == 'win32'
+    def OnMotion(self, event:wx.MouseEvent):
+        """鼠标移动(左键拖动)"""
+        if event.Dragging() and event.LeftIsDown():
+            # 更新鼠标的坐标
+            pre_pos = self.cur_pos
+            self.cur_pos = event.GetPosition()
+            self.cur_line.append(self.cur_pos)
+            # 设置缓冲区
+            if BUFFERED:
+                # 设置缓冲区，当dc销毁时，将 buffer 复制到当前窗口上
+                dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
+            else:
+                # 直接获得当前窗口的设别上下文
+                dc = wx.ClientDC(self)
+            # 绘制直线
+            pen = wx.Pen(self.pen_color, self.pen_thick, self.pen_style)
+            dc.SetPen(pen)
+            coord = (pre_pos.x, pre_pos.y, self.cur_pos.x, self.cur_pos.y)
+            dc.DrawLine(*coord)
 
-            hwnd = self.GetHandle()
-            try :
-                import ctypes   # DLL library interface constants' definitions
-                _winlib = ctypes.windll.user32    # create object to access DLL file user32.dll
-                style = _winlib.GetWindowLongA( hwnd, 0xffffffec )
-                style |= 0x00080000
-                _winlib.SetWindowLongA( hwnd, 0xffffffec, style )
-                _winlib.SetLayeredWindowAttributes( hwnd, 0, amount, 2 )
+            print("Drawing:", coord)
 
-            except ImportError :
+        event.Skip()
 
-                import win32api, win32con, winxpgui
-                _winlib = win32api.LoadLibrary( "user32" )
-                pSetLayeredWindowAttributes = win32api.GetProcAddress(
-                    _winlib, "SetLayeredWindowAttributes" )
-                if pSetLayeredWindowAttributes == None :
-                    return
-                exstyle = win32api.GetWindowLong( hwnd, win32con.GWL_EXSTYLE )
-                if 0 == ( exstyle & 0x80000 ) :
-                    win32api.SetWindowLong( hwnd,
-                                           win32con.GWL_EXSTYLE,
-                                           exstyle | 0x80000 )
-                winxpgui.SetLayeredWindowAttributes( hwnd, 0, amount, 2 )
-        else :
-            print('####  OS Platform must be MS Windows')
-            self.Destroy()
-        #end if
-    #end MakeTransparent def
 
-#end AppFrame class
+class SketchWindow(SimpleSketchWindow):
 
-#=======================================================
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+    
+    def DoMyDrawing(self, dc: wx.DC):
+        """绘制自定义内容"""
+        self.DrawLogo(dc)
 
-if __name__ == '__main__' :
+    def DrawLogo(self, dc:wx.DC):
+        """绘制logo"""
 
-    app = wx.App( False )
-    frm = AppFrame()
+        dc.SetPen(wx.Pen('RED'))
+        dc.DrawRectangle(5, 5, 50, 50)
+
+        dc.SetBrush(wx.Brush("MEDIUM SEA GREEN"))
+        dc.SetPen(wx.Pen('BLUE', 4))
+        dc.DrawRectangle(15, 15, 50, 50)
+
+class SketchFrame(wx.Frame):
+
+    def __init__(self):
+        super().__init__(parent=None, id=-1, 
+            title="简易的画板",
+            size=(800,600)
+        )
+        
+        self.sketch = SketchWindow(parent=self, id=-1)
+
+        # 窗口居中
+        self.Center()
+
+if __name__ == '__main__':
+    app = wx.App()
+    frm = SketchFrame()
     frm.Show()
-    app.MainLoop()   
+    app.MainLoop()

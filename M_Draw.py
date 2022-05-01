@@ -15,38 +15,51 @@ class CalcFrame(GUI_Draw.Main):
 		# 定义主函数
 		GUI_Draw.Main.__init__(self, parent)
 
-	def EVT_PAINT(self,event):
-		global dc,gc,path
-		# Create paint DC
-		dc = wx.PaintDC(self)
+		self.Bind(wx.EVT_MOTION, self.OnMotion)
 
-		# Create graphics context from it
-		gc = wx.GraphicsContext.Create(dc)
-		gc.SetAntialiasMode(True)
+		self.dc = wx.ClientDC(self)
 
-		# make a path that contains a circle and some lines
-		gc.SetPen(wx.RED_PEN)
-		path = gc.CreatePath()
-		path.AddCircle(50.0, 50.0, 50.0)
-		path.MoveToPoint(0.0, 50.0)
-		path.AddLineToPoint(100.0, 50.0)
-		path.MoveToPoint(50.0, 0.0)
-		path.AddLineToPoint(50.0, 100.0)
-		path.CloseSubpath()
-		path.AddRectangle(25.0, 25.0, 50.0, 50.0)
-
-		gc.StrokePath(path)
+		self.line = []
 		
-	def MainOnLeftDown(self, event):
-		path.AddCircle(event.GetPosition()[0],event.GetPosition()[1],1)
-		gc.StrokePath(path)
+	def MainOnLeftDown(self, event:wx.MouseEvent):
+		print(event.x,event.y)
+	
+		self.dc.DrawCircle(event.x,event.y,10)
+
+	def MainOnLeftUp(self, event):
+		self.line = []
+
+	def OnMotion(self, event:wx.MouseEvent):
+		if event.Dragging() and event.LeftIsDown():
+			dc = self.dc
+
+			if len(self.line) == 0:
+				self.line.append(event.x)
+				self.line.append(event.y)
+			elif len(self.line) == 2:
+				self.line.append(event.x)
+				self.line.append(event.y)
+				print(self.line)
+				dc.DrawLine(self.line[0],self.line[1],self.line[2],self.line[3])
+				del self.line[0]
+				del self.line[0]
+				print(self.line)
+
+		event.Skip()
+
+
+	def MainOnPaint(self, event):
+		print(1)
+		##dc = wx.PaintDC(self)
+		event.Skip()
+
+	def MainOnEraseBackground(self, event):
+		print(2)
+		##dc = event.GetDC()
+		event.Skip()
 
 	def Close(self, event):
-		try:
-			if app.GetAppName() != '_core.cp38-win_amd64':
-				self.Destroy()
-		except:
-			self.Hide()
+		self.Destroy()
 
 ##############################
 # 主函数
